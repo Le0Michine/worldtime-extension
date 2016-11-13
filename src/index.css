@@ -10,3 +10,12 @@ body, * {
     -ms-text-rendering: optimizeLegibility;
     text-rendering: optimizeLegibility;
 }
+
+@font-face {
+    font-family: "material-icons";
+    src: url("MaterialIcons-Regular.woff") format('woff');
+}
+
+.material-icons {
+    font-family: "material-icons";
+}

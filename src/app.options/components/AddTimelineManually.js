@@ -4,7 +4,6 @@ import { Field, reduxForm } from 'redux-form';
 
 import TimeLine from "../../app/components/TimeLine";
 import { TimeZoneInfo } from "../models";
-import style from "./AddTimeLine.css";
 import { TimeLineInfo } from "../models";
 import * as addTimeLine from "../actions/AddNewTimeLineActions";
 import * as timeLines from "../actions/TimeLineActions";

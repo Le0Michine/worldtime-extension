@@ -32,7 +32,7 @@ export default class Layout extends React.Component {
     var YKB = this.getHoursWithOffset(4);
     return [
       { name: "Krakow", timeZoneName: "CET", timeZoneNumber: 3, timeZoneOffset: 0, hours: KRK },
-      { name: "San Fracisco", timeZoneName: "PST", timeZoneNumber: 1, timeZoneOffset: -9, hours: SA },
+      { name: "San Francisco", timeZoneName: "PST", timeZoneNumber: 1, timeZoneOffset: -9, hours: SA },
       { name: "Saint Petersburg", timeZoneName: "MSK", timeZoneNumber: 3, timeZoneOffset: +2, hours: SPB },
       { name: "Yekaterinburg", timeZoneName: "GMT+5", timeZoneNumber: 5, timeZoneOffset: +4, hours: YKB },
     ];

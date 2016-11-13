@@ -26,10 +26,6 @@ const webpackOptions = {
 module.exports = (function(env) {
     webpackOptions.cleanOutput = env.clean === "true";
     return webpackMerge(commonConfig(webpackOptions), {
-        output: {
-            path: helpers.root('out'),
-            filename: "[name].min.js",
-        },
         devtool: 'cheap-module-source-map'
     });
 });

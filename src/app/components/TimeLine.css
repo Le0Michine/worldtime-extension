@@ -22,7 +22,8 @@
 
 .container {
   /* width: calc(24 * 25px + 5px); */
-  width: fit-content;
+  display: inline-block;
+  width: max-content;
   font-size: 16px;
   margin-top: 10px;
 }

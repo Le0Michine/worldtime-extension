@@ -54,11 +54,12 @@ module.exports = function(options) {
     context: path.join(__dirname, "../"),
     devtool: !isProd ? "inline-sourcemap" : null,
     entry: {
-      "app": "./src/app/app.js"
+      "app": "./src/app/app.js",
+      "app.options": "./src/app.options/app.options.js"
     },
     output: {
       path: helpers.root('out'),
-      filename: "app.min.js",
+      filename: "[name].min.js",
     },
     resolve: {
       extensions: ['.js', '.jsx'],

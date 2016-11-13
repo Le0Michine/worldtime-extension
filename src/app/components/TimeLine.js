@@ -12,7 +12,7 @@ export default class TimeLine extends React.Component {
   getCurrentHour() {
     const currentTime = new Date(Date.now());
     var h = currentTime.getHours();
-    h = h + this.props.timeLine.timeZoneOffset;
+    h = h + this.props.timeLine.relativeTimeZoneOffset;
     h = h < 0 ? h + 24 : h >= 24 ? h - 24 : h;
     return h;
   }

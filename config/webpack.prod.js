@@ -27,10 +27,6 @@ const webpackOptions = {
  */
 module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
-        output: {
-            path: helpers.root('out'),
-            filename: "[name].min.js",
-        },
         plugins: [
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,

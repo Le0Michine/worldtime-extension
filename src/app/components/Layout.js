@@ -1,6 +1,7 @@
 import React from "react";
 
 import TimeLine from "./TimeLine";
+import { TimeZoneInfo } from "../models";
 import style from "./Layout.css";
 
 export default class Layout extends React.Component {
@@ -13,41 +14,18 @@ export default class Layout extends React.Component {
     setInterval(() => this.updateTime(Date.now()), 1000);
   }
 
-  getHoursWithOffset(offset) {
-    return Array(24).fill(1).map((v, i) => {
-      var h = i + offset;
-      if (h < 0) {
-        h += 24;
-      } else if (h >= 24) {
-        h -= 24;
-      }
-      return h;
-    });
-  }
-
   getTimelines() {
-    var SA = this.getHoursWithOffset(-9);
-    var KRK = this.getHoursWithOffset(0);
-    var SPB = this.getHoursWithOffset(2);
-    var YKB = this.getHoursWithOffset(4);
     return [
-      { name: "Krakow", timeZoneName: "CET", timeZoneNumber: 3, timeZoneOffset: 0, hours: KRK },
-      { name: "San Francisco", timeZoneName: "PST", timeZoneNumber: 1, timeZoneOffset: -9, hours: SA },
-      { name: "Saint Petersburg", timeZoneName: "MSK", timeZoneNumber: 3, timeZoneOffset: +2, hours: SPB },
-      { name: "Yekaterinburg", timeZoneName: "GMT+5", timeZoneNumber: 5, timeZoneOffset: +4, hours: YKB },
+      new TimeZoneInfo("Krakow", "CET", -1 * 60),
+      new TimeZoneInfo("San Francisco", "PST", 8 * 60),
+      new TimeZoneInfo("Saint Petersburg", "MSK", -3 * 60),
+      new TimeZoneInfo("Yekaterinburg", "GMT+5", -5 * 60)
     ];
   }
 
   getTimeString(unixTime) {
     const date = new Date(unixTime);
-    var h = date.getHours().toString();
-    h = h.length > 1 ? h : "0" + h;
-    var m = date.getMinutes().toString();
-    m = m.length > 1 ? m : "0" + m;
-    var s = date.getSeconds().toString();
-    s = s.length > 1 ? s : "0" + s;
-    const time = h + ":" + m + ":" + s;
-    return time;
+    return date.toLocaleTimeString();
   }
 
   updateTime(unixTime) {
@@ -60,7 +38,7 @@ export default class Layout extends React.Component {
       <div className={style.app}>
         <div className={style.header}>
           <div className={style.clock}>{this.state.time}</div>
-          <a className={style.settingsBtn + " material-icons"} target="_blank" href="">settings</a>
+          <a className={style.settingsBtn + " material-icons"} target="_blank" href="options.html">settings</a>
         </div>
         <div>
           {this.state.timeLines.map(tl => 

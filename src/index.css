@@ -1,4 +1,4 @@
-body, * {
+body, *, h1 {
     font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
     font-weight: 200;
     -webkit-font-smoothing: antialiased;

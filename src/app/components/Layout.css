@@ -1,0 +1,36 @@
+.clock {
+    flex: 1;
+    font-weight: 100;
+    font-size: 36px;
+}
+
+.app {
+    width: calc(24 * 25px + 5px);
+    margin: 10px;
+}
+
+.settingsBtn {
+    cursor: pointer;
+    font-size: 36px;
+    border: none;
+    background: none;
+    height: 100%;
+}
+
+.settingsBtn, .settingsBtn:hover, .settingsBtn:focus {
+    text-decoration: none;
+    color: black;
+    outline: none;
+}
+
+.settingsBtn:hover {
+    color: rgba(0, 0, 0, .5)
+}
+
+.header {
+    display: flex;
+    -webkit-align-items: center;
+            align-items: center;
+    -webkit-justify-content: center;
+            justify-content: center;
+}

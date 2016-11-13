@@ -1,0 +1,42 @@
+.hour {
+  display: inline-block;
+  width: 25px;
+  margin: 0;
+  text-align: center;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  box-sizing: border-box;
+  font-weight: 200;
+  background-color: #E8EAF6;
+}
+
+.timeLineBorderRight {
+  border-right: 1px solid black;
+  border-radius: 0 5px 5px 0;
+}
+
+.timeLineBorderLeft {
+  border-left: 1px solid black;
+  border-radius: 5px 0 0 5px;
+}
+
+.container {
+  /* width: calc(24 * 25px + 5px); */
+  width: fit-content;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.timeLine {
+  display: inline-block;
+}
+
+.nightHour {
+  background-color: #C5CAE9;
+}
+
+.currentHour {
+  background-color: #3F51B5;
+  color: white;
+  font-weight: 500;
+}

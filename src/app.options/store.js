@@ -7,10 +7,10 @@ import { TimeZoneInfo } from "./models";
 const middleware = applyMiddleware(logger());
 const initialState = {
   timeLines: [
-    new TimeZoneInfo("Krakow", "CET", -1 * 60),
-    new TimeZoneInfo("San Francisco", "PST", 8 * 60),
-    new TimeZoneInfo("Saint Petersburg", "MSK", -3 * 60),
-    new TimeZoneInfo("Yekaterinburg", "GMT+5", -5 * 60)
+    new TimeZoneInfo("Krakow", "CET", 1 * 60),
+    new TimeZoneInfo("San Francisco", "PST", -8 * 60),
+    new TimeZoneInfo("Saint Petersburg", "MSK", 3 * 60),
+    new TimeZoneInfo("Yekaterinburg", "GMT+5", 5 * 60)
   ],
   newTimeLine: {}
 };

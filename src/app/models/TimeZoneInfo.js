@@ -7,10 +7,11 @@ export class TimeZoneInfo {
 
     constructor(name, timeZoneName, timeZoneOffset) {
         timeZoneOffset = Math.abs(timeZoneOffset) < 60 ? timeZoneOffset * 60 : timeZoneOffset;
+        const currentTimeZoneOffset = -new Date(Date.now()).getTimezoneOffset();
         this.name = name;
         this.timeZoneName = timeZoneName;
         this.timeZoneOffset = timeZoneOffset;
-        this.relativeTimeZoneOffset = (new Date(Date.now()).getTimezoneOffset() - timeZoneOffset) / 60;
+        this.relativeTimeZoneOffset = (timeZoneOffset - currentTimeZoneOffset) / 60;
         this.hours = TimeZoneInfo.getHoursWithOffset(this.relativeTimeZoneOffset);
     }
 

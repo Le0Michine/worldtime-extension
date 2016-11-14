@@ -2,18 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Field, reduxForm } from 'redux-form';
 
-import TimeLine from "../../app/components/TimeLine";
-import { TimeZoneInfo } from "../models";
-import { TimeLineInfo } from "../models";
-import * as addTimeLine from "../actions/AddNewTimeLineActions";
-import * as timeLines from "../actions/TimeLineActions";
-
 @reduxForm({
   form: "newTimeLineForm"
 })
 export default class AddTimelineManually extends React.Component {
   render() {
-    console.log("props", this.props);
     const { handleSubmit } = this.props;
     return (
       <div>

@@ -6,6 +6,7 @@ import TimeLine from "../../app/components/TimeLine";
 import NavTab from "./NavTab";
 import { TimeZoneInfo } from "../models";
 import style from "./OptionsLayout.css";
+import * as timeLines from "../actions/TimeLineActions";
 
 @connect((store) => {
   return { timeLines: store.timeLines };
@@ -29,8 +30,8 @@ export default class OptionsLayout extends React.Component {
     this.setState({time});
   }
 
-  onNewTimeLine(timeLine) {
-    console.log("on submit", timeLine);
+  onNewTimeLine({name, timeZoneName, timeZoneOffset}) {
+    this.props.dispatch(timeLines.addTimeLine(new TimeZoneInfo(name, timeZoneName, +timeZoneOffset)));
   }
 
   render() {
@@ -54,7 +55,7 @@ export default class OptionsLayout extends React.Component {
               <NavTab active={router.isActive("timelines")} title={<Link to="timelines">Select predefined</Link>} />
             </ul>
           </div>
-          {this.props.children && React.cloneElement(this.props.children, { onSubmit: this.onNewTimeLine })}}
+          {this.props.children && React.cloneElement(this.props.children, { onSubmit: this.onNewTimeLine.bind(this) })}
         </div>
       </div>
     );

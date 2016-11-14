@@ -3,7 +3,8 @@ export const timeLines = function (state = [], action) {
     case "REPLACE_TIMELINES":
       return action.payload;
     case "ADD_TIMELINE": {
-      const timeLines = [...state.timeLines, action.payload];
+      const timeLines = [...state, action.payload];
+      console.log("got here", state, action, timeLines);
       return timeLines;
     }
     case "DELETE_TIMELINE": {

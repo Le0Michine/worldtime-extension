@@ -6,6 +6,7 @@ export class TimeZoneInfo {
     hours;
 
     constructor(name, timeZoneName, timeZoneOffset) {
+        timeZoneOffset = Math.abs(timeZoneOffset) < 60 ? timeZoneOffset * 60 : timeZoneOffset;
         this.name = name;
         this.timeZoneName = timeZoneName;
         this.timeZoneOffset = timeZoneOffset;

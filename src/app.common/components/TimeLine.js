@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./TimeLine.css";
 
-export default class TimeLine extends React.Component {
+export class TimeLine extends React.Component {
   getTime() {
     const currentTime = new Date(Date.now());
     var h = this.getCurrentHour();

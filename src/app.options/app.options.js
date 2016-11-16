@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
-import { store } from "./store";
+import { store } from "../app.common/store";
 import OptionsLayout from "./components/OptionsLayout";
 import AddTimelineFromList from "./components/AddTimelineFromList";
 import AddTimelineManually from "./components/AddTimelineManually";

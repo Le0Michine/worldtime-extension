@@ -26,7 +26,7 @@ export default class AddTimelineManually extends React.Component {
             </div>
           </div>
           <div className="form-group">
-            <label htmlFor="timeZoneOffset" className="control-label col-md-3">Time zone offset</label>
+            <label htmlFor="timeZoneOffset" className="control-label col-md-3">Time zone offset (UTC)</label>
             <div className="col-md-6">
               <Field name="timeZoneOffset" type="number" component="input" className="form-control" />
             </div>

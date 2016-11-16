@@ -1,7 +1,6 @@
 import React from "react";
 
-import TimeLine from "../../app/components/TimeLine";
-import { TimeZoneInfo } from "../models";
+import { TimeZoneInfo } from "../../app.common/models";
 
 export default class AddTimeLineFromList extends React.Component {
   render() {

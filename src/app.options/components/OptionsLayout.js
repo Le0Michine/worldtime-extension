@@ -2,34 +2,16 @@ import React from "react";
 import { Link, IndexLink } from "react-router";
 import { connect } from "react-redux";
 
-import TimeLine from "../../app/components/TimeLine";
+import { TimeLine, Clock } from "../../app.common/components";
 import NavTab from "./NavTab";
-import { TimeZoneInfo } from "../models";
+import { TimeZoneInfo } from "../../app.common/models";
 import style from "./OptionsLayout.css";
-import * as timeLines from "../actions/TimeLineActions";
+import * as timeLines from "../../app.common/actions";
 
 @connect((store) => {
   return { timeLines: store.timeLines };
 })
 export default class OptionsLayout extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      time: this.getTimeString(Date.now())
-    };
-    setInterval(() => this.updateTime(Date.now()), 1000);
-  }
-
-  getTimeString(unixTime) {
-    const date = new Date(unixTime);
-    return date.toLocaleTimeString();
-  }
-
-  updateTime(unixTime) {
-    const time = this.getTimeString(unixTime);
-    this.setState({time});
-  }
-
   onNewTimeLine({name, timeZoneName, timeZoneOffset}) {
     this.props.dispatch(timeLines.addTimeLine(new TimeZoneInfo(name, timeZoneName, +timeZoneOffset)));
   }
@@ -39,7 +21,7 @@ export default class OptionsLayout extends React.Component {
     return (
       <div className={style.app}>
         <div className={style.header}>
-          <div className={style.clock}>{this.state.time}</div>
+          <span className={style.clock}><Clock /></span>
         </div>
         <h1>Selected timelines</h1>
         <div>

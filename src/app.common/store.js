@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import logger from "redux-logger";
 import { reducer as formReducer } from 'redux-form'
 import { timeLines, newTimeLine } from "./reducers";
-import { TimeZoneInfo } from "./models";
+import { TimeZoneInfo } from "../app.common/models";
 
 const middleware = applyMiddleware(logger());
 const initialState = {

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Several timezones in popup",
   "main": "webpack.config.js",
-  "repository": "",
+  "repository": "https://github.com/Le0Michine/timezone-extension",
   "author": "Lev Mishin",
   "license": "ISC",
   "scripts": {

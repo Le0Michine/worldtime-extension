@@ -1,19 +1,48 @@
 import React from "react";
 import { Link, IndexLink } from "react-router";
 import { connect } from "react-redux";
+import { initialize } from "redux-form";
 
 import { TimeLine, Clock } from "../../app.common/components";
+import DeleteEditButtons from "./DeleteEditButtons";
 import NavTab from "./NavTab";
-import { TimeZoneInfo } from "../../app.common/models";
+import { TimeZoneInfo, createTimeZoneInfo } from "../../app.common/models";
 import style from "./OptionsLayout.css";
-import * as timeLines from "../../app.common/actions";
+import { removeTimeLine, addTimeLine, select, editTimeLine } from "../../app.common/actions";
 
-@connect((store) => {
-  return { timeLines: store.timeLines };
-})
+@connect(
+  store => ({ 
+    timeLines: store.timeLines,
+    isEditMode: store.selectedTimeLineId ? true : false
+  }),
+  {
+    update: editTimeLine,
+    create: addTimeLine,
+    delete: removeTimeLine,
+    select,
+    fillForm: initialize
+  }
+)
 export default class OptionsLayout extends React.Component {
-  onNewTimeLine({name, timeZoneName, timeZoneOffset}) {
-    this.props.dispatch(timeLines.addTimeLine(new TimeZoneInfo(name, timeZoneName, +timeZoneOffset)));
+  onNewTimeLine({id, name, timeZoneName, timeZoneOffset}) {
+    let newTimeZoneInfo = createTimeZoneInfo(name, timeZoneName, +timeZoneOffset, id);
+    if (this.props.timeLines.findIndex(x => x.id === id) > -1) {
+      this.props.update(newTimeZoneInfo);
+    } else {
+      this.props.create(newTimeZoneInfo);
+    }
+    this.props.fillForm("editTimeLineForm", {}, false);
+  }
+
+  onDelete(timeLine) {
+    return function() { this.props.delete(timeLine); }
+  }
+
+  onEdit(timeLine) {
+    return function() {
+      this.props.select(timeLine.id);
+      this.props.fillForm("editTimeLineForm", timeLine, false);
+    };
   }
 
   render() {
@@ -26,7 +55,15 @@ export default class OptionsLayout extends React.Component {
         <h1>Selected timelines</h1>
         <div>
           {timeLines.map(tl => 
-            <TimeLine key={tl.name} timeLine={tl} />
+            <div key={tl.id}>
+              <TimeLine timeLine={tl} />
+              <div className={style.btnContainer}>
+                <DeleteEditButtons
+                  onEdit={this.onEdit(tl).bind(this)}
+                  onDelete={this.onDelete(tl).bind(this)}
+                />
+              </div>
+            </div>
           )}
         </div>
         <div>

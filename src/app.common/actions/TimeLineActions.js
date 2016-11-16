@@ -11,3 +11,17 @@ export function removeTimeLine(timeLine) {
     payload: timeLine
   };
 }
+
+export function replaceTimeLines(timeLines) {
+  return {
+    type: "REPLACE_TIMELINES",
+    payload: timeLines
+  };
+}
+
+export function editTimeLine(timeLine) {
+  return {
+    type: "EDIT_TIMELINE",
+    payload: timeLine
+  };
+}

@@ -18,3 +18,10 @@ export function updateTimeZoneOffset(offset) {
     payload: offset
   };
 }
+
+export function select(timeLine) {
+  return {
+    type: "EDIT/SELECT",
+    payload: timeLine
+  };
+}

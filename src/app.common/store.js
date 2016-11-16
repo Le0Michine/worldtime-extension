@@ -1,24 +1,32 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import logger from "redux-logger";
-import { reducer as formReducer } from 'redux-form'
+import { reducer as formReducer } from "redux-form";
+import persistState from "redux-localstorage";
+
 import { timeLines, newTimeLine } from "./reducers";
-import { TimeZoneInfo } from "../app.common/models";
+import { TimeZoneInfo, createTimeZoneInfo } from "../app.common/models";
+
 
 const middleware = applyMiddleware(logger());
 const initialState = {
   timeLines: [
-    new TimeZoneInfo("Krakow", "CET", 1 * 60),
-    new TimeZoneInfo("San Francisco", "PST", -8 * 60),
-    new TimeZoneInfo("Saint Petersburg", "MSK", 3 * 60),
-    new TimeZoneInfo("Yekaterinburg", "GMT+5", 5 * 60)
+    createTimeZoneInfo("Krakow", "CET", 1 * 60),
+    createTimeZoneInfo("San Francisco", "PST", -8 * 60),
+    createTimeZoneInfo("Saint Petersburg", "MSK", 3 * 60),
+    createTimeZoneInfo("Yekaterinburg", "GMT+5", 5 * 60)
   ],
-  newTimeLine: {}
+  selectedTimeLineId: null
 };
 
 const reducers = {
   timeLines,
-  newTimeLine,
+  selectedTimeLineId: newTimeLine,
   form: formReducer
 };
 
-export const store = createStore(combineReducers(reducers), initialState, middleware);
+const enhancer = compose(
+  middleware,
+  persistState("timeLines", { key: "timeLines" }),
+);
+
+export const store = createStore(combineReducers(reducers), initialState, enhancer);

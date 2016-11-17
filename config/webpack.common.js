@@ -22,13 +22,23 @@ function versionReplacer(key, value) {
     return value;
 }
 
+const iconNameReplacer = function (fileName) {
+    return function (key, value) {
+        if (key === "default_icon") {
+            return "icons/" + fileName;
+        }
+    };
+};
+
 var filesToCopy = [
     { from: './node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./", toType: "dir" },
     { from: './node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
+    { from: './src/icons', to: "./icons", toType: "dir" },
     { from: './src/*', to: "./", toType: "dir", flatten: true }
 ];
 
 var filesToIgnore = [
+  "*.svg",
 ];
 
 var optionalPlugins = [];
@@ -106,7 +116,7 @@ module.exports = function(options) {
       ),
       new JsonReplacerPlugin({
         inputFile: "src/manifest.json",
-        replacers: [ versionReplacer ]
+        replacers: [ iconNameReplacer(options.defaultIcon), versionReplacer ]
       }),
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows

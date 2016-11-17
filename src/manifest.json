@@ -2,12 +2,19 @@
     "manifest_version": 2,
     "name": "Timezone",
     "description": "Timezone",
-    "version": "0.0.147",
+    "version": "0.0.157",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "options_page": "options.html",
     "browser_action": {
+        "default_icon": "icons/icon_19.png",
         "default_popup": "index.html"
     },
-    "options_page": "options.html",
+    "icons": {
+        "16": "icons/icon_16.png",
+        "48": "icons/icon_48.png",
+        "64": "icons/icon_64.png",
+        "128": "icons/icon_128.png"
+    },
     "permissions": [
         "tabs",
         "storage",

@@ -19,7 +19,9 @@ const helpers = require('./helpers');
 
 const webpackOptions = {
     env: ENV,
-    cleanOutput: true
+    cleanOutput: true,
+    filesToIgnore: ["icon_debug.png"],
+    defaultIcon: "icon_19.png",
 };
 
 /**

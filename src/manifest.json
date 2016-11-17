@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Timezone",
     "description": "Timezone",
-    "version": "0.0.158",
+    "version": "0.0.165",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "options_page": "options.html",
     "browser_action": {

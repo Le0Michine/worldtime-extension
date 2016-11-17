@@ -20,8 +20,7 @@ const helpers = require('./helpers');
 const webpackOptions = {
     env: ENV,
     cleanOutput: true,
-    filesToIgnore: ["icon_debug.png"],
-    defaultIcon: "icon_19.png",
+    filesToCopy: [{ from: './src/icons_prod', to: "./icons", toType: "dir" }],
 };
 
 /**

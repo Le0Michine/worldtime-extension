@@ -39,13 +39,13 @@ export default class EditTimeLine extends React.Component {
           <div className="form-group">
             <label htmlFor="timeZoneName" className="control-label col-md-3">Time zone name</label>
             <div className="col-md-6">
-              <Field name="timeZoneName" type="text" component="input" className="form-control" />
+              <Field name="timeZoneName" type="text" component="input" className="form-control" required />
             </div>
           </div>
           <div className="form-group">
             <label htmlFor="timeZoneOffset" className="control-label col-md-3">Time zone offset (UTC)</label>
             <div className="col-md-6">
-              <Field name="timeZoneOffset" type="number" component="input" className="form-control" />
+              <Field name="timeZoneOffset" type="number" component="input" className="form-control" required />
             </div>
           </div>
           <div className="form-group">

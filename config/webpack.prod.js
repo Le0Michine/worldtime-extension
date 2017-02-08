@@ -8,6 +8,7 @@ const commonConfig = require('./webpack.common.js'); // the settings that are co
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
+const ZipBundlerPlugin = require('webpack-zip-bundler');
 
 /**
  * Webpack Constants
@@ -20,7 +21,7 @@ const helpers = require('./helpers');
 const webpackOptions = {
     env: ENV,
     cleanOutput: true,
-    filesToCopy: [{ from: './src/icons_prod', to: "./icons", toType: "dir" }],
+    filesToCopy: [{ from: './src/icons_prod/*.png', to: "./icons", toType: "dir", flatten: true }],
 };
 
 /**
@@ -29,6 +30,7 @@ const webpackOptions = {
 module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
         plugins: [
+            new ZipBundlerPlugin(),
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
                 compress: {

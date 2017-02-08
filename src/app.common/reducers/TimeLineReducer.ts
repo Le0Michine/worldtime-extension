@@ -1,4 +1,7 @@
-export const timeLines = function (state = [], action) {
+import { TimeZoneInfo } from "../models";
+import { Action } from "../actions";
+
+export const timeLines = function (state: TimeZoneInfo[] = [], action: Action<any>): TimeZoneInfo[] {
   switch(action.type) {
     case "REPLACE_TIMELINES":
       return action.payload;
@@ -11,7 +14,15 @@ export const timeLines = function (state = [], action) {
       const timeLines = i > -1 ? state.slice(0, i).concat([ action.payload ]).concat(state.slice(i + 1)) : state;
       return timeLines;
     }
+    case "CREATE_OR_UPDATE": {
+      const i = state.findIndex(x => x.id === action.payload.id);
+      const timeLines = i > -1
+        ? state.slice(0, i).concat([ action.payload ]).concat(state.slice(i + 1))
+        : state.concat([action.payload]);
+      return timeLines;
+    }
     case "DELETE_TIMELINE": {
+      console.info(action, state);
       const i = state.findIndex(x => x.id === action.payload.id);
       const timeLines = i > -1 ? state.slice(0, i).concat(state.slice(i + 1)) : state;
       return timeLines;

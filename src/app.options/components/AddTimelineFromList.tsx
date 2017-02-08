@@ -1,8 +1,8 @@
-import React from "react";
+import * as React from "react";
 
 import { TimeZoneInfo } from "../../app.common/models";
 
-export default class AddTimeLineFromList extends React.Component {
+export default class AddTimeLineFromList extends React.Component<any, any> {
   render() {
     return (
       <div>

@@ -1,6 +1,6 @@
-import React from "react";
+import * as React from "react";
 
-export default class Layout extends React.Component {
+export class NavTab extends React.Component<any, any> {
   render() {
     var className = "";
     if (this.props.active) {

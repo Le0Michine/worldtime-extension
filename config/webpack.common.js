@@ -58,19 +58,24 @@ module.exports = function(options) {
     context: path.join(__dirname, "../"),
     devtool: !isProd ? "inline-sourcemap" : null,
     entry: {
-      "app": "./src/app/app.js",
-      "app.options": "./src/app.options/app.options.js"
+      "app": "./src/app/app.tsx",
+      "app.options": "./src/app.options/app.options.tsx"
     },
     output: {
       path: helpers.root('out'),
       filename: "[name].min.js",
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
       modules: [helpers.root("src"), "node_modules"]
     },
     module: {
       loaders: [
+        {
+          test: /\.tsx?$/,
+          loaders: 'awesome-typescript-loader',
+          exclude: [/\.(spec|e2e)\.ts$/]
+        },
         {
           test: /\.jsx?$/,
           exclude: /node_modules/,

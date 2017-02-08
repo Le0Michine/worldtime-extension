@@ -1,34 +1,44 @@
-import React from "react";
-import { connect } from "react-redux";
+import * as React from "react";
+import { connect, ActionCreator } from "react-redux";
 import { Field, reduxForm, initialize } from 'redux-form';
 
-import { select } from "../../app.common/actions";
-import style from "./EditTimeLine.css";
+import { selectTimeLine, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
+const style = require("./EditTimeLine.css");
 
-@connect(
+interface EditTimeLineStateProps {
+  initialValues: any;
+  values?: any;
+  handleSubmit?: any;
+}
+
+interface EditTimeLineDispatchProps {
+  clearForm: ActionCreator<any>;
+  selectTimeLine: ActionCreator<any>;
+  updateOrCreate: ActionCreator<any>,
+}
+
+type EditTimeLineProps = EditTimeLineStateProps & EditTimeLineDispatchProps;
+
+@connect<EditTimeLineStateProps, EditTimeLineDispatchProps, EditTimeLineProps>(
   store => ({
     initialValues: { timeZoneOffset: 0 }
   }),
   {
-    fillForm: initialize,
-    select
+    updateOrCreate: createOrUpdateTimeLine as ActionCreator<any>,
+    clearForm: clearForm as ActionCreator<any>,
+    selectTimeLine: selectTimeLine as ActionCreator<any>
   }
 )
 @reduxForm({
   form: "editTimeLineForm"
 })
-export default class EditTimeLine extends React.Component {
-  resetForm() {
-    let id = this.props.values ? this.props.values.id : 0;
-    let timeLine = Object.assign({}, { id, name: "", timeZoneName: "", timeZoneOffset: "" });
-    this.props.select(timeLine.id);
-    this.props.fillForm("editTimeLineForm", timeLine, false);
-  }
-
+export default class EditTimeLine extends React.Component<EditTimeLineProps, React.ComponentState> {
   render() {
-    const { handleSubmit, values } = this.props;
+    const { values, handleSubmit } = this.props;
+    const id = values ? values.id : 0;
     return (
       <div>
+        {/*<form onSubmit={this.props.updateOrCreate} className={"form-horizontal " + style.topBuffer}>*/}
         <form onSubmit={handleSubmit} className={"form-horizontal " + style.topBuffer}>
           <div className="form-group">
             <label htmlFor="name" className="control-label col-md-3">Time line name</label>
@@ -51,7 +61,7 @@ export default class EditTimeLine extends React.Component {
           <div className="form-group">
             <div className="col-md-2 col-md-offset-3">
               <button type="submit" className="btn btn-default">Save</button>
-              <button type="button" onClick={this.resetForm.bind(this)} className={style.leftBuffer + " btn btn-default"}>Clear</button>
+              <button type="button" onClick={() => { this.props.selectTimeLine(id); this.props.clearForm(id); }} className={style.leftBuffer + " btn btn-default"}>Clear</button>
             </div>
           </div>
         </form>

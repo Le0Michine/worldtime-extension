@@ -8,13 +8,33 @@
 
 .btnContainer {
     margin-left: 10px;
-    display: inline-block;
+    height: 25px;
+    display: block;
+    font-weight: 200;
+    font-size: 16px;
+}
+
+.btnContainer > div {
+    height: 100%;
+}
+
+.btnContainer button {
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .header {
     display: flex;
-    -webkit-align-items: center;
-            align-items: center;
-    -webkit-justify-content: center;
-            justify-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeLineContainer {
+    display: flex;
+    align-items: flex-end;
+}
+
+.timeSelectorContainer {
+    position: relative;
 }

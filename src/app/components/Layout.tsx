@@ -1,15 +1,16 @@
-import React from "react";
+import * as React from "react";
 import { connect } from "react-redux";
 
 import { TimeLine, Clock } from "../../app.common/components";
 import { TimeZoneInfo } from "../../app.common/models";
-import style from "./Layout.css";
+import { AppState } from "../../app.common/store";
+const style = require("./Layout.css");
 
-@connect((store) => {
-  return { timeLines: store.timeLines };
+@connect((store: AppState) => {
+  return { timeLines: store.timeLines } as LayoutProps;
 })
-export default class Layout extends React.Component {
-  render() {
+export class Layout extends React.Component<any, any> {
+  render(): React.ReactElement<any> {
     return (
       <div className={style.app}>
         <div className={style.header}>
@@ -24,4 +25,8 @@ export default class Layout extends React.Component {
       </div>
     );
   }
+}
+
+interface LayoutProps {
+  timeLines: any[];
 }

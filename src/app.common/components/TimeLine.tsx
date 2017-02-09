@@ -5,6 +5,16 @@ const style = require("./TimeLine.css");
 import { TimeZoneInfo } from "../models";
 
 export class TimeLine extends React.Component<TimeLineProps, any> {
+  constructor(props) {
+    super(props);
+    this.state = { time: this.getCurrentTime() }
+    setInterval(() => this.setState({ time: this.getCurrentTime() }), 1000)
+  }
+
+  getCurrentTime() {
+    return moment().utcOffset(this.props.timeLine.timeZoneOffset).format("HH:mm");
+  }
+
   renderHourCell(h, i, currentHour) {
     const styles = [style.hour];
     if (h === currentHour) {
@@ -34,12 +44,12 @@ export class TimeLine extends React.Component<TimeLineProps, any> {
   }
 
   render() {
-    const time = moment().utcOffset(this.props.timeLine.timeZoneOffset).format("HH:mm");
+    // const time = moment().utcOffset(this.props.timeLine.timeZoneOffset).format("HH:mm");
     return (
       <div className={style.container}>
         <div className="clearfix">
           <div className="pull-left">{this.props.timeLine.name}</div>
-          <div className="pull-right">{time}</div>
+          <div className="pull-right">{this.state.time}</div>
         </div>
         <div>
           {this.renderTimeLine(this.props.timeLine.hours)}

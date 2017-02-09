@@ -59,7 +59,7 @@ export default class EditTimeLine extends React.Component<EditTimeLineProps, Rea
             </div>
           </div>
           <div className="form-group">
-            <div className="col-md-2 col-md-offset-3">
+            <div className="col-md-9 col-md-offset-3">
               <button type="submit" className="btn btn-default">Save</button>
               <button type="button" onClick={() => { this.props.selectTimeLine(id); this.props.clearForm(id); }} className={style.leftBuffer + " btn btn-default"}>Clear</button>
             </div>

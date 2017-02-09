@@ -19,3 +19,15 @@ body, *, h1 {
 .material-icons {
     font-family: "material-icons";
 }
+
+div#app.app-options {
+    margin: 0 auto 0 auto;
+    width: 800px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.page-background {
+    padding-top: 40px;
+    background-color: #eee;
+}

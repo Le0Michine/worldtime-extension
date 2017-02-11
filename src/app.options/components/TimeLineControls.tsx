@@ -1,8 +1,8 @@
 import * as React from "react";
 
-const style = require("./DeleteEditButtons.css");
+const style = require("./TimeLineControls.css");
 
-export class DeleteEditButtons extends React.Component<any, any> {
+export class TimeLineControls extends React.Component<any, any> {
   static propTypes = {
     onEdit: React.PropTypes.func.isRequired,
     onDelete: React.PropTypes.func.isRequired,

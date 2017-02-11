@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux";
 import { initialize } from "redux-form";
 
 import { TimeLine, Clock, TimeSelector } from "../../app.common/components";
-import { DeleteEditButtons } from "./DeleteEditButtons";
+import { TimeLineControls } from "./TimeLineControls";
 import { NavTab } from "./NavTab";
 import { TimeZoneInfo, createTimeZoneInfo } from "../../app.common/models";
 import { AppState, AppStoreDispatcher } from "../../app.common/store";
@@ -63,7 +63,7 @@ export default class OptionsLayout extends React.Component<OptionsLayoutProps, R
             <div key={tl.id} className={style.timeLineContainer}>
               <TimeLine timeLine={tl} />
               <div className={style.btnContainer}>
-                <DeleteEditButtons
+                <TimeLineControls
                   onEdit={() => { selectTimeLine(tl.id); fillForm("editTimeLineForm", tl, false); }}
                   onDelete={() => deleteTimeLine(tl)}
                   onUp={() => replaceTimeLines(swapElements(timeLines, index, index - 1))}

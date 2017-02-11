@@ -6,6 +6,7 @@ export interface TimeZoneInfo {
     timeZoneName: string;
     timeZoneOffset: number;
     hours: number[];
+    dayLight: boolean;
 }
 
 let tzId = 1;

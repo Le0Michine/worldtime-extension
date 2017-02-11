@@ -3,11 +3,9 @@ body, *, h1 {
     font-weight: 200;
     -webkit-font-smoothing: antialiased;
        -moz-font-smoothing: antialiased;
-        -ms-font-smoothing: antialiased;
             font-smoothing: antialiased;
     -webkit-text-rendering: optimizeLegibility;
        -moz-text-rendering: optimizeLegibility;
-        -ms-text-rendering: optimizeLegibility;
             text-rendering: optimizeLegibility;
 }
 
@@ -22,12 +20,7 @@ body, *, h1 {
 
 div#app.app-options {
     margin: 0 auto 0 auto;
-    width: 800px;
+    width: 850px;
     background-color: #fff;
     border: 1px solid #ccc;
-}
-
-.page-background {
-    padding-top: 40px;
-    background-color: #eee;
 }

@@ -33,6 +33,10 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
     return moment().utcOffset(offset).format("HH:mm");
   }
 
+  isDST(offset: number) {
+    return moment().utcOffset(offset).isDST();
+  }
+
   renderHourCell(h, i, currentHour) {
     const styles = [style.hour];
     if (h === currentHour) {
@@ -69,6 +73,9 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
       <div className={style.container}>
         <div className="clearfix">
           <div className="pull-left">{this.props.timeLine.name}</div>
+          <div className={`pull-left ${style.timeLineInfo}`}>{this.props.timeLine.timeZoneId.replace("_", " ")}</div>
+          <div className={`pull-left ${style.timeLineInfo}`}>{`UTC${offset >= 0 ? "+" : ""}${offset / 60}`}</div>
+          <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(offset) ? "DST " : ""}`}</div>
           <div className="pull-right">{this.state.time}</div>
         </div>
         <div>

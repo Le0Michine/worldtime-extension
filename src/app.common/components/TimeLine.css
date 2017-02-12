@@ -45,3 +45,9 @@
   color: white;
   font-weight: 500;
 }
+
+.timeLineInfo {
+  margin-left: 10px;
+  font-style: italic;
+  color: #BBBBBB;
+}

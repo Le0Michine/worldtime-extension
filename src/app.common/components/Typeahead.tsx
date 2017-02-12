@@ -12,11 +12,13 @@ export class Typeahead extends React.Component<any, any> {
     const { options } = this.props;
     this.state = {
       optionsContainerStyle: { display: "none" },
-      optionsContainerHeight: 200,
+      optionsContainerMaxHeight: 200,
+      optionsContainerMinHeight: 48,
       options,
       mouseOverList: false,
       touched: false,
-      focused: false
+      focused: false,
+      activeOption: -1
     };
   }
 
@@ -31,15 +33,20 @@ export class Typeahead extends React.Component<any, any> {
     return ReactDOM.findDOMNode(this.refs["typeAheadInput"]).getBoundingClientRect()
   }
 
+  getOptionsRect() {
+    return ReactDOM.findDOMNode(this.refs["typeAheadOptions"]).getBoundingClientRect()
+  }
+
   showOptions() {
-    const rect = this.getInputRect();
+    const inputRect = this.getInputRect();
     this.setState({
       optionsContainerStyle: {
         display: "block",
-        top: `${rect.top - this.state.optionsContainerHeight - 30}px`,
-        left: `${rect.left}px`,
-        width: `${rect.width}px`,
-        height: `${this.state.optionsContainerHeight}px`
+        bottom: `calc(100% - ${inputRect.top - 30}px)`,
+        left: `${inputRect.left}px`,
+        width: `${inputRect.width}px`,
+        maxHeight: `${this.state.optionsContainerMaxHeight}px`,
+        minHeight: `${this.state.optionsContainerMinHeight}px`
       },
       focused: true
     });
@@ -83,17 +90,43 @@ export class Typeahead extends React.Component<any, any> {
     this.setState({ mouseOverList: false });
   }
 
+  onKeyDown(event: KeyboardEvent) {
+    const KEY_UP = 38;
+    const KEY_DOWN = 40;
+    const KEY_ENTER = 13;
+    if (event.which === KEY_UP || event.which === KEY_DOWN || event.which === KEY_ENTER) {
+      event.preventDefault();
+      const { activeOption, options } = this.state;
+      if (activeOption === -1 && event.which === KEY_UP) {
+        this.setState({ activeOption: options.length - 1 });
+      } else if (activeOption === -1 && event.which === KEY_DOWN) {
+        this.setState({ activeOption: 0 });
+      } else if (event.which === KEY_UP) {
+        this.setState({ activeOption: (options.length + activeOption - 1) % options.length });
+      } else if (event.which === KEY_DOWN) {
+        this.setState({ activeOption: (activeOption + 1) % options.length });
+      } else if (event.which === KEY_ENTER) {
+        this.selectOption(options[activeOption]);
+        this.setState({ activeOption: -1 });
+      }
+    }
+  }
+
   render() {
     const { value } = this.props;
-    const { optionsContainerStyle, options, focused } = this.state;
+    const { optionsContainerStyle, options, focused, activeOption } = this.state;
     const isValid = this.isValid();
 
     return (
       <div ref="typeAheadInput">
         <div className={`${style.typeAheadOptions} whiteframe`} style={optionsContainerStyle} onMouseEnter={() => this.onMouseEnterOptionsList()} onMouseLeave={() => this.onMouseLeaveOptionsList()}>
           <ul className={style.typeAheadOptionsList}>
-            {options.map(option => (
-              <li key={option.value} className={style.typeAheadOptionsListItem} onClick={() => this.selectOption(option)}>
+            {options.map((option, index) => (
+              <li
+                key={option.value}
+                className={`${style.typeAheadOptionsListItem} ${activeOption === index ? style.typeAheadOptionsListItemSelected : ""}`}
+                onClick={() => this.selectOption(option)}
+              >
                 {option.template}
               </li>
             ))}
@@ -104,6 +137,7 @@ export class Typeahead extends React.Component<any, any> {
           onFocus={() => this.showOptions()}
           onBlur={() => this.hideOptions()}
           onChange={(value) => this.filterOptions(value)}
+          onKeyDown={(event) => this.onKeyDown(event)}
           value={value}
           invalid={!isValid}
           errorMessage="Select value from the list, value can't be empty"

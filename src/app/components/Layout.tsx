@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 
 import { TimeLine, Clock } from "../../app.common/components";
-import { TimeZoneInfo } from "../../app.common/models";
+import { TimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
 import { AppState } from "../../app.common/store";
 const style = require("./Layout.css");
 
@@ -19,7 +19,7 @@ export class Layout extends React.Component<any, any> {
         </div>
         <div>
           {this.props.timeLines.map(tl => 
-            <TimeLine key={tl.name} timeLine={tl} />
+            <TimeLine key={tl.name} timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} />
           )}
         </div>
       </div>

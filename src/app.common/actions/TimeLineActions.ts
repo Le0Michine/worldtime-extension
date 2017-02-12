@@ -3,18 +3,10 @@ import { Action } from "./Action";
 import { TimeZoneInfo, createTimeZoneInfo } from "../models";
 import * as moment from "moment-timezone";
 
-export function addTimeLine(timeLine: TimeZoneInfo): Action<TimeZoneInfo> {
-  return {
-    type: "ADD_TIMELINE",
-    payload: timeLine
-  };
-}
-
-export function createOrUpdateTimeLine(timeZoneId: string, name: string, timeLineId: number = undefined) {
-  let newTimeZoneInfo = createTimeZoneInfo(timeZoneId, name);
+export function createOrUpdateTimeLine(timeLine: TimeZoneInfo) {
   return {
     type: "CREATE_OR_UPDATE",
-    payload: Object.assign(newTimeZoneInfo, { id: timeLineId || newTimeZoneInfo.timeLineid })
+    payload: Object.assign({}, timeLine)
   };
 }
 
@@ -33,9 +25,9 @@ export function replaceTimeLines(timeLines: TimeZoneInfo[]): Action<TimeZoneInfo
   };
 }
 
-export function editTimeLine(timeLine: TimeZoneInfo): Action<TimeZoneInfo> {
-  return {
-    type: "EDIT_TIMELINE",
-    payload: timeLine
-  };
+export function swapTimeLines(timeLines: TimeZoneInfo[], i: number, j: number): Action<TimeZoneInfo[]> {
+  const result =  [...timeLines]
+  result[i] = timeLines[j];
+  result[j] = timeLines[i];
+  return replaceTimeLines(result);
 }

@@ -17,7 +17,8 @@ export class Input extends React.Component<any, any> {
     invalid: React.PropTypes.bool,
     onTouch: React.PropTypes.func,
     onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func
+    onBlur: React.PropTypes.func,
+    onKeyDown: React.PropTypes.func,
   };
 
   onFocus() {
@@ -51,18 +52,17 @@ export class Input extends React.Component<any, any> {
       `${ invalid && touched ? "input-container-invalid " : "" }`;
 
     return (
-      // <div>
-        <div className={inputContainerClasses}>
-          <label>{placeholder}</label>
-          <input
-            onFocus={() => this.onFocus()}
-            onBlur={() => this.onBlur()}
-            onChange={(event) => this.onChange(event.target.value)}
-            value={value}
-            type="text" />
-          <div className="input-invalid-error-message">{errorMessage}</div>
-        </div>
-      // </div>
+      <div className={inputContainerClasses}>
+        <label>{placeholder}</label>
+        <input
+          onFocus={() => this.onFocus()}
+          onBlur={() => this.onBlur()}
+          onChange={(event) => this.onChange(event.target.value)}
+          onKeyDown={(event) => this.props.onKeyDown(event)}
+          value={value}
+          type="text" />
+        <div className="input-invalid-error-message">{errorMessage}</div>
+      </div>
     );
   }
 }

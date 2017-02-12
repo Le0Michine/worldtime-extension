@@ -2,90 +2,86 @@ import * as React from "react";
 import { Link, IndexLink } from "react-router";
 import { connect, ActionCreator } from "react-redux";
 import { bindActionCreators } from "redux";
-import { initialize } from "redux-form";
 
 import { TimeLine, Clock, TimeSelector } from "../../app.common/components";
 import AddNewTimeline from "./AddNewTimeline";
 import { TimeLineControls } from "./TimeLineControls";
 import { NavTab } from "./NavTab";
-import { TimeZoneInfo, createTimeZoneInfo } from "../../app.common/models";
+import { TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
 import { AppState, AppStoreDispatcher } from "../../app.common/store";
-import { removeTimeLine, addTimeLine, selectTimeLine, createOrUpdateTimeLine, replaceTimeLines } from "../../app.common/actions";
+import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
 const style = require("./OptionsLayout.css");
 
 interface OptionsLayoutDispatchProps {
-  updateOrCreateTimeLine: ActionCreator<any>;
-  replaceTimeLines: ActionCreator<any>;
+  swapTimeLines: ActionCreator<any>;
   deleteTimeLine: ActionCreator<any>;
   selectTimeLine: ActionCreator<any>;
-  fillForm: ActionCreator<any>;
 }
 
 interface OptionsLayoutStateProps {
-  router?: any;
-  children?: any;
   timeLines: TimeZoneInfo[];
-  selectedTimeLineId: number;
+  selectedTimeLine: TimeZoneInfo;
 }
 
 type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
 
 @connect<OptionsLayoutStateProps, OptionsLayoutDispatchProps, OptionsLayoutProps>(
-  state => ({
+  (state: AppState) => ({
     timeLines: state.timeLines,
-    selectedTimeLineId: state.selectedTimeLineId
+    selectedTimeLine: state.editTimeLineForm
   } as OptionsLayoutStateProps),
   {
-    updateOrCreateTimeLine: createOrUpdateTimeLine as ActionCreator<any>,
-    replaceTimeLines: replaceTimeLines as ActionCreator<any>,
+    swapTimeLines: swapTimeLines as ActionCreator<any>,
     deleteTimeLine: removeTimeLine as ActionCreator<any>,
-    selectTimeLine: selectTimeLine as ActionCreator<any>,
-    fillForm: initialize as ActionCreator<any>
+    selectTimeLine: startEdit as ActionCreator<any>
   }
 )
-export default class OptionsLayout extends React.Component<OptionsLayoutProps, React.ComponentState> {
+export default class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      mouseOverTimeLineIndex: -1
+    };
+  }
+
   render() {
+    const { mouseOverTimeLineIndex } = this.state;
     const {
-      router,
       timeLines,
-      fillForm,
-      replaceTimeLines,
+      swapTimeLines,
       selectTimeLine,
       deleteTimeLine,
-      updateOrCreateTimeLine,
-      selectedTimeLineId
+      selectedTimeLine
     } = this.props;
-    const swapElements = (arr: any[], i: number, j: number): any[] => {
-      const result =  [...arr]
-      result[i] = arr[j];
-      result[j] = arr[i];
-      return result;
-    };
+
+    const onMouseEnter = (i) => this.setState({ mouseOverTimeLineIndex: i });
+    const onMouseLeave = () => this.setState({ mouseOverTimeLineIndex: -1 });
+
     return (
       <div className={style.app}>
         <div className={style.header}>
           <span className={style.clock}><Clock /></span>
         </div>
         <h1>Selected timelines</h1>
-        <div className={style.timeSelectorContainer}>
-          <TimeSelector/>
-          {timeLines.map((tl, index) => 
-            <div key={tl.timeLineid} className={style.timeLineContainer}>
-              <TimeLine timeLine={tl} />
-              <div className={style.btnContainer}>
+        <div>
+          {timeLines.map((tl, index) =>
+            <div key={tl.timeLineid} className={style.timeLineContainer} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave()}>
+              <TimeLine timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} />
+              <div>
                 <TimeLineControls
-                  onEdit={() => { selectTimeLine(tl.timeZoneId); fillForm("editTimeLineForm", tl, false); }}
+                  onEdit={() => selectTimeLine(tl)}
                   onDelete={() => deleteTimeLine(tl)}
-                  onUp={() => replaceTimeLines(swapElements(timeLines, index, index - 1))}
-                  onDown={() => replaceTimeLines(swapElements(timeLines, index, index + 1))}
+                  onUp={() => swapTimeLines(timeLines, index, index - 1)}
+                  onDown={() => swapTimeLines(timeLines, index, index + 1)}
                   upDisabled={!index}
                   downDisabled={index === timeLines.length - 1}
+                  show={index === mouseOverTimeLineIndex}
                 />
               </div>
             </div>
           )}
         </div>
-        <AddNewTimeline addNewTimeLine={(timeZoneId, name) => updateOrCreateTimeLine(timeZoneId, name, selectedTimeLineId)}/>
+        <AddNewTimeline />
       </div>
     );
   }

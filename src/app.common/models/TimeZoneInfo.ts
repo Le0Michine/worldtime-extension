@@ -23,6 +23,5 @@ export function getHoursWithOffset(offset: number): number[] {
 };
 
 export function getOffset(timeLine: TimeZoneInfo) {
-  console.log(timeLine);
   return moment().tz(timeLine.timeZoneId).utcOffset();
 }

@@ -2,21 +2,27 @@ import * as React from "react";
 import * as moment from "moment";
 const style = require("./TimeLine.css");
 
-import { TimeZoneInfo, getOffset, getHoursWithOffset } from "../models";
+import { TimeZoneInfo, getOffset } from "../models";
 
-export class TimeLine extends React.Component<TimeLineProps, any> {
-  interval: any;
+interface TimeLineProps {
+  timeLine: TimeZoneInfo;
+  offset: number;
+  hours: number[];
+}
+
+interface TimeLineState {
+  time: string;
+}
+
+export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
+  private interval: any;
 
   constructor(props) {
     super(props);
-    const offset = getOffset(this.props.timeLine);
-    const hours = getHoursWithOffset(offset);
     this.state = {
-      time: this.getCurrentTime(offset),
-      offset,
-      hours
+      time: this.getCurrentTime(getOffset(this.props.timeLine))
     };
-    this.interval = setInterval(() => this.setState({ time: this.getCurrentTime(offset) }), 1000)
+    this.interval = setInterval(() => this.setState({ time: this.getCurrentTime(getOffset(this.props.timeLine)) }), 1000)
   }
 
   componentWillUnmount() {
@@ -47,8 +53,8 @@ export class TimeLine extends React.Component<TimeLineProps, any> {
     return (<span className={styles.join(" ")} key={h}>{h}</span>);
   }
 
-  renderTimeLine(hours) {
-    const currentHour = +moment().utcOffset(this.state.offset).format("HH");
+  renderTimeLine(hours, offset) {
+    const currentHour = +moment().utcOffset(offset).format("HH");
     return (
       <div className={style.timeLine}>
         {hours.map((h, i) => this.renderHourCell(h, i, currentHour))}
@@ -56,7 +62,9 @@ export class TimeLine extends React.Component<TimeLineProps, any> {
   }
 
   render() {
-    // const time = moment().utcOffset(this.props.timeLine.timeZoneOffset).format("HH:mm");
+    const { offset, hours } = this.props;
+    // const offset = getOffset(this.props.timeLine);
+    // const hours = getHoursWithOffset(offset);
     return (
       <div className={style.container}>
         <div className="clearfix">
@@ -64,13 +72,9 @@ export class TimeLine extends React.Component<TimeLineProps, any> {
           <div className="pull-right">{this.state.time}</div>
         </div>
         <div>
-          {this.renderTimeLine(this.state.hours)}
+          {this.renderTimeLine(hours, offset)}
         </div>
       </div>
     );
   }
-}
-
-interface TimeLineProps {
-  timeLine: TimeZoneInfo;
 }

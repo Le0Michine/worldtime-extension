@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "Worldtime",
-    "description": "Worldtime",
-    "version": "0.0.261",
+    "description": "All time zones in one click",
+    "version": "0.0.263",
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
     "options_page": "options.html",
     "browser_action": {

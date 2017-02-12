@@ -1,6 +1,9 @@
+h1 {
+    font-weight: 200;
+}
+
 body, *, h1 {
     font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
-    font-weight: 200;
     -webkit-font-smoothing: antialiased;
        -moz-font-smoothing: antialiased;
             font-smoothing: antialiased;

@@ -1,6 +1,7 @@
 import { ActionCreator } from "react-redux";
 import { Action } from "./Action";
 import { TimeZoneInfo, createTimeZoneInfo } from "../models";
+import * as moment from "moment-timezone";
 
 export function addTimeLine(timeLine: TimeZoneInfo): Action<TimeZoneInfo> {
   return {
@@ -9,11 +10,11 @@ export function addTimeLine(timeLine: TimeZoneInfo): Action<TimeZoneInfo> {
   };
 }
 
-export function createOrUpdateTimeLine({id, name, timeZoneName, timeZoneOffset, preventDefault}) {
-  let newTimeZoneInfo = createTimeZoneInfo(name, timeZoneName, +timeZoneOffset);
+export function createOrUpdateTimeLine(timeZoneId: string, name: string, timeLineId: number = undefined) {
+  let newTimeZoneInfo = createTimeZoneInfo(timeZoneId, name);
   return {
     type: "CREATE_OR_UPDATE",
-    payload: Object.assign(newTimeZoneInfo, { id: id || newTimeZoneInfo.id })
+    payload: Object.assign(newTimeZoneInfo, { id: timeLineId || newTimeZoneInfo.timeLineid })
   };
 }
 

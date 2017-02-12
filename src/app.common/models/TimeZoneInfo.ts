@@ -1,34 +1,28 @@
-import * as moment from "moment";
+// import * as moment from "moment";
+import * as moment from "moment-timezone";
 
 export interface TimeZoneInfo {
-    id: number;
+    timeLineid: number;
+    timeZoneId: string;
     name: string;
-    timeZoneName: string;
-    timeZoneOffset: number;
-    hours: number[];
-    dayLight: boolean;
 }
 
-let tzId = 1;
+var tzId = 1;
 
-export function createTimeZoneInfo(name: string, timeZoneName: string, timeZoneOffset: number): TimeZoneInfo {
-  // const currentTimeZoneOffset = moment().utcOffset();
-
-  const timeZoneInfo = {
-    id: tzId++,
-    name,
-    timeZoneName,
-    timeZoneOffset,
-    hours: getHoursWithOffset(timeZoneOffset)
-  } as TimeZoneInfo;
-
+export function createTimeZoneInfo(timeZoneId, name: string, timeLineid: number = undefined): TimeZoneInfo {
+  const timeZoneInfo = { timeZoneId, timeLineid: timeLineid || tzId++, name } as TimeZoneInfo;
   return timeZoneInfo;
 }
 
-function getHoursWithOffset(offset: number): number[] {
+export function getHoursWithOffset(offset: number): number[] {
   const relativeOffset = (offset - moment().utcOffset()) / 60;
   let result = Array(24).fill(1).map((x, i) => i);
   result = [...result, ...result, ...result];
   const startIndex = 24 + relativeOffset;
   return result.slice(startIndex, startIndex + 24);
 };
+
+export function getOffset(timeLine: TimeZoneInfo) {
+  console.log(timeLine);
+  return moment().tz(timeLine.timeZoneId).utcOffset();
+}

@@ -1,0 +1,18 @@
+.optionItem {
+  text-align: left;
+  font-weight: 400;
+}
+
+.textLeft {
+  display: inline-block;
+  width: 50%;
+  text-align: left;
+  font-weight: inherit;
+}
+
+.textRight {
+  display: inline-block;
+  width: 50%;
+  text-align: right;
+  font-weight: inherit;
+}

@@ -13,7 +13,7 @@ const ZipBundlerPlugin = require('webpack-zip-bundler');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'developmen1t';
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 
 const helpers = require('./helpers');
@@ -31,6 +31,11 @@ module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
         plugins: [
             new ZipBundlerPlugin(),
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': '"production"'
+                }
+            }),
             new webpack.optimize.UglifyJsPlugin({
                 sourceMap: false,
                 compress: {

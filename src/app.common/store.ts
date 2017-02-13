@@ -36,10 +36,19 @@ const reducers = {
   displaySettings
 };
 
-const enchancer = compose(
-  middleware,
-  persistState("timeLines", { key: "timeLines@0.0.259" }),
-  persistState("displaySettings", { key: "displaySettings@0.1.265" })
-) as any;
+let enchancer;
+
+if (process.env.NODE_ENV === "development") {
+  enchancer = compose(
+    middleware,
+    persistState("timeLines", { key: "timeLines@0.0.259" }),
+    persistState("displaySettings", { key: "displaySettings@0.1.265" })
+  ) as any;
+} else {
+  enchancer = compose(
+    persistState("timeLines", { key: "timeLines@0.0.259" }),
+    persistState("displaySettings", { key: "displaySettings@0.1.265" })
+  ) as any;
+}
 
 export const store = createStore<AppState>(combineReducers<AppState>(reducers), initialState, enchancer);

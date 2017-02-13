@@ -18,7 +18,7 @@ export class Checkbox extends React.Component<CheckboxProps, CheckboxState> {
   }
 
   static propTypes = {
-    value: React.PropTypes.string.isRequired,
+    value: React.PropTypes.bool.isRequired,
     onChange: React.PropTypes.func.isRequired
   };
 

@@ -107,7 +107,6 @@ module.exports = function(options) {
       ]
     },
     plugins: [
-      
       new CopyWebpackPlugin([ ...filesToCopy ], {
           ignore: [ ...filesToIgnore ],
           copyUnmodified: false

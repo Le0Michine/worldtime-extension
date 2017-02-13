@@ -1,5 +1,6 @@
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
+const webpackMerge = require('webpack-merge');
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const webpack = require('webpack');
 
 /**
  * Webpack Plugins
@@ -27,6 +28,13 @@ const webpackOptions = {
 module.exports = (function(env) {
     webpackOptions.cleanOutput = env.clean === "true";
     return webpackMerge(commonConfig(webpackOptions), {
-        devtool: 'cheap-module-source-map'
+        devtool: 'cheap-module-source-map',
+        plugins: [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': '"development"'
+                }
+            }),
+        ]
     });
 });

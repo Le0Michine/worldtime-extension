@@ -1,6 +1,23 @@
 import * as React from "react";
 
-export class Input extends React.Component<any, any> {
+interface InputProps {
+  value?: string;
+  invalid?: boolean;
+  errorMessage?: string;
+  placeholder?: string;
+  onChange?: Function;
+  onTouch?: Function;
+  onFocus?: Function;
+  onBlur?: Function;
+  onKeyDown?: Function;
+}
+
+interface InputState {
+  touched: boolean;
+  focused: boolean;
+}
+
+export class Input extends React.Component<InputProps, InputState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,9 +59,15 @@ export class Input extends React.Component<any, any> {
     this.setState({ touched: true });
   }
 
+  onKeyDown(event) {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(event);
+    }
+  }
+
   render() {
     const { invalid, placeholder, value, errorMessage } = this.props;
-    const { optionsContainerStyle, options, focused, touched } = this.state;
+    const { focused, touched } = this.state;
     const inputContainerClasses =
       "input-container " +
       `${ focused ? "input-container-focused " : "" }` +
@@ -58,7 +81,7 @@ export class Input extends React.Component<any, any> {
           onFocus={() => this.onFocus()}
           onBlur={() => this.onBlur()}
           onChange={(event) => this.onChange(event.target.value)}
-          onKeyDown={(event) => this.props.onKeyDown(event)}
+          onKeyDown={(event) => this.onKeyDown(event)}
           value={value}
           type="text" />
         <div className="input-invalid-error-message">{errorMessage}</div>

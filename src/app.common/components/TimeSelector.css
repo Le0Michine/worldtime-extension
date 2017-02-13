@@ -1,8 +1,9 @@
 .timeSelector {
-  border: 3px solid black;
+  border: 1px dashed #26A69A;
   position: absolute;
-  min-width: 25px;
-  height: calc(100% - 32px);
+  width: 0;
   bottom: 0;
-  visibility: hidden;
+  height: calc(100% - 28px);
+  margin: -2px 0;
+  transition: all 0.15s;
 }

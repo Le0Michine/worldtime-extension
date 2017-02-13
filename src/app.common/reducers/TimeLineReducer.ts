@@ -18,7 +18,6 @@ export const timeLines = function (state: TimeZoneInfo[] = [], action: Action<an
       return timeLines;
     }
     case "DELETE_TIMELINE": {
-      console.info(action, state);
       const i = state.findIndex(x => x.timeLineid === action.payload.timeLineid);
       const timeLines = i > -1 ? state.slice(0, i).concat(state.slice(i + 1)) : state;
       return timeLines;

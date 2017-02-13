@@ -4,3 +4,4 @@ export * from "./Clock";
 export * from "./Typeahead";
 export * from "./Input";
 export * from "./Checkbox";
+export * from "./Range";

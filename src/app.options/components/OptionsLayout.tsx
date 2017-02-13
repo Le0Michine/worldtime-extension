@@ -3,7 +3,7 @@ import { Link, IndexLink } from "react-router";
 import { connect, ActionCreator } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { TimeLine, Clock, TimeSelector } from "../../app.common/components";
+import { TimeLine, Clock } from "../../app.common/components";
 import AddNewTimeline from "./AddNewTimeline";
 import { TimeLineControls } from "./TimeLineControls";
 import { DisplaySettings } from "./DisplaySettings";

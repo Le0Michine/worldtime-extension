@@ -11,7 +11,6 @@ export function createOrUpdateTimeLine(timeLine: TimeZoneInfo) {
 }
 
 export function removeTimeLine(timeLine: TimeZoneInfo): Action<TimeZoneInfo> {
-  console.info("removeTimeLine", timeLine);
   return {
     type: "DELETE_TIMELINE",
     payload: timeLine

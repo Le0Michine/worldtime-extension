@@ -3,8 +3,14 @@
 }
 
 .app {
-    width: calc(24 * 25px + 5px);
+    width: calc(24 * 25px);
     margin: 10px;
+    position: relative;
+}
+
+.app:not(:last-child) {
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .settingsBtn {
@@ -29,4 +35,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.timeSpanSelector {
+    width: 600px;
+    margin-top: 10px;
+}
+
+.timeSpanSelectorInput {
+    width: 30px;
+    display: inline-block;
 }

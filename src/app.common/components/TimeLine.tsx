@@ -2,12 +2,13 @@ import * as React from "react";
 import * as moment from "moment";
 const style = require("./TimeLine.css");
 
-import { TimeZoneInfo, getOffset } from "../models";
+import { TimeZoneInfo, getOffset, DisplaySettingsInfo } from "../models";
 
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
   offset: number;
   hours: number[];
+  displaySettings: DisplaySettingsInfo;
 }
 
 interface TimeLineState {
@@ -66,16 +67,23 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
   }
 
   render() {
-    const { offset, hours } = this.props;
-    // const offset = getOffset(this.props.timeLine);
-    // const hours = getHoursWithOffset(offset);
+    const { offset, hours, displaySettings } = this.props;
+    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer";
+    const winter = displaySettings.showDST === "DST" ? "" : "Winter";
+
     return (
       <div className={style.container}>
         <div className="clearfix">
           <div className="pull-left">{this.props.timeLine.name}</div>
-          <div className={`pull-left ${style.timeLineInfo}`}>{this.props.timeLine.timeZoneId.replace("_", " ")}</div>
-          <div className={`pull-left ${style.timeLineInfo}`}>{`UTC${offset >= 0 ? "+" : ""}${offset / 60}`}</div>
-          <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(offset) ? "DST " : ""}`}</div>
+          {displaySettings.showTimeZoneId ?
+            <div className={`pull-left ${style.timeLineInfo}`}>{this.props.timeLine.timeZoneId.replace("_", " ")}</div> : null
+          }
+          {displaySettings.showUTCOffset ?
+            <div className={`pull-left ${style.timeLineInfo}`}>{`UTC${offset >= 0 ? "+" : ""}${offset / 60}`}</div> : null
+          }
+          {displaySettings.showDST !== "hide" ?
+            <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(offset) ?  summer : winter}`}</div> : null
+          }
           <div className="pull-right">{this.state.time}</div>
         </div>
         <div>

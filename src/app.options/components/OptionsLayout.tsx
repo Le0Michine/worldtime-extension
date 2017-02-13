@@ -6,8 +6,9 @@ import { bindActionCreators } from "redux";
 import { TimeLine, Clock, TimeSelector } from "../../app.common/components";
 import AddNewTimeline from "./AddNewTimeline";
 import { TimeLineControls } from "./TimeLineControls";
+import { DisplaySettings } from "./DisplaySettings";
 import { NavTab } from "./NavTab";
-import { TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
+import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
 import { AppState, AppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
 const style = require("./OptionsLayout.css");
@@ -21,6 +22,7 @@ interface OptionsLayoutDispatchProps {
 interface OptionsLayoutStateProps {
   timeLines: TimeZoneInfo[];
   selectedTimeLine: TimeZoneInfo;
+  displaySettings: DisplaySettingsInfo;
 }
 
 type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
@@ -28,7 +30,8 @@ type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
 @connect<OptionsLayoutStateProps, OptionsLayoutDispatchProps, OptionsLayoutProps>(
   (state: AppState) => ({
     timeLines: state.timeLines,
-    selectedTimeLine: state.editTimeLineForm
+    selectedTimeLine: state.editTimeLineForm,
+    displaySettings: state.displaySettings
   } as OptionsLayoutStateProps),
   {
     swapTimeLines: swapTimeLines as ActionCreator<any>,
@@ -51,7 +54,8 @@ export default class OptionsLayout extends React.Component<OptionsLayoutProps, a
       swapTimeLines,
       selectTimeLine,
       deleteTimeLine,
-      selectedTimeLine
+      selectedTimeLine,
+      displaySettings
     } = this.props;
 
     const onMouseEnter = (i) => this.setState({ mouseOverTimeLineIndex: i });
@@ -62,11 +66,15 @@ export default class OptionsLayout extends React.Component<OptionsLayoutProps, a
         <div className={style.header}>
           <span className={style.clock}><Clock /></span>
         </div>
+        <h1>Display settings</h1>
+        <div>
+          <DisplaySettings />
+        </div>
         <h1>Selected timelines</h1>
         <div>
           {timeLines.map((tl, index) =>
             <div key={tl.timeLineid} className={style.timeLineContainer} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave()}>
-              <TimeLine timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} />
+              <TimeLine timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
               <div>
                 <TimeLineControls
                   onEdit={() => selectTimeLine(tl)}

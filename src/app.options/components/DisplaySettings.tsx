@@ -3,7 +3,7 @@ import { Link, IndexLink } from "react-router";
 import { connect, ActionCreator } from "react-redux";
 import { bindActionCreators } from "redux";
 
-import { TimeLine, Clock, TimeSelector } from "../../app.common/components";
+import { TimeLine, Clock, TimeSelector, Checkbox } from "../../app.common/components";
 import AddNewTimeline from "./AddNewTimeline";
 import { TimeLineControls } from "./TimeLineControls";
 import { NavTab } from "./NavTab";
@@ -44,7 +44,8 @@ export class DisplaySettings extends React.Component<DisplaySettingsProps, any> 
             <label htmlFor="showUTCOffset">Show UTC offset</label>
           </div>
           <div className="col-md-2">
-            <input id="showUTCOffset" type="checkbox" checked={displaySettings.showUTCOffset} onChange={(event) => changeShowUTCOffsetSetting(event.target.checked)} />
+            <Checkbox value={displaySettings.showUTCOffset} onChange={(value) => changeShowUTCOffsetSetting(value)} />
+            {/*<input id="showUTCOffset" type="checkbox" checked={displaySettings.showUTCOffset} onChange={(event) => changeShowUTCOffsetSetting(event.target.checked)} />*/}
           </div>
         </div>
         <div className="row">
@@ -52,7 +53,8 @@ export class DisplaySettings extends React.Component<DisplaySettingsProps, any> 
             <label htmlFor="showTZId">Show Timezone name</label>
           </div>
           <div className="col-md-2">
-            <input id="showTZId" type="checkbox" checked={displaySettings.showTimeZoneId} onChange={(event) => changeShowTimezoneIdSetting(event.target.checked)} />
+            <Checkbox value={displaySettings.showTimeZoneId} onChange={(value) => changeShowTimezoneIdSetting(value)} />
+            {/*<input id="showTZId" type="checkbox" checked={displaySettings.showTimeZoneId} onChange={(event) => changeShowTimezoneIdSetting(event.target.checked)} />*/}
           </div>
         </div>
         <div className="row">

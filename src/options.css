@@ -172,10 +172,6 @@ body {
     border-radius: 50%;
 }
 
-.btn-delete {
-
-}
-
 .btn-group {
     transition: all .2s ;
     opacity: 1;
@@ -191,4 +187,74 @@ body {
     /*visibility: hidden;*/
     opacity: 0;
     transition: opacity .1s ease-out;
+}
+
+.checkbox-material-container {
+    box-sizing: border-box;
+    display: inline-block;
+    margin-bottom: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    min-width: 20px;
+    min-height: 20px;
+    margin-left: 0;
+    margin-right: 16px;
+}
+
+.checkbox-material {
+    color: rgba(255,82,82,0.87);
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    box-sizing: border-box;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    left: 0;
+    right: auto;
+}
+
+.checkbox-material-icon {
+    border-color: rgba(0,0,0,0.54);
+    box-sizing: border-box;
+    -webkit-transition: .24s;
+    transition: .24s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 2px;
+}
+
+.checkbox-material-checked .checkbox-material-icon {
+    background-color: rgba(255,82,82,0.87);
+    border-color: rgba(255,82,82,0.87);
+}
+
+.checkbox-material-checked .checkbox-material-icon:after {
+    box-sizing: border-box;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    left: 4.66667px;
+    top: .22222px;
+    display: table;
+    width: 6.66667px;
+    height: 13.33333px;
+    border-width: 2px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    content: "";
+    border-color: rgba(255,255,255,0.87);
 }

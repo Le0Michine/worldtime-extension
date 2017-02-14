@@ -30,7 +30,7 @@ type LayoutProps = LayoutStateProps & LayoutDispatchProps;
 )
 export class Layout extends React.Component<LayoutProps, any> {
   render(): React.ReactElement<any> {
-    const { displaySettings, selectedTimeSpan, changeSelectedTimeSpan } = this.props;
+    const { displaySettings, selectedTimeSpan, changeSelectedTimeSpan, timeLines } = this.props;
     const valueMin = selectedTimeSpan.startHour * 2 + selectedTimeSpan.startMinute / 30;
     const valueMax = selectedTimeSpan.endHour * 2 + selectedTimeSpan.endMinute / 30;
     const startTime = moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute);
@@ -51,7 +51,7 @@ export class Layout extends React.Component<LayoutProps, any> {
         <div className={style.app}>
           <TimeSelector selectedTimeSpan={selectedTimeSpan}/>
           <div>
-            {this.props.timeLines.map(tl => 
+            {timeLines.map(tl => 
               <TimeLine key={tl.name} timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
             )}
           </div>
@@ -77,7 +77,7 @@ export class Layout extends React.Component<LayoutProps, any> {
             <div className="pull-right">
               <button
                 className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
-                onClick={() => CalendarEvent.toCalendarEvent(selectedTimeSpan)}
+                onClick={() => CalendarEvent.toCalendarEvent(selectedTimeSpan, timeLines[0].timeZoneId)}
               >Export ot .ics</button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { connect, ActionCreator } from "react-redux";
 import * as moment from "moment";
+import "moment-duration-format";
 
 import { TimeLine, Clock, Range, Input, TimeSelector } from "../../app.common/components";
 import { changeSelectedTimeSpan } from "../../app.common/actions";
@@ -33,6 +34,12 @@ export class Layout extends React.Component<LayoutProps, any> {
     const { displaySettings, selectedTimeSpan, changeSelectedTimeSpan } = this.props;
     const valueMin = selectedTimeSpan.startHour * 2 + selectedTimeSpan.startMinute / 30;
     const valueMax = selectedTimeSpan.endHour * 2 + selectedTimeSpan.endMinute / 30;
+    const startTime = moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute);
+    const endTime = moment().hours(selectedTimeSpan.endHour).minutes(selectedTimeSpan.endMinute);
+    if (selectedTimeSpan.endHour === 24) {
+      endTime.add({ days: 1 })
+    }
+    const duration = moment.duration((selectedTimeSpan.endHour - selectedTimeSpan.startHour) * 60 + (selectedTimeSpan.endMinute - selectedTimeSpan.startMinute), "minutes") as any;
     return (
       <div>
         <div className={style.app}>
@@ -54,7 +61,7 @@ export class Layout extends React.Component<LayoutProps, any> {
             <Range rangeSize={48} valueMin={valueMin} valueMax={valueMax} onChange={({valueMin, valueMax}) => changeSelectedTimeSpan(valueMin, valueMax)} />
           </div>
           <div className={style.timeSpanSelector}>
-            <span>{moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute).format("HH:mm")} - {moment().hours(selectedTimeSpan.endHour).minutes(selectedTimeSpan.endMinute).format("HH:mm")}</span>
+            <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.format("HH:mm")})</span>
             {/*<div className={style.timeSpanSelectorInput}>
               <Input placeholder="hh" />
             </div><span> : </span>

@@ -1,11 +1,10 @@
 import * as React from "react";
 import { connect, ActionCreator } from "react-redux";
 import * as moment from "moment";
-import "moment-duration-format";
 
 import { TimeLine, Clock, Range, Input, TimeSelector } from "../../app.common/components";
 import { changeSelectedTimeSpan } from "../../app.common/actions";
-import { TimeZoneInfo, getOffset, getRelativeOffset, getHoursWithOffset, DisplaySettingsInfo, TimeSpanInfo } from "../../app.common/models";
+import { TimeZoneInfo, getOffset, getRelativeOffset, getHoursWithOffset, DisplaySettingsInfo, TimeSpanInfo, CalendarEvent } from "../../app.common/models";
 import { AppState } from "../../app.common/store";
 const style = require("./Layout.css");
 
@@ -39,7 +38,8 @@ export class Layout extends React.Component<LayoutProps, any> {
     if (selectedTimeSpan.endHour === 24) {
       endTime.add({ days: 1 })
     }
-    const duration = moment.duration((selectedTimeSpan.endHour - selectedTimeSpan.startHour) * 60 + (selectedTimeSpan.endMinute - selectedTimeSpan.startMinute), "minutes") as any;
+    const duration = moment.duration((selectedTimeSpan.endHour - selectedTimeSpan.startHour) * 60 + (selectedTimeSpan.endMinute - selectedTimeSpan.startMinute), "minutes");
+    const buttonDisabled = false;
     return (
       <div>
         <div className={style.app}>
@@ -61,7 +61,7 @@ export class Layout extends React.Component<LayoutProps, any> {
             <Range rangeSize={48} valueMin={valueMin} valueMax={valueMax} onChange={({valueMin, valueMax}) => changeSelectedTimeSpan(valueMin, valueMax)} />
           </div>
           <div className={style.timeSpanSelector}>
-            <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.format("HH:mm")})</span>
+            <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.as("hours")})</span>
             {/*<div className={style.timeSpanSelectorInput}>
               <Input placeholder="hh" />
             </div><span> : </span>
@@ -74,6 +74,12 @@ export class Layout extends React.Component<LayoutProps, any> {
             <div className={style.timeSpanSelectorInput}>
               <Input placeholder="mm" />
             </div>*/}
+            <div className="pull-right">
+              <button
+                className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
+                onClick={() => CalendarEvent.toCalendarEvent(selectedTimeSpan)}
+              >Export ot .ics</button>
+            </div>
           </div>
         </div>
       </div>

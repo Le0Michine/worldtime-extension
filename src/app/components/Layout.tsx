@@ -61,24 +61,32 @@ export class Layout extends React.Component<LayoutProps, any> {
             <Range rangeSize={48} valueMin={valueMin} valueMax={valueMax} onChange={({valueMin, valueMax}) => changeSelectedTimeSpan(valueMin, valueMax)} />
           </div>
           <div className={style.timeSpanSelector}>
-            <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.as("hours")})</span>
-            {/*<div className={style.timeSpanSelectorInput}>
-              <Input placeholder="hh" />
-            </div><span> : </span>
-            <div className={style.timeSpanSelectorInput}>
-              <Input placeholder="mm" />
-            </div><span> - </span>
-            <div className={style.timeSpanSelectorInput}>
-              <Input placeholder="hh" />
-            </div><span> : </span>
-            <div className={style.timeSpanSelectorInput}>
-              <Input placeholder="mm" />
-            </div>*/}
-            <div className="pull-right">
-              <button
-                className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
-                onClick={() => CalendarEvent.toCalendarEvent(selectedTimeSpan, timeLines[0].timeZoneId)}
-              >Export ot .ics</button>
+            <div className="bottom-panel-container">
+              <div className="">
+                <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.as("hours")})</span>
+              </div>
+              {/*<div className={style.timeSpanSelectorInput}>
+                <Input placeholder="hh" />
+              </div><span> : </span>
+              <div className={style.timeSpanSelectorInput}>
+                <Input placeholder="mm" />
+              </div><span> - </span>
+              <div className={style.timeSpanSelectorInput}>
+                <Input placeholder="hh" />
+              </div><span> : </span>
+              <div className={style.timeSpanSelectorInput}>
+                <Input placeholder="mm" />
+              </div>*/}
+              <div className="">
+                <button
+                  className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
+                  onClick={() => CalendarEvent.copyToClipboard(selectedTimeSpan, timeLines[0].timeZoneId)}
+                >Copy</button>
+                <button
+                  className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
+                  onClick={() => CalendarEvent.exportToICS(selectedTimeSpan, timeLines[0].timeZoneId)}
+                >Export ot .ics</button>
+              </div>
             </div>
           </div>
         </div>

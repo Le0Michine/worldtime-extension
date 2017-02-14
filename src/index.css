@@ -27,3 +27,9 @@ div#app.app-options {
     background-color: #fff;
     border: 1px solid #ccc;
 }
+
+.bottom-panel-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

@@ -4,7 +4,7 @@ import "moment-timezone";
 import { TimeSpanInfo } from "./TimeSpanInfo";
 
 export class CalendarEvent {
-  static toCalendarEvent(timeSpan: TimeSpanInfo, location: string) {
+  static exportToICS(timeSpan: TimeSpanInfo, location: string) {
     const startTime = moment().hours(timeSpan.startHour).minutes(timeSpan.startMinute).seconds(0);
     const endTime = moment().hours(timeSpan.endHour).minutes(timeSpan.endMinute).seconds(0);
     const mail = "me@gmail.com";
@@ -32,5 +32,16 @@ export class CalendarEvent {
       `END:VCALENDAR`;
 
      window.open(`data:text/calendar;charset=utf8,${encodeURI(icsMSG)}`);
+  }
+
+  static copyToClipboard(timeSpan: TimeSpanInfo, location: string) {
+    let copyFrom = document.createElement("textarea");
+    copyFrom.textContent = "copy content";
+    document.body.appendChild(copyFrom);
+    copyFrom.focus();
+    document.execCommand('SelectAll');
+    document.execCommand('Copy');
+    document.execCommand("copy");
+    document.body.removeChild(copyFrom);
   }
 }

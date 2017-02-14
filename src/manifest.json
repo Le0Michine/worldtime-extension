@@ -20,6 +20,7 @@
         "storage",
         "management",
         "notifications",
-        "contextMenus"
+        "contextMenus",
+        "clipboardWrite"
     ]
 }

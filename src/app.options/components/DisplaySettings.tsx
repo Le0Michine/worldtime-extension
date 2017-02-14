@@ -9,13 +9,14 @@ import { TimeLineControls } from "./TimeLineControls";
 import { NavTab } from "./NavTab";
 import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
 import { AppState, AppStoreDispatcher } from "../../app.common/store";
-import { removeTimeLine, startEdit, swapTimeLines, changeShowDSTSetting, changeShowTimezoneIdSetting, changeShowUTCOffsetSetting } from "../../app.common/actions";
+import { removeTimeLine, startEdit, swapTimeLines, changeShowDSTSetting, changeShowTimezoneIdSetting, changeShowUTCOffsetSetting, changeShowControlPanelSetting } from "../../app.common/actions";
 // const style = require("./DisplaySettings.css");
 
 interface DisplaySettingsDispatchProps {
   changeShowUTCOffsetSetting?: ActionCreator<any>;
   changeShowTimezoneIdSetting?: ActionCreator<any>;
   changeShowDSTSetting?: ActionCreator<any>;
+  changeShowControlPanelSetting?: ActionCreator<any>;
 }
 
 interface DisplaySettingsStateProps {
@@ -32,11 +33,12 @@ type DisplaySettingsProps = DisplaySettingsStateProps & DisplaySettingsDispatchP
     changeShowDSTSetting: changeShowDSTSetting as ActionCreator<any>,
     changeShowTimezoneIdSetting: changeShowTimezoneIdSetting as ActionCreator<any>,
     changeShowUTCOffsetSetting: changeShowUTCOffsetSetting as ActionCreator<any>,
+    changeShowControlPanelSetting: changeShowControlPanelSetting as ActionCreator<any>
   }
 )
 export class DisplaySettings extends React.Component<DisplaySettingsProps, any> {
   render() {
-    const { displaySettings, changeShowUTCOffsetSetting, changeShowTimezoneIdSetting, changeShowDSTSetting } = this.props;
+    const { displaySettings, changeShowUTCOffsetSetting, changeShowTimezoneIdSetting, changeShowDSTSetting, changeShowControlPanelSetting } = this.props;
     return (
       <div>
         <div className="row">
@@ -45,7 +47,6 @@ export class DisplaySettings extends React.Component<DisplaySettingsProps, any> 
           </div>
           <div className="col-md-2">
             <Checkbox value={displaySettings.showUTCOffset} onChange={(value) => changeShowUTCOffsetSetting(value)} />
-            {/*<input id="showUTCOffset" type="checkbox" checked={displaySettings.showUTCOffset} onChange={(event) => changeShowUTCOffsetSetting(event.target.checked)} />*/}
           </div>
         </div>
         <div className="row">
@@ -54,7 +55,14 @@ export class DisplaySettings extends React.Component<DisplaySettingsProps, any> 
           </div>
           <div className="col-md-2">
             <Checkbox value={displaySettings.showTimeZoneId} onChange={(value) => changeShowTimezoneIdSetting(value)} />
-            {/*<input id="showTZId" type="checkbox" checked={displaySettings.showTimeZoneId} onChange={(event) => changeShowTimezoneIdSetting(event.target.checked)} />*/}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-3">
+            <label htmlFor="showTZId">Show bottom panel</label>
+          </div>
+          <div className="col-md-2">
+            <Checkbox value={displaySettings.showControlPanel} onChange={(value) => changeShowControlPanelSetting(value)} />
           </div>
         </div>
         <div className="row">

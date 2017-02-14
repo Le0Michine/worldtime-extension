@@ -23,3 +23,10 @@ export function changeShowTimezoneIdSetting(showTZId: boolean): Action<boolean> 
     payload: showTZId
   };
 }
+
+export function changeShowControlPanelSetting(ShowControlPanel: boolean): Action<boolean> {
+  return {
+    type: "DISPLAY_SETTINGS/SHOW_SHOW_CONTROL_PANEL",
+    payload: ShowControlPanel
+  };
+}

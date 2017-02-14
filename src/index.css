@@ -33,3 +33,7 @@ div#app.app-options {
     align-items: center;
     justify-content: space-between;
 }
+
+.right-space {
+    margin-right: 10px;
+}

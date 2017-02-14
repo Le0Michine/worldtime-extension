@@ -29,7 +29,7 @@ const initialState = {
     createTimeZoneInfo("Asia/Yekaterinburg", "Yekaterinburg")
   ],
   editTimeLineForm: { name: "", timeZoneId: "" } as TimeZoneInfo,
-  displaySettings: { showDST: "hide", showTimeZoneId: false, showUTCOffset: true },
+  displaySettings: { showDST: "hide", showTimeZoneId: false, showUTCOffset: true, showControlPanel: true },
   selectedTimeSpan: { startHour: 0, startMinute: 0, endHour: 24, endMinute: 0 }
 } as AppState;
 
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === "development") {
 } else {
   enchancer = compose(
     persistState("timeLines", { key: "timeLines@0.0.259" }),
-    persistState("displaySettings", { key: "displaySettings@0.1.265" })
+    persistState("displaySettings", { key: "displaySettings@0.1.288" })
   ) as any;
 }
 

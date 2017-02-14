@@ -14,6 +14,10 @@ export const displaySettings = function (state: DisplaySettingsInfo = {} as Disp
       const result = Object.assign({}, state, { showTimeZoneId: action.payload });
       return result;
     }
+    case "DISPLAY_SETTINGS/SHOW_SHOW_CONTROL_PANEL": {
+      const result = Object.assign({}, state, { showControlPanel: action.payload });
+      return result;
+    }
     default:
       return state;
   }

@@ -60,35 +60,27 @@ export class Layout extends React.Component<LayoutProps, any> {
           <div className={style.timeSpanSelector}>
             <Range rangeSize={48} valueMin={valueMin} valueMax={valueMax} onChange={({valueMin, valueMax}) => changeSelectedTimeSpan(valueMin, valueMax)} />
           </div>
-          <div className={style.timeSpanSelector}>
+          {displaySettings.showControlPanel ? (<div className={style.timeSpanSelector}>
             <div className="bottom-panel-container">
               <div className="">
-                <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} ({duration.as("hours")})</span>
+                <span>{startTime.format("HH:mm")} - {endTime.format("HH:mm")} duration: {duration.asHours().toFixed(1)}h</span>
               </div>
-              {/*<div className={style.timeSpanSelectorInput}>
-                <Input placeholder="hh" />
-              </div><span> : </span>
-              <div className={style.timeSpanSelectorInput}>
-                <Input placeholder="mm" />
-              </div><span> - </span>
-              <div className={style.timeSpanSelectorInput}>
-                <Input placeholder="hh" />
-              </div><span> : </span>
-              <div className={style.timeSpanSelectorInput}>
-                <Input placeholder="mm" />
-              </div>*/}
               <div className="">
                 <button
-                  className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
-                  onClick={() => CalendarEvent.copyToClipboard(selectedTimeSpan, timeLines[0].timeZoneId)}
+                  className={`btn btn-default btn-material right-space ${ buttonDisabled ? "disabled" : ""}`}
+                  onClick={() => CalendarEvent.copyToClipboard(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
                 >Copy</button>
                 <button
+                  className={`btn btn-default btn-material right-space ${ buttonDisabled ? "disabled" : ""}`}
+                  onClick={() => CalendarEvent.getGoogleCalendarLink(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
+                >To Google Cal</button>
+                <button
                   className={`btn btn-default btn-material ${ buttonDisabled ? "disabled" : ""}`}
-                  onClick={() => CalendarEvent.exportToICS(selectedTimeSpan, timeLines[0].timeZoneId)}
-                >Export ot .ics</button>
+                  onClick={() => CalendarEvent.exportToICS(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
+                >Export to .ics</button>
               </div>
             </div>
-          </div>
+          </div>) : null}
         </div>
       </div>
     );

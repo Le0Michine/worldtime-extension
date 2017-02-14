@@ -2,8 +2,7 @@
     "manifest_version": 2,
     "name": "Worldtime",
     "description": "All time zones in one click",
-    "version": "0.1.288",
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "version": "1.0.1",
     "options_page": "options.html",
     "browser_action": {
         "default_icon": "icons/icon_19.png",
@@ -18,7 +17,6 @@
     "permissions": [
         "tabs",
         "storage",
-        "management",
         "notifications",
         "contextMenus",
         "clipboardWrite"

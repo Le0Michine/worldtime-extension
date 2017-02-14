@@ -61,14 +61,13 @@ export class CalendarEvent {
 
   static copyToClipboard(timeSpan: TimeSpanInfo, location: string, timelines: TimeZoneInfo[]) {
     const {startTime, endTime} = timeSpanToTime(timeSpan);
-    const sceduleData = getEventDescription(timeSpan, timelines);
+    const scheduleData = getEventDescription(timeSpan, timelines);
 
     let copyFrom = document.createElement("textarea");
-    copyFrom.textContent = sceduleData;
+    copyFrom.textContent = scheduleData;
     document.body.appendChild(copyFrom);
     copyFrom.focus();
-    document.execCommand('SelectAll');
-    document.execCommand('Copy');
+    copyFrom.select();
     document.execCommand("copy");
     document.body.removeChild(copyFrom);
   }

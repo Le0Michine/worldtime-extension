@@ -1,24 +1,26 @@
+// tslint:disable:typedef
+// tslint:disable:max-line-length
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-interface RangeProps {
-  valueMin?: number,
-  valueMax?: number,
-  rangeSize?: number
-  onChange?: Function
+interface IRangeProps {
+  valueMin?: number;
+  valueMax?: number;
+  rangeSize?: number;
+  onChange?: Function;
 }
 
-interface RangeState {
+interface IRangeState {
   valueMin: number;
   valueMax: number;
   hold: false | "min" | "max";
 }
 
-export class Range extends React.Component<RangeProps, RangeState> {
+export class Range extends React.Component<IRangeProps, IRangeState> {
   private onMouseMoveListener;
   private onMouseUpListener;
 
-  constructor(props: RangeProps) {
+  constructor(props: IRangeProps) {
     super(props);
     this.state = {
       valueMin: props.rangeSize ? props.valueMin / props.rangeSize * 100 : props.valueMin,
@@ -32,7 +34,7 @@ export class Range extends React.Component<RangeProps, RangeState> {
     valueMax: React.PropTypes.number.isRequired,
     rangeStep: React.PropTypes.number,
     onChange: React.PropTypes.func
-  }
+  };
 
   onChange(valueMin: number, valueMax: number) {
     if (this.props.onChange) {
@@ -59,17 +61,35 @@ export class Range extends React.Component<RangeProps, RangeState> {
 
   onHold(hold: false | "min" | "max") {
     this.setState({ hold });
-    this.onMouseMoveListener = (event) => this.onMouseMove(event);
-    window.addEventListener("mousemove", this.onMouseMoveListener, false);
+    if (!this.onMouseMoveListener) {
+      this.onMouseMoveListener = (event) => this.onMouseMove(event);
+      window.addEventListener("mousemove", this.onMouseMoveListener, false);
+    }
+  }
+
+  onRangeBaseClick(event: React.MouseEvent<HTMLDivElement>) {
+    event.preventDefault();
+    const { valueMin, valueMax } = this.state;
+    const x = this.getCoordinateInRange(event);
+    const hold = Math.abs(x - valueMin) <= Math.abs(x - valueMax) ? "min" : "max";
+    this.onHold(hold);
+    this.movePointer(x, hold);
   }
 
   onMouseMove(event: MouseEvent) {
     event.preventDefault();
-    const { valueMin, valueMax, hold } = this.state;
-    const { rangeSize } = this.props;
-    let x = event.clientX;
+    const { hold } = this.state;
+    this.movePointer(this.getCoordinateInRange(event), hold);
+  }
+
+  getCoordinateInRange(event: MouseEvent | React.MouseEvent<any>) {
     const rect = this.getRangeRect();
-    x = (Math.min(rect.right, Math.max(rect.left, x)) - rect.left) / rect.width * 100;
+    return (Math.min(rect.right, Math.max(rect.left, event.clientX)) - rect.left) / rect.width * 100;
+  }
+
+  movePointer(x: number, hold: false | "min" | "max") {
+    const { valueMin, valueMax } = this.state;
+    const { rangeSize } = this.props;
     if (rangeSize) {
       const l = 100 / rangeSize;
       x = Math.round(x / l) * l;
@@ -90,10 +110,12 @@ export class Range extends React.Component<RangeProps, RangeState> {
   onRelease() {
     this.setState({ hold: false });
     window.removeEventListener("mousemove", this.onMouseMoveListener);
+    this.onMouseMoveListener = undefined;
   }
 
   getRangeRect() {
-    return ReactDOM.findDOMNode(this.refs["rangeBase"]).getBoundingClientRect()
+    // tslint:disable-next-line:no-string-literal
+    return ReactDOM.findDOMNode(this.refs["rangeBase"]).getBoundingClientRect();
   }
 
   render() {
@@ -103,7 +125,7 @@ export class Range extends React.Component<RangeProps, RangeState> {
     const width = `${valueMax - valueMin}%`;
     return (
       <div className="range-material-container">
-        <div ref="rangeBase" className="range-material-base">
+        <div ref="rangeBase" className="range-material-base" onMouseDown={(event) => this.onRangeBaseClick(event)}>
           <div className="range-material-min-selector" style={{left: min}} onMouseDown={() => this.onHold("min")}></div>
           <div className="range-material-range-selected" style={{left: min, width}}></div>
           <div className="range-material-max-selector" style={{left: max}} onMouseDown={() => this.onHold("max")}></div>

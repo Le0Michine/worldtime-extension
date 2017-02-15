@@ -1,17 +1,18 @@
+// tslint:disable:typedef
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import * as moment from "moment";
-const style = require("./Typeahead.css");
 
-import { TimeZoneInfo } from "../models";
 import { Input } from "./Input";
+const style = require("./Typeahead.css");
 
 export class Typeahead extends React.Component<any, any> {
   constructor(props) {
     super(props);
     const { options } = this.props;
     this.state = {
-      optionsContainerStyle: { display: "none" },
+      optionsContainerStyle: {
+        display: "none"
+      },
       optionsContainerMaxHeight: 200,
       optionsContainerMinHeight: 48,
       options,
@@ -20,6 +21,8 @@ export class Typeahead extends React.Component<any, any> {
       focused: false,
       activeOption: -1
     };
+
+    setTimeout(() => this.setState({ optionsContainerStyle: this.updateOptionsPosition(true) }), 100);
   }
 
   static propTypes = {
@@ -29,32 +32,39 @@ export class Typeahead extends React.Component<any, any> {
     onChange: React.PropTypes.func.isRequired
   };
 
-  getInputRect() {
-    return ReactDOM.findDOMNode(this.refs["typeAheadInput"]).getBoundingClientRect()
+  getInputRect(): ClientRect {
+    // tslint:disable-next-line:no-string-literal
+    return ReactDOM.findDOMNode(this.refs["typeAheadInput"]).getBoundingClientRect();
   }
 
-  getOptionsRect() {
-    return ReactDOM.findDOMNode(this.refs["typeAheadOptions"]).getBoundingClientRect()
+  getOptionsRect(): ClientRect {
+    // tslint:disable-next-line:no-string-literal
+    return ReactDOM.findDOMNode(this.refs["typeAheadOptions"]).getBoundingClientRect();
+  }
+
+  updateOptionsPosition(hidden: boolean): any {
+    const inputRect = this.getInputRect();
+    return {
+      display: hidden ? "none" : "block",
+      bottom: `calc(100% - ${inputRect.top - 30}px)`,
+      left: `${inputRect.left}px`,
+      width: `${inputRect.width}px`,
+      maxHeight: `${this.state.optionsContainerMaxHeight}px`,
+      minHeight: `${this.state.optionsContainerMinHeight}px`
+    };
   }
 
   showOptions() {
-    const inputRect = this.getInputRect();
     this.setState({
-      optionsContainerStyle: {
-        display: "block",
-        bottom: `calc(100% - ${inputRect.top - 30}px)`,
-        left: `${inputRect.left}px`,
-        width: `${inputRect.width}px`,
-        maxHeight: `${this.state.optionsContainerMaxHeight}px`,
-        minHeight: `${this.state.optionsContainerMinHeight}px`
-      },
+      optionsContainerStyle: this.updateOptionsPosition(false),
       focused: true
     });
   }
 
-  hideOptions(force: boolean = false) {
-    if (this.state.mouseOverList && !force) return;
-    const rect = this.getInputRect();
+  hideOptions(force: boolean = false): void {
+    if (this.state.mouseOverList && !force) {
+      return;
+    }
     this.setState({
       optionsContainerStyle: {
         display: "none"
@@ -64,13 +74,13 @@ export class Typeahead extends React.Component<any, any> {
     });
   }
 
-  isValid() {
+  isValid(): boolean {
     return !this.state.touched || !!this.props.options.find(x => x.value === this.state.inputValue);
   }
 
-  filterOptions(query: string) {
+  filterOptions(query: string): void {
     const { options } = this.props;
-    const regex = new RegExp(query.replace(/[ ,/]/ig, "[ /_]"), "ig");
+    const regex: RegExp = new RegExp(query.replace(/[ ,/]/ig, "[ /_]"), "ig");
     const filteredOptions = options.filter(x => regex.test(x.value));
     this.setState({ options: filteredOptions, inputValue: query, touched: true });
     this.props.onChange(query);
@@ -78,7 +88,7 @@ export class Typeahead extends React.Component<any, any> {
 
   selectOption(option) {
     this.props.onSelect(option);
-    this.setState({ inputValue: option.value })
+    this.setState({ inputValue: option.value });
     this.hideOptions(true);
   }
 
@@ -114,12 +124,17 @@ export class Typeahead extends React.Component<any, any> {
 
   render() {
     const { value } = this.props;
-    const { optionsContainerStyle, options, focused, activeOption } = this.state;
+    const { optionsContainerStyle, options, activeOption } = this.state;
     const isValid = this.isValid();
 
     return (
       <div ref="typeAheadInput">
-        <div className={`${style.typeAheadOptions} whiteframe`} style={optionsContainerStyle} onMouseEnter={() => this.onMouseEnterOptionsList()} onMouseLeave={() => this.onMouseLeaveOptionsList()}>
+        <div
+          className={`${style.typeAheadOptions} whiteframe`}
+          style={optionsContainerStyle}
+          onMouseEnter={() => this.onMouseEnterOptionsList()}
+          onMouseLeave={() => this.onMouseLeaveOptionsList()}
+        >
           <ul className={style.typeAheadOptionsList}>
             {options.map((option, index) => (
               <li

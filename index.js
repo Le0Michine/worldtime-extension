@@ -13,3 +13,7 @@ function successCallback() {
 function failureCallback(...args) {
   console.log("fail", args);
 }
+
+document.getElementById("install-button").addEventListener("click", onInstallClick);
+document.getElementById("install-button").style.display="block";
+document.getElementById("link-to-webstore").style.display="none";

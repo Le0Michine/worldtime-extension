@@ -1,0 +1,39 @@
+h1 {
+    font-weight: 200;
+}
+
+body, *, h1 {
+    font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
+    -webkit-font-smoothing: antialiased;
+       -moz-font-smoothing: antialiased;
+            font-smoothing: antialiased;
+    -webkit-text-rendering: optimizeLegibility;
+       -moz-text-rendering: optimizeLegibility;
+            text-rendering: optimizeLegibility;
+}
+
+@font-face {
+    font-family: "material-icons";
+    src: url("MaterialIcons-Regular.woff") format('woff');
+}
+
+.material-icons {
+    font-family: "material-icons";
+}
+
+div#app.app-options {
+    margin: 0 auto 0 auto;
+    width: 850px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.bottom-panel-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.right-space {
+    margin-right: 10px;
+}

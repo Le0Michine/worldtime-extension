@@ -6,8 +6,6 @@ function onInstallClick(event) {
 
 function successCallback() {
   console.log("success");
-  document.getElementById("install-button").style.display="none";
-  document.getElementById("link-to-webstore").style.display="block";
 }
 
 function failureCallback(...args) {
@@ -15,5 +13,3 @@ function failureCallback(...args) {
 }
 
 document.getElementById("install-button").addEventListener("click", onInstallClick);
-document.getElementById("install-button").style.display="block";
-document.getElementById("link-to-webstore").style.display="none";

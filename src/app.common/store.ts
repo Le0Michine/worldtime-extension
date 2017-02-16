@@ -26,7 +26,8 @@ const initialState = {
     createTimeZoneInfo("Europe/Warsaw", "Kraków"),
     createTimeZoneInfo("US/Pacific", "San Francisco"),
     createTimeZoneInfo("Europe/Moscow", "Saint Petersburg"),
-    createTimeZoneInfo("Asia/Yekaterinburg", "Yekaterinburg")
+    createTimeZoneInfo("Australia/Melbourne", "Melbourne"),
+    // createTimeZoneInfo("Asia/Yekaterinburg", "Yekaterinburg")
   ],
   editTimeLineForm: { name: "", timeZoneId: "" } as TimeZoneInfo,
   displaySettings: { showDST: "hide", showTimeZoneId: false, showUTCOffset: true, showControlPanel: true },

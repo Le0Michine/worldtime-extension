@@ -20,8 +20,8 @@
     height: 100%;
     z-index: 2;
     cursor: pointer;
-    padding: 1000px 0 10px 0;
-    top: -1000px;
+    padding: 250px 0 10px 0;
+    top: -250px;
     box-sizing: content-box;
 }
 

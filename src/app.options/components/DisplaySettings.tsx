@@ -8,7 +8,7 @@ import AddNewTimeline from "./AddNewTimeline";
 import { TimeLineControls } from "./TimeLineControls";
 import { NavTab } from "./NavTab";
 import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
-import { AppState, AppStoreDispatcher } from "../../app.common/store";
+import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines, changeShowDSTSetting, changeShowTimezoneIdSetting, changeShowUTCOffsetSetting, changeShowControlPanelSetting } from "../../app.common/actions";
 // const style = require("./DisplaySettings.css");
 
@@ -26,7 +26,7 @@ interface DisplaySettingsStateProps {
 type DisplaySettingsProps = DisplaySettingsStateProps & DisplaySettingsDispatchProps;
 
 @connect<DisplaySettingsStateProps, DisplaySettingsDispatchProps, DisplaySettingsProps>(
-  (state: AppState) => ({
+  (state: IAppState) => ({
     displaySettings: state.displaySettings
   } as DisplaySettingsStateProps),
   {

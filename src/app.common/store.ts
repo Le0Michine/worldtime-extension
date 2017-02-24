@@ -1,27 +1,29 @@
-import { createStore, applyMiddleware, combineReducers, compose, Action, Reducer } from "redux";
+import { createStore, applyMiddleware, combineReducers, compose, Store, Reducer, ReducersMapObject, StoreEnhancer } from "redux";
 import * as createLogger from "redux-logger";
 import * as persistState from "redux-localstorage";
+import * as moment from "moment";
 
 import { timeLines, editTimeLineForm, displaySettings, selectedTimeSpan } from "./reducers";
 import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo } from "../app.common/models";
 
 
-export interface AppState {
+export interface IAppState {
   timeLines: TimeZoneInfo[];
   editTimeLineForm: TimeZoneInfo;
   displaySettings: DisplaySettingsInfo;
   selectedTimeSpan: TimeSpanInfo;
 }
 
-export interface AppStoreDispatcher {
-  timeLines: Reducer<TimeZoneInfo>;
+export interface IAppStoreDispatcher extends ReducersMapObject {
+  timeLines: Reducer<TimeZoneInfo[]>;
   editTimeLineForm: Reducer<TimeZoneInfo>;
-  displaySettings: Reducer<TimeZoneInfo>;
-  selectedTimeSpan: Reducer<TimeZoneInfo>;
+  displaySettings: Reducer<DisplaySettingsInfo>;
+  selectedTimeSpan: Reducer<TimeSpanInfo>;
 }
 
+// tslint:disable-next-line:typedef
 const middleware = applyMiddleware(createLogger());
-const initialState = {
+const initialState: IAppState = {
   timeLines: [
     createTimeZoneInfo("Europe/Warsaw", "Kraków"),
     createTimeZoneInfo("US/Pacific", "San Francisco"),
@@ -30,17 +32,17 @@ const initialState = {
   ],
   editTimeLineForm: { name: "", timeZoneId: "" } as TimeZoneInfo,
   displaySettings: { showDST: "hide", showTimeZoneId: false, showUTCOffset: true, showControlPanel: true },
-  selectedTimeSpan: { startHour: 0, startMinute: 0, endHour: 24, endMinute: 0 }
-} as AppState;
+  selectedTimeSpan: { startHour: moment().hours(), startMinute: moment().minutes(), endHour: 24, endMinute: 0 }
+} as IAppState;
 
-const reducers = {
+const reducers: IAppStoreDispatcher = {
   timeLines,
   editTimeLineForm,
   displaySettings,
   selectedTimeSpan
 };
 
-let enchancer;
+let enchancer: StoreEnhancer<IAppState>;
 
 if (process.env.NODE_ENV === "development") {
   enchancer = compose(
@@ -55,4 +57,4 @@ if (process.env.NODE_ENV === "development") {
   ) as any;
 }
 
-export const store = createStore<AppState>(combineReducers<AppState>(reducers), initialState, enchancer);
+export const store: Store<IAppState> = createStore<IAppState>(combineReducers<IAppState>(reducers), initialState, enchancer);

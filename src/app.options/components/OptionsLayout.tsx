@@ -9,7 +9,7 @@ import { TimeLineControls } from "./TimeLineControls";
 import { DisplaySettings } from "./DisplaySettings";
 import { NavTab } from "./NavTab";
 import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
-import { AppState, AppStoreDispatcher } from "../../app.common/store";
+import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
 const style = require("./OptionsLayout.css");
 
@@ -28,7 +28,7 @@ interface OptionsLayoutStateProps {
 type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
 
 @connect<OptionsLayoutStateProps, OptionsLayoutDispatchProps, OptionsLayoutProps>(
-  (state: AppState) => ({
+  (state: IAppState) => ({
     timeLines: state.timeLines,
     selectedTimeLine: state.editTimeLineForm,
     displaySettings: state.displaySettings

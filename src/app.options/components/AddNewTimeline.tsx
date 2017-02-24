@@ -5,7 +5,7 @@ import * as moment from "moment-timezone";
 import { TimeZoneInfo } from "../../app.common/models";
 import { Typeahead, Input } from "../../app.common/components";
 import { changeDisplayName, changeTimezoneId, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
-import { AppState } from "../../app.common/store";
+import { IAppState } from "../../app.common/store";
 const style = require("./AddNewTimeline.css");
 
 interface AddNewTimeLineStateProps {
@@ -22,7 +22,7 @@ interface AddNewTimeLineDispatchProps {
 type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProps;
 
 @connect<AddNewTimeLineStateProps, AddNewTimeLineDispatchProps, AddNewTimeLineProps>(
-  (store: AppState) => ({
+  (store: IAppState) => ({
     selectedTimeLine: store.editTimeLineForm
   }),
   {

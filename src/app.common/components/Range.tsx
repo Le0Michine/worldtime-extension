@@ -125,10 +125,12 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
     const width = `${valueMax - valueMin}%`;
     return (
       <div className="range-material-container">
-        <div ref="rangeBase" className="range-material-base" onMouseDown={(event) => this.onRangeBaseClick(event)}>
-          <div className="range-material-min-selector" style={{left: min}} onMouseDown={() => this.onHold("min")}></div>
-          <div className="range-material-range-selected" style={{left: min, width}}></div>
-          <div className="range-material-max-selector" style={{left: max}} onMouseDown={() => this.onHold("max")}></div>
+        <div ref="rangeBase" className="range-material-base-clickable" onMouseDown={(event) => this.onRangeBaseClick(event)}>
+          <div ref="rangeBase" className="range-material-base">
+            <div className="range-material-min-selector" style={{left: min}} onMouseDown={() => this.onHold("min")}></div>
+            <div className="range-material-range-selected" style={{left: min, width}}></div>
+            <div className="range-material-max-selector" style={{left: max}} onMouseDown={() => this.onHold("max")}></div>
+          </div>
         </div>
       </div>
     );

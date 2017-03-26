@@ -34,8 +34,8 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
     return moment().utcOffset(offset).format("HH:mm");
   }
 
-  isDST(offset: number) {
-    return moment().utcOffset(offset).isDST();
+  isDST(tz: string) {
+    return moment().tz(tz).isDST();
   }
 
   renderHourCell(h, i, currentHour) {
@@ -67,14 +67,14 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
   }
 
   render() {
-    const { offset, hours, displaySettings } = this.props;
+    const { offset, hours, displaySettings, timeLine } = this.props;
     const summer = displaySettings.showDST === "DST" ? "DST" : "Summer";
     const winter = displaySettings.showDST === "DST" ? "" : "Winter";
 
     return (
       <div className={style.container}>
         <div className="clearfix">
-          <div className="pull-left">{this.props.timeLine.name}</div>
+          <div className="pull-left">{timeLine.name}</div>
           {displaySettings.showTimeZoneId ?
             <div className={`pull-left ${style.timeLineInfo}`}>{this.props.timeLine.timeZoneId.replace("_", " ")}</div> : null
           }
@@ -82,7 +82,7 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
             <div className={`pull-left ${style.timeLineInfo}`}>{`UTC${offset >= 0 ? "+" : ""}${offset / 60}`}</div> : null
           }
           {displaySettings.showDST !== "hide" ?
-            <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(offset) ?  summer : winter}`}</div> : null
+            <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(timeLine.timeZoneId) ?  summer : winter}`}</div> : null
           }
           <div className="pull-right">{this.state.time}</div>
         </div>

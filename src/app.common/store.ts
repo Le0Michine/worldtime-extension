@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers, compose, Store, Reducer, ReducersMapObject, StoreEnhancer } from "redux";
-import * as createLogger from "redux-logger";
+import createLogger from "redux-logger";
 import * as persistState from "redux-localstorage";
 import * as moment from "moment";
 

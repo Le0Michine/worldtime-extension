@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Worldtime",
     "description": "All time zones in one click",
-    "version": "1.1.15",
+    "version": "1.1.19",
     "options_page": "options.html",
     "browser_action": {
         "default_icon": "icons/icon_19.png",

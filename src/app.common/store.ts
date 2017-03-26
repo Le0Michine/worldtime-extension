@@ -21,8 +21,6 @@ export interface IAppStoreDispatcher extends ReducersMapObject {
   selectedTimeSpan: Reducer<TimeSpanInfo>;
 }
 
-// tslint:disable-next-line:typedef
-const middleware = applyMiddleware(createLogger());
 const initialState: IAppState = {
   timeLines: [
     createTimeZoneInfo("Europe/Warsaw", "Kraków"),
@@ -46,6 +44,7 @@ const reducers: IAppStoreDispatcher = {
 let enchancer: StoreEnhancer<IAppState>;
 
 if (process.env.NODE_ENV === "development") {
+  const middleware = applyMiddleware(createLogger());
   enchancer = compose(
     middleware,
     persistState("timeLines", { key: "timeLines@0.0.259" }),

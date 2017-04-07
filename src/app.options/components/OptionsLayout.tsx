@@ -90,6 +90,13 @@ export default class OptionsLayout extends React.Component<OptionsLayoutProps, a
           )}
         </div>
         <AddNewTimeline />
+        <button
+            className={`btn btn-default btn-material reset-button`}
+            onClick={() => {
+              localStorage.clear();
+              location.reload();
+            }}
+          >Reset to defaults</button>
       </div>
     );
   }

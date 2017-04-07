@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware, combineReducers, compose, Store, Reducer, ReducersMapObject, StoreEnhancer } from "redux";
-import createLogger from "redux-logger";
+// import * as createLogger from "redux-logger";
+import * as createLogger from "redux-logger";
 import * as persistState from "redux-localstorage";
 import * as moment from "moment";
 
@@ -44,9 +45,8 @@ const reducers: IAppStoreDispatcher = {
 let enchancer: StoreEnhancer<IAppState>;
 
 if (process.env.NODE_ENV === "development") {
-  const middleware = applyMiddleware(createLogger());
   enchancer = compose(
-    middleware,
+    applyMiddleware((<any>createLogger)()),
     persistState("timeLines", { key: "timeLines@0.0.259" }),
     persistState("displaySettings", { key: "displaySettings@0.1.265" })
   ) as any;

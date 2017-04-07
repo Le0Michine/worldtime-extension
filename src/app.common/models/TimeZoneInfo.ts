@@ -10,7 +10,7 @@ export interface TimeZoneInfo {
 var tzId = 1;
 
 export function createTimeZoneInfo(timeZoneId, name: string, timeLineid: number = undefined): TimeZoneInfo {
-  const timeZoneInfo = { timeZoneId, timeLineid: timeLineid || tzId++, name } as TimeZoneInfo;
+  const timeZoneInfo: TimeZoneInfo = { timeZoneId, timeLineid: timeLineid || tzId++, name } as TimeZoneInfo;
   return timeZoneInfo;
 }
 

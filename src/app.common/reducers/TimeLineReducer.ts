@@ -7,9 +7,9 @@ export const timeLines = function (state: TimeZoneInfo[] = [], action: Action<an
       return action.payload;
     case "CREATE_OR_UPDATE": {
       if (!action.payload.timeLineid) {
-        let sum = 0;
+        let sum: number = 1;
         state.map(x => x.timeLineid).forEach(x => sum += x);
-        Object.assign(action.payload, { timeLineid: sum })
+        Object.assign(action.payload, { timeLineid: sum });
       }
       const i = state.findIndex(x => x.timeLineid === action.payload.timeLineid);
       const timeLines = i > -1

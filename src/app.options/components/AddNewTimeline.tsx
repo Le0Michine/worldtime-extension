@@ -9,17 +9,19 @@ import { IAppState } from "../../app.common/store";
 const style = require("./AddNewTimeline.css");
 
 interface AddNewTimeLineStateProps {
-  selectedTimeLine?: TimeZoneInfo
+  selectedTimeLine?: TimeZoneInfo;
 }
 
 interface AddNewTimeLineDispatchProps {
-  changeDisplayName?: Function,
-  changeTimezoneId?: Function,
-  saveTimeLine?: Function,
-  clearForm?: Function
+  changeDisplayName?: Function;
+  changeTimezoneId?: Function;
+  saveTimeLine?: Function;
+  clearForm?: Function;
 }
 
 type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProps;
+
+var compKey: number = 0;
 
 @connect<AddNewTimeLineStateProps, AddNewTimeLineDispatchProps, AddNewTimeLineProps>(
   (store: IAppState) => ({
@@ -33,7 +35,7 @@ type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProp
   }
 )
 export default class AddNewTimeline extends React.Component<AddNewTimeLineProps, any> {
-  constructor(props) {
+  constructor(props: AddNewTimeLineProps) {
     super(props);
     const tzNames = moment.tz.names().map(name => ({ id: name, utcOffset: moment().tz(name).utcOffset() }));
     this.state = {
@@ -50,7 +52,7 @@ export default class AddNewTimeline extends React.Component<AddNewTimeLineProps,
   //   compKey++;
   // }
 
-  render() {
+  render(): any {
     const { changeTimezoneId, changeDisplayName, selectedTimeLine, saveTimeLine, clearForm } = this.props;
     const addButtonDisabled = !selectedTimeLine.name || !selectedTimeLine.timeZoneId;
     return (
@@ -75,6 +77,7 @@ export default class AddNewTimeline extends React.Component<AddNewTimeLineProps,
         </div>
         <div className="col-md-2">
           <button
+            // tslint:disable-next-line:max-line-length
             className={`btn btn-default btn-material ${ addButtonDisabled ? "disabled" : ""} ${selectedTimeLine.timeLineid ? "btn-material-edit" : ""}`}
             onClick={() => { saveTimeLine(selectedTimeLine); clearForm(); compKey++;}}
           >{selectedTimeLine.timeLineid ? "Save" : "Add"}</button>
@@ -84,12 +87,11 @@ export default class AddNewTimeline extends React.Component<AddNewTimeLineProps,
   }
 }
 
-var compKey = 0;
-
-function getOptionItem(tz) {
-  const offset = (tz.utcOffset >= 0 ? "+" : "") + tz.utcOffset / 60;
+function getOptionItem(tz): any {
+  const offset: string = (tz.utcOffset >= 0 ? "+" : "") + tz.utcOffset / 60;
   return {
     value: tz.id,
+    // tslint:disable-next-line:max-line-length
     template: (<div className={style.optionItem} key={tz.id}><span className={style.textLeft}>{tz.id.replace("_", " ")}</span> <i className={style.textRight}>UTC{offset}</i></div>)
   };
 }

@@ -232,6 +232,10 @@
     transition: opacity .1s ease-out;
 }
 
+.reset-button {
+    background: rgba(255,82,82,0.87);
+}
+
 .checkbox-material-container {
     box-sizing: border-box;
     display: inline-block;

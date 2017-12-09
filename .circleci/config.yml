@@ -38,7 +38,7 @@ jobs:
       - store_artifacts:
           path: out/out.zip
           destination: ./canary.zip
-      - - run:
+      - run:
           name: "Upload & Publish Extension to the Google Chrome Store"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then

@@ -3,8 +3,15 @@ import { createLogger } from "redux-logger";
 import * as persistState from "redux-localstorage";
 import * as moment from "moment";
 
-import { timeLines, editTimeLineForm, displaySettings, selectedTimeSpan, theme } from "./reducers";
-import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo, AppTheme } from "../app.common/models";
+import {
+  timeLines,
+  editTimeLineForm,
+  displaySettings,
+  selectedTimeSpan,
+  theme,
+  scrollPosition
+} from "./reducers";
+import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo, AppTheme, ScrollPosition } from "../app.common/models";
 import { initialPalette } from "./themes/themes";
 
 
@@ -14,6 +21,7 @@ export interface IAppState {
   displaySettings: DisplaySettingsInfo;
   selectedTimeSpan: TimeSpanInfo;
   theme: AppTheme;
+  scrollPosition: ScrollPosition;
 }
 
 export interface IAppStoreDispatcher extends ReducersMapObject {
@@ -21,6 +29,8 @@ export interface IAppStoreDispatcher extends ReducersMapObject {
   editTimeLineForm: Reducer<TimeZoneInfo>;
   displaySettings: Reducer<DisplaySettingsInfo>;
   selectedTimeSpan: Reducer<TimeSpanInfo>;
+  theme: Reducer<AppTheme>;
+  scrollPosition: Reducer<ScrollPosition>;
 }
 
 const initialState: IAppState = {
@@ -49,6 +59,12 @@ const initialState: IAppState = {
   },
   theme: {
     palette: initialPalette,
+  },
+  scrollPosition: {
+    maxLimit: 0,
+    minLimit: -100 / 3 * 2 + 100 / 3 / 24,
+    position: -100 / 3,
+    step: 100 / 3 / 24 * 6,
   }
 } as IAppState;
 
@@ -58,6 +74,7 @@ const reducers: IAppStoreDispatcher = {
   displaySettings,
   selectedTimeSpan,
   theme,
+  scrollPosition
 };
 
 let enchancer: StoreEnhancer<IAppState>;

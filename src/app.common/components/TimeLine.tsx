@@ -1,5 +1,7 @@
 import * as React from "react";
 import * as moment from "moment";
+import Typography from "material-ui/Typography";
+import { withTheme, Theme } from "material-ui/styles";
 const style = require("./TimeLine.css");
 
 import { TimeZoneInfo, getOffset, DisplaySettingsInfo } from "../models";
@@ -9,13 +11,14 @@ interface TimeLineProps {
   offset: number;
   hours: number[];
   displaySettings: DisplaySettingsInfo;
+  theme: Theme;
 }
 
 interface TimeLineState {
   time: string;
 }
 
-export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
+class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
   private interval: any;
 
   constructor(props) {
@@ -39,30 +42,46 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
   }
 
   renderHourCell(h, i, currentHour) {
-    const styles = [style.hour];
-    if (h === currentHour) {
-      styles.push(style.currentHour);
+    const classes = [style.hour];
+    const { theme } = this.props;
+    let background = theme.palette.primary[50];
+    if (i === 0) {
+      // classes.push(style.timeLineBorderLeft);
     }
-    if (h === 0) {
-      styles.push(style.hourMidnight);
-    }
-    if (i === 0 ) {
-      styles.push(style.timeLineBorderLeft);
-    }
-    if (i === 23 ) {
-      styles.push(style.timeLineBorderRight);
+    if (i === 23) {
+      // classes.push(style.timeLineBorderRight);
     }
     if (h < 8 || h > 21) {
-      styles.push(style.nightHour);
+      // classes.push(style.nightHour);
+      background = theme.palette.primary[100];
     }
-    return (<span className={styles.join(" ")} key={h}>{h}</span>);
+    if (h === 0) {
+      // classes.push(style.hourMidnight);
+      background = theme.palette.primary[200];
+    }
+    if (h === currentHour) {
+      // classes.push(style.currentHour);
+      background = theme.palette.primary[700];
+    }
+    const color = theme.palette.getContrastText(background);
+    const styles: React.CSSProperties = Object.assign({}, theme.typography.subheading, {
+      background,
+      color,
+      borderBottom: theme.palette.grey.A400
+    } as React.CSSProperties);
+    return (<span className={classes.join(" ")} style={styles} key={`${h}_${i}`}>{h}</span>);
   }
 
   renderTimeLine(hours, offset) {
     const currentHour = +moment().utcOffset(offset).format("HH");
+    const uiOffset = (offset % 60) / 60;
+    const oneDay = 100 / 3;
+    const inlineStyle = {
+      transform: `translateX(${-oneDay - oneDay / 24 * uiOffset}%)`
+    };
     return (
-      <div className={style.timeLine}>
-        {hours.map((h, i) => this.renderHourCell(h, i, currentHour))}
+      <div className={style.timeLine} style={inlineStyle}>
+        {[...hours, ...hours, ...hours].map((h, i) => this.renderHourCell(h, i, currentHour))}
       </div>);
   }
 
@@ -73,18 +92,18 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
 
     return (
       <div className={style.container}>
-        <div className="clearfix">
-          <div className="pull-left">{timeLine.name}</div>
+        <div className="d-flex">
+          <Typography type="subheading" className="mr-2">{timeLine.name}</Typography>
           {displaySettings.showTimeZoneId ?
-            <div className={`pull-left ${style.timeLineInfo}`}>{this.props.timeLine.timeZoneId.replace("_", " ")}</div> : null
+            <Typography type="subheading" color="secondary" className="mr-2">{timeLine.timeZoneId.replace("_", " ")}</Typography> : null
           }
           {displaySettings.showUTCOffset ?
-            <div className={`pull-left ${style.timeLineInfo}`}>{`UTC${offset >= 0 ? "+" : ""}${offset / 60}`}</div> : null
+            <Typography type="subheading" color="secondary" className="mr-2">UTC{offset >= 0 ? "+" : ""}{offset / 60}</Typography> : null
           }
           {displaySettings.showDST !== "hide" ?
-            <div className={`pull-left ${style.timeLineInfo}`}>{`${this.isDST(timeLine.timeZoneId) ?  summer : winter}`}</div> : null
+            <Typography type="subheading" color="secondary">{this.isDST(timeLine.timeZoneId) ? summer : winter}</Typography> : null
           }
-          <div className="pull-right">{this.state.time}</div>
+          <Typography type="subheading" className="ml-auto">{this.state.time}</Typography>
         </div>
         <div>
           {this.renderTimeLine(hours, offset)}
@@ -93,3 +112,5 @@ export class TimeLine extends React.Component<TimeLineProps, TimeLineState> {
     );
   }
 }
+
+export const TimeLine = withTheme<Partial<TimeLineProps>>()(TimeLineImpl);

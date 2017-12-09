@@ -1,83 +1,175 @@
+import { FormControlLabel } from "material-ui/Form";
+import { MenuItem } from "material-ui/Menu";
+import Switch from "material-ui/Switch";
 import * as React from "react";
-import { Link, IndexLink } from "react-router";
-import { connect, ActionCreator } from "react-redux";
-import { bindActionCreators } from "redux";
+import { ActionCreator, connect } from "react-redux";
+import Select from "material-ui/Select";
+import { FormControl } from "material-ui/Form";
+import Input, { InputLabel } from "material-ui/Input";
 
-import { TimeLine, Clock, TimeSelector, Checkbox } from "../../app.common/components";
-import AddNewTimeline from "./AddNewTimeline";
-import { TimeLineControls } from "./TimeLineControls";
-import { NavTab } from "./NavTab";
-import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
-import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
-import { removeTimeLine, startEdit, swapTimeLines, changeShowDSTSetting, changeShowTimezoneIdSetting, changeShowUTCOffsetSetting, changeShowControlPanelSetting } from "../../app.common/actions";
-// const style = require("./DisplaySettings.css");
+import {
+  changeDarkThemeSetting,
+  changePrimaryColor,
+  changeSecondaryColor,
+  changeShowControlPanelSetting,
+  changeShowDSTSetting,
+  changeShowTimezoneIdSetting,
+  changeShowUTCOffsetSetting,
+} from "../../app.common/actions";
+import { DisplaySettingsInfo } from "../../app.common/models";
+import { AppTheme } from "../../app.common/models/AppTheme";
+import { IAppState } from "../../app.common/store";
+import { ColorName, getColorNameById } from "../../app.common/themes/themes";
+import { ColorSelector } from "./ColorSelector";
 
 interface DisplaySettingsDispatchProps {
   changeShowUTCOffsetSetting?: ActionCreator<any>;
   changeShowTimezoneIdSetting?: ActionCreator<any>;
   changeShowDSTSetting?: ActionCreator<any>;
   changeShowControlPanelSetting?: ActionCreator<any>;
+  changeDarkThemeSetting?: ActionCreator<boolean>;
+  changePrimaryColorSetting?: ActionCreator<string>;
+  changeSecondaryColorSetting?: ActionCreator<string>;
 }
 
 interface DisplaySettingsStateProps {
   displaySettings?: DisplaySettingsInfo;
+  theme?: AppTheme;
 }
 
 type DisplaySettingsProps = DisplaySettingsStateProps & DisplaySettingsDispatchProps;
 
-@connect<DisplaySettingsStateProps, DisplaySettingsDispatchProps, DisplaySettingsProps>(
-  (state: IAppState) => ({
-    displaySettings: state.displaySettings
-  } as DisplaySettingsStateProps),
-  {
-    changeShowDSTSetting: changeShowDSTSetting as ActionCreator<any>,
-    changeShowTimezoneIdSetting: changeShowTimezoneIdSetting as ActionCreator<any>,
-    changeShowUTCOffsetSetting: changeShowUTCOffsetSetting as ActionCreator<any>,
-    changeShowControlPanelSetting: changeShowControlPanelSetting as ActionCreator<any>
+class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
+
+  renderColorMenuItem(color: ColorName) {
+    return (
+      <MenuItem key={color.id} value={color.id} style={{ textTransform: "capitalize" }}>{color.name}</MenuItem>
+    );
   }
-)
-export class DisplaySettings extends React.Component<DisplaySettingsProps, any> {
+
   render() {
-    const { displaySettings, changeShowUTCOffsetSetting, changeShowTimezoneIdSetting, changeShowDSTSetting, changeShowControlPanelSetting } = this.props;
+    const {
+      displaySettings,
+      changeShowUTCOffsetSetting,
+      changeShowTimezoneIdSetting,
+      changeShowDSTSetting,
+      changeShowControlPanelSetting,
+      changeDarkThemeSetting,
+      changePrimaryColorSetting,
+      changeSecondaryColorSetting,
+      theme,
+    } = this.props;
+
+    const primary = getColorNameById(theme.palette.primary);
+    const secondary = getColorNameById(theme.palette.secondary);
+
     return (
       <div>
         <div className="row">
-          <div className="col-md-3">
-            <label htmlFor="showUTCOffset">Show UTC offset</label>
-          </div>
-          <div className="col-md-2">
-            <Checkbox value={displaySettings.showUTCOffset} onChange={(value) => changeShowUTCOffsetSetting(value)} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-3">
-            <label htmlFor="showTZId">Show Timezone name</label>
-          </div>
-          <div className="col-md-2">
-            <Checkbox value={displaySettings.showTimeZoneId} onChange={(value) => changeShowTimezoneIdSetting(value)} />
+          <div className="col-6">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displaySettings.useDarkTheme}
+                  onChange={(event, value) => changeDarkThemeSetting(value)}
+                />
+              }
+              label="Use dark theme"
+            />
           </div>
         </div>
         <div className="row">
-          <div className="col-md-3">
-            <label htmlFor="showTZId">Show bottom panel</label>
-          </div>
-          <div className="col-md-2">
-            <Checkbox value={displaySettings.showControlPanel} onChange={(value) => changeShowControlPanelSetting(value)} />
+          <div className="col-6">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displaySettings.showUTCOffset}
+                  onChange={(event, value) => changeShowUTCOffsetSetting(value)}
+                />
+              }
+              label="Show UTC offset"
+            />
           </div>
         </div>
         <div className="row">
-          <div className="col-md-3">
-            <label>Show DST (daylight saving time)</label>
+          <div className="col-6">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displaySettings.showTimeZoneId}
+                  onChange={(event, value) => changeShowTimezoneIdSetting(value)}
+                />
+              }
+              label="Show Timezone name"
+            />
           </div>
-          <div className="col-md-3">
-            <select value={displaySettings.showDST} onChange={(event) => changeShowDSTSetting(event.target.value)}>
-              <option value="hide">hide</option>
-              <option value="DST">show DST</option>
-              <option value="Summer/Winter">show Summer/Winter</option>
-            </select>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displaySettings.showControlPanel}
+                  onChange={(event, value) => changeShowControlPanelSetting(value)}
+                />
+              }
+              label="Show bottom panel"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <FormControl fullWidth>
+              <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
+              <Select
+                value={displaySettings.showDST}
+                onChange={(event) => changeShowDSTSetting(event.target.value)}
+                input={<Input name="showDstSetting" id="showDstSetting" />}
+              >
+                <MenuItem value="hide">hide</MenuItem>
+                <MenuItem value="DST">DST</MenuItem>
+                <MenuItem value="Summer/Winter">Summer/Winter</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <ColorSelector
+              id="primary"
+              label="Primary color"
+              color={primary}
+              onChange={(color) => changePrimaryColorSetting(color.id)}
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
+            <ColorSelector
+              id="secondary"
+              label="Secondary color"
+              color={secondary}
+              onChange={(color) => changeSecondaryColorSetting(color.id)}
+            />
           </div>
         </div>
       </div>
     );
   }
 }
+
+export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySettingsDispatchProps, DisplaySettingsProps>(
+  (state: IAppState) => ({
+    displaySettings: state.displaySettings,
+    theme: state.theme,
+  } as DisplaySettingsStateProps),
+  {
+    changeShowDSTSetting: changeShowDSTSetting as ActionCreator<any>,
+    changeShowTimezoneIdSetting: changeShowTimezoneIdSetting as ActionCreator<any>,
+    changeShowUTCOffsetSetting: changeShowUTCOffsetSetting as ActionCreator<any>,
+    changeShowControlPanelSetting: changeShowControlPanelSetting as ActionCreator<any>,
+    changeDarkThemeSetting: changeDarkThemeSetting as ActionCreator<any>,
+    changePrimaryColorSetting: changePrimaryColor as ActionCreator<any>,
+    changeSecondaryColorSetting: changeSecondaryColor as ActionCreator<any>,
+  }
+)(DisplaySettingsImpl);

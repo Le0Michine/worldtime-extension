@@ -8,6 +8,7 @@ interface IRangeProps {
   valueMax?: number;
   rangeSize?: number;
   onChange?: Function;
+  color?: string;
 }
 
 interface IRangeState {
@@ -28,13 +29,6 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
       hold: false
     };
   }
-
-  static propTypes = {
-    valueMin: React.PropTypes.number.isRequired,
-    valueMax: React.PropTypes.number.isRequired,
-    rangeStep: React.PropTypes.number,
-    onChange: React.PropTypes.func
-  };
 
   onChange(valueMin: number, valueMax: number) {
     if (this.props.onChange) {
@@ -120,6 +114,8 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
 
   render() {
     const { valueMin, valueMax } = this.state;
+    const { color } = this.props;
+    console.log("color", color);
     const min = `${valueMin}%`;
     const max = `${valueMax}%`;
     const width = `${valueMax - valueMin}%`;
@@ -127,9 +123,9 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
       <div className="range-material-container">
         <div ref="rangeBase" className="range-material-base-clickable" onMouseDown={(event) => this.onRangeBaseClick(event)}>
           <div ref="rangeBase" className="range-material-base">
-            <div className="range-material-min-selector" style={{left: min}} onMouseDown={() => this.onHold("min")}></div>
-            <div className="range-material-range-selected" style={{left: min, width}}></div>
-            <div className="range-material-max-selector" style={{left: max}} onMouseDown={() => this.onHold("max")}></div>
+            <div className="range-material-min-selector" style={{left: min, background: color}} onMouseDown={() => this.onHold("min")}></div>
+            <div className="range-material-range-selected" style={{left: min, width, background: color}}></div>
+            <div className="range-material-max-selector" style={{left: max, background: color}} onMouseDown={() => this.onHold("max")}></div>
           </div>
         </div>
       </div>

@@ -3,21 +3,19 @@
   width: 25px;
   margin: 0;
   text-align: center;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+  /* border-top: 1px solid #ccc; */
+  /* border-bottom: 1px solid #ccc; */
   box-sizing: border-box;
-  font-weight: 200;
-  background-color: #E8EAF6;
 }
 
 .timeLineBorderRight {
-  border-right: 1px solid #ccc;
-  border-radius: 0 5px 5px 0;
+  /* border-right: 1px solid #ccc; */
+  /* border-radius: 0 5px 5px 0; */
 }
 
 .timeLineBorderLeft {
-  border-left: 1px solid #ccc;
-  border-radius: 5px 0 0 5px;
+  /* border-left: 1px solid #ccc; */
+  /* border-radius: 5px 0 0 5px; */
 }
 
 .container {
@@ -25,11 +23,16 @@
   width: max-content;
   font-size: 16px;
   margin-top: 10px;
+  max-width: calc(25px * 24);
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .timeLine {
   display: inline-block;
   cursor: default;
+  transform: translateX(-33.33333%);
+  transition: all 0.15s;
 }
 
 .nightHour {

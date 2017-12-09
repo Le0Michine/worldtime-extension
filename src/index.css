@@ -37,3 +37,8 @@ div#app.app-options {
 .right-space {
     margin-right: 10px;
 }
+
+a:hover {
+    text-decoration: none;
+    color: initial;
+}

@@ -1,10 +1,10 @@
 import * as React from "react";
 import * as moment from "moment";
-const style = require("./Clock.css");
+import Typography from "material-ui/Typography";
 
 export class Clock extends React.Component<{}, ClockState> {
-  constructor() {
-    super();
+  constructor(props: {}) {
+    super(props);
     this.state = {
       time: moment().format("HH:mm:ss"),
     };
@@ -17,7 +17,7 @@ export class Clock extends React.Component<{}, ClockState> {
 
   render() {
     return (
-      <div className={style.clock}>{this.state.time}</div>
+      <Typography type="display1">{this.state.time}</Typography>
     );
   }
 }

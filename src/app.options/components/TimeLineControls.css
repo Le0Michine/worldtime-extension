@@ -13,3 +13,8 @@
     border-radius: 0;
     border-right: none;
 }
+
+button.iconButtonSmall {
+    width: 30px;
+    height: 30px;
+}

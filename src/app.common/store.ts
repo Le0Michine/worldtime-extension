@@ -1,11 +1,11 @@
 import { createStore, applyMiddleware, combineReducers, compose, Store, Reducer, ReducersMapObject, StoreEnhancer } from "redux";
-// import * as createLogger from "redux-logger";
-import * as createLogger from "redux-logger";
+import { createLogger } from "redux-logger";
 import * as persistState from "redux-localstorage";
 import * as moment from "moment";
 
-import { timeLines, editTimeLineForm, displaySettings, selectedTimeSpan } from "./reducers";
-import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo } from "../app.common/models";
+import { timeLines, editTimeLineForm, displaySettings, selectedTimeSpan, theme } from "./reducers";
+import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo, AppTheme } from "../app.common/models";
+import { initialPalette } from "./themes/themes";
 
 
 export interface IAppState {
@@ -13,6 +13,7 @@ export interface IAppState {
   editTimeLineForm: TimeZoneInfo;
   displaySettings: DisplaySettingsInfo;
   selectedTimeSpan: TimeSpanInfo;
+  theme: AppTheme;
 }
 
 export interface IAppStoreDispatcher extends ReducersMapObject {
@@ -28,33 +29,55 @@ const initialState: IAppState = {
     createTimeZoneInfo("US/Pacific", "San Francisco"),
     createTimeZoneInfo("Europe/Moscow", "Saint Petersburg"),
     createTimeZoneInfo("Australia/Melbourne", "Melbourne"),
+    createTimeZoneInfo("Asia/Calcutta", "India")
     // createTimeZoneInfo("Asia/Yekaterinburg", "Yekaterinburg")
   ],
   editTimeLineForm: { name: "", timeZoneId: "" } as TimeZoneInfo,
-  displaySettings: { showDST: "hide", showTimeZoneId: false, showUTCOffset: true, showControlPanel: true },
-  selectedTimeSpan: { startHour: moment().hours(), startMinute: moment().minutes(), endHour: 24, endMinute: 0 }
+  displaySettings: {
+    showDST: "hide",
+    showTimeZoneId: false,
+    showUTCOffset: true,
+    showControlPanel: true,
+    useDarkTheme: false,
+  },
+  selectedTimeSpan: { startHour: moment().hours(), startMinute: moment().minutes(), endHour: 24, endMinute: 0 },
+  theme: {
+    palette: initialPalette,
+  }
 } as IAppState;
 
 const reducers: IAppStoreDispatcher = {
   timeLines,
   editTimeLineForm,
   displaySettings,
-  selectedTimeSpan
+  selectedTimeSpan,
+  theme,
 };
 
 let enchancer: StoreEnhancer<IAppState>;
 
+const localStorageState = [
+  persistState("timeLines", { key: "timeLines@0.0.259" }),
+  persistState("displaySettings", { key: "displaySettings@0.1.265" }),
+  persistState("theme", { key: "theme@1.2.45" }),
+];
 if (process.env.NODE_ENV === "development") {
-  enchancer = compose(
-    applyMiddleware((<any>createLogger)()),
-    persistState("timeLines", { key: "timeLines@0.0.259" }),
-    persistState("displaySettings", { key: "displaySettings@0.1.265" })
+  const devEnchansers = [
+    applyMiddleware((<any>createLogger)())
+  ];
+  const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  enchancer = composeEnhancers(
+    ...devEnchansers,
+    ...localStorageState
   ) as any;
 } else {
   enchancer = compose(
-    persistState("timeLines", { key: "timeLines@0.0.259" }),
-    persistState("displaySettings", { key: "displaySettings@0.1.288" })
+    ...localStorageState
   ) as any;
 }
 
-export const store: Store<IAppState> = createStore<IAppState>(combineReducers<IAppState>(reducers), initialState, enchancer);
+export const store: Store<IAppState> = createStore<IAppState>(
+  combineReducers<IAppState>(reducers),
+  initialState,
+  enchancer
+);

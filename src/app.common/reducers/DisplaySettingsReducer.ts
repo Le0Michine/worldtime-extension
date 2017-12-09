@@ -18,6 +18,10 @@ export const displaySettings = function (state: DisplaySettingsInfo = {} as Disp
       const result = Object.assign({}, state, { showControlPanel: action.payload });
       return result;
     }
+    case "DISPLAY_SETTINGS/TOGGLE_DARK_THEME": {
+      const result = Object.assign({}, state, { useDarkTheme: action.payload });
+      return result;
+    }
     default:
       return state;
   }

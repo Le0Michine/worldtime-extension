@@ -4,8 +4,8 @@
 
 .app {
     width: calc(24 * 25px);
-    margin: 10px;
     position: relative;
+    box-sizing: border-box;
 }
 
 .app:not(:last-child) {

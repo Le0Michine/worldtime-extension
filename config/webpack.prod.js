@@ -55,7 +55,7 @@ module.exports = (function(options) {
                     join_vars: true,
                     drop_console: true,
                     drop_debugger: true,
-                    //unsafe: true,
+                    unsafe: true,
                     hoist_vars: true,
                     negate_iife: true,
                     //side_effects: true,

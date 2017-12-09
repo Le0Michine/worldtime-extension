@@ -1,163 +1,206 @@
-// tslint:disable:typedef
+import { getMatches, SuggestionMatchPart } from "../util/match";
+import { MenuItem } from "material-ui/Menu";
+import Paper from "material-ui/Paper";
+import { Theme, withStyles } from "material-ui/styles";
+import TextField from "material-ui/TextField";
+import Typography from "material-ui/Typography";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import * as Autosuggest from "react-autosuggest";
 
-import { Input } from "./Input";
+import { Suggestion } from "../models";
+
+const match = require("autosuggest-highlight/match");
+const parse = require("autosuggest-highlight/parse");
 const style = require("./Typeahead.css");
 
-export class Typeahead extends React.Component<any, any> {
+interface TypeaheadProps {
+  suggestions: Suggestion[];
+  classes: any;
+  onChange: Function;
+}
+
+interface TypeaheadState {
+  value: string;
+  suggestions: Suggestion[];
+  valid: boolean;
+  touched: boolean;
+}
+
+class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
   constructor(props) {
     super(props);
-    const { options } = this.props;
+    const { suggestions } = this.props;
     this.state = {
-      optionsContainerStyle: {
-        display: "none"
-      },
-      optionsContainerMaxHeight: 200,
-      optionsContainerMinHeight: 48,
-      options,
-      mouseOverList: false,
+      suggestions,
+      value: "",
+      valid: false,
       touched: false,
-      focused: false,
-      activeOption: -1
-    };
-
-    setTimeout(() => this.setState({ optionsContainerStyle: this.updateOptionsPosition(true) }), 100);
-  }
-
-  static propTypes = {
-    value: React.PropTypes.string.isRequired,
-    options: React.PropTypes.array.isRequired,
-    onSelect: React.PropTypes.func.isRequired,
-    onChange: React.PropTypes.func.isRequired
-  };
-
-  getInputRect(): ClientRect {
-    // tslint:disable-next-line:no-string-literal
-    return ReactDOM.findDOMNode(this.refs["typeAheadInput"]).getBoundingClientRect();
-  }
-
-  getOptionsRect(): ClientRect {
-    // tslint:disable-next-line:no-string-literal
-    return ReactDOM.findDOMNode(this.refs["typeAheadOptions"]).getBoundingClientRect();
-  }
-
-  updateOptionsPosition(hidden: boolean): any {
-    const inputRect = this.getInputRect();
-    return {
-      display: hidden ? "none" : "block",
-      bottom: `calc(100% - ${inputRect.top - 30}px)`,
-      left: `${inputRect.left}px`,
-      width: `${inputRect.width}px`,
-      maxHeight: `${this.state.optionsContainerMaxHeight}px`,
-      minHeight: `${this.state.optionsContainerMinHeight}px`
     };
   }
 
-  showOptions() {
-    this.setState({
-      optionsContainerStyle: this.updateOptionsPosition(false),
-      focused: true
-    });
+  get showError(): boolean {
+    return !this.state.valid && this.state.touched;
   }
 
-  hideOptions(force: boolean = false): void {
-    if (this.state.mouseOverList && !force) {
-      return;
-    }
-    this.setState({
-      optionsContainerStyle: {
-        display: "none"
-      },
-      mouseOverList: false,
-      focused: false
-    });
+  get errorMessage(): string {
+    return this.showError ? "Select value from the list, value can't be empty" : "";
   }
 
-  isValid(): boolean {
-    return !this.state.touched || !!this.props.options.find(x => x.value === this.state.inputValue);
+  onBlur() {
+    this.setState({ touched: true });
   }
 
-  filterOptions(query: string): void {
-    const { options } = this.props;
-    const regex: RegExp = new RegExp(query.replace(/[ ,/]/ig, "[ /_]"), "ig");
-    const filteredOptions = options.filter(x => regex.test(x.value));
-    this.setState({ options: filteredOptions, inputValue: query, touched: true });
-    this.props.onChange(query);
-  }
-
-  selectOption(option) {
-    this.props.onSelect(option);
-    this.setState({ inputValue: option.value });
-    this.hideOptions(true);
-  }
-
-  onMouseEnterOptionsList() {
-    this.setState({ mouseOverList: true });
-  }
-
-  onMouseLeaveOptionsList() {
-    this.setState({ mouseOverList: false });
-  }
-
-  onKeyDown(event: KeyboardEvent) {
-    const KEY_UP = 38;
-    const KEY_DOWN = 40;
-    const KEY_ENTER = 13;
-    if (event.which === KEY_UP || event.which === KEY_DOWN || event.which === KEY_ENTER) {
-      event.preventDefault();
-      const { activeOption, options } = this.state;
-      if (activeOption === -1 && event.which === KEY_UP) {
-        this.setState({ activeOption: options.length - 1 });
-      } else if (activeOption === -1 && event.which === KEY_DOWN) {
-        this.setState({ activeOption: 0 });
-      } else if (event.which === KEY_UP) {
-        this.setState({ activeOption: (options.length + activeOption - 1) % options.length });
-      } else if (event.which === KEY_DOWN) {
-        this.setState({ activeOption: (activeOption + 1) % options.length });
-      } else if (event.which === KEY_ENTER) {
-        this.selectOption(options[activeOption]);
-        this.setState({ activeOption: -1 });
-      }
-    }
-  }
-
-  render() {
-    const { value } = this.props;
-    const { optionsContainerStyle, options, activeOption } = this.state;
-    const isValid = this.isValid();
+  renderInput(inputProps) {
+    const { classes, value, ref, ...other } = inputProps;
 
     return (
-      <div ref="typeAheadInput">
-        <div
-          className={`${style.typeAheadOptions} whiteframe`}
-          style={optionsContainerStyle}
-          onMouseEnter={() => this.onMouseEnterOptionsList()}
-          onMouseLeave={() => this.onMouseLeaveOptionsList()}
-        >
-          <ul className={style.typeAheadOptionsList}>
-            {options.map((option, index) => (
-              <li
-                key={option.value}
-                className={`${style.typeAheadOptionsListItem} ${activeOption === index ? style.typeAheadOptionsListItemSelected : ""}`}
-                onClick={() => this.selectOption(option)}
-              >
-                {option.template}
-              </li>
-            ))}
-          </ul>
+      <TextField
+        required={true}
+        className={classes.textField}
+        value={value}
+        inputRef={ref}
+        label="Choose timezone"
+        error={this.showError}
+        helperText={this.errorMessage}
+        InputProps={{
+          classes: {
+            input: classes.input,
+          },
+          ...other,
+        }}
+      />
+    );
+  }
+
+  renderSuggestion(suggestion: Suggestion, query, isHighlighted) {
+    const matches = getMatches(suggestion.title, query);
+    const parts = parse(suggestion.title, matches) as SuggestionMatchPart[];
+
+    return (
+      <MenuItem selected={isHighlighted} component="div">
+        <div className="d-flex w-100">
+          {parts.map((part, index) => {
+            return (
+              <span key={index} style={{ fontWeight: part.highlight ? "bolder" : "inherit" }}>
+                {part.text}
+              </span>
+            )
+          })}
+          <span className="ml-auto" style={{ fontWeight: "lighter" }}>{suggestion.subheading}</span>
         </div>
-        <Input
-          placeholder="Choose timezone*"
-          onFocus={() => this.showOptions()}
-          onBlur={() => this.hideOptions()}
-          onChange={(value) => this.filterOptions(value)}
-          onKeyDown={(event) => this.onKeyDown(event)}
-          value={value}
-          invalid={!isValid}
-          errorMessage="Select value from the list, value can't be empty"
-        />
-      </div>
+      </MenuItem>
+    );
+  }
+
+  renderSuggestionsContainer(options) {
+    const { containerProps, children } = options;
+    return (
+      <Paper {...containerProps} square>
+        {children}
+      </Paper>
+    );
+  }
+
+  getSuggestionValue(suggestion: Suggestion) {
+    return suggestion.title;
+  }
+
+  getSuggestions(suggestions: Suggestion[], value) {
+    const inputValue = value.trim().toLowerCase();
+    const inputLength = inputValue.length;
+    let count = 0;
+
+    const result = inputLength === 0
+      ? []
+      : suggestions.filter(suggestion => {
+        return suggestion.title.toLowerCase().includes(inputValue);
+      }).slice(0, 100);
+    return result;
+  }
+
+  handleSuggestionsFetchRequested(suggestions: Suggestion[], value) {
+    this.setState({
+      suggestions: this.getSuggestions(suggestions, value),
+    });
+  };
+
+  handleSuggestionsClearRequested() {
+    this.setState({
+      suggestions: [],
+    });
+  };
+
+  handleChange(newValue) {
+    this.setState({
+      value: newValue,
+    });
+    const selectedValue = this.props.suggestions.find(x => x.title === newValue);
+    if (selectedValue) {
+      this.props.onChange(selectedValue.title);
+      this.setState({ valid: true });
+    } else {
+      this.setState({ valid: false });
+    }
+  };
+
+  render() {
+    const { classes } = this.props;
+    const { value, suggestions } = this.state;
+
+    return (
+      <Autosuggest
+        theme={{
+          container: classes.container,
+          suggestionsContainerOpen: classes.suggestionsContainerOpen,
+          suggestionsList: classes.suggestionsList,
+          suggestion: classes.suggestion,
+        }}
+        renderInputComponent={(inputProps) => this.renderInput(inputProps)}
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={({ value }) => this.handleSuggestionsFetchRequested(this.props.suggestions, value)}
+        onSuggestionsClearRequested={() => this.handleSuggestionsClearRequested()}
+        renderSuggestionsContainer={(options) => this.renderSuggestionsContainer(options)}
+        getSuggestionValue={this.getSuggestionValue}
+        renderSuggestion={(suggestion, { query, isHighlighted }) => this.renderSuggestion(suggestion, query, isHighlighted)}
+        inputProps={{
+          classes,
+          value,
+          onChange: (event, { newValue }) => this.handleChange(newValue),
+          onBlur: () => this.onBlur(),
+        }}
+      />
     );
   }
 }
+
+const styles = (theme: Theme): React.CSSProperties => ({
+  container: {
+    flexGrow: 1,
+    position: "relative",
+    height: 200,
+  },
+  suggestionsContainerOpen: {
+    position: "absolute",
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 3,
+    overflowY: "scroll",
+    maxHeight: 200,
+    zIndex: 10,
+    left: 0,
+    right: 0,
+  },
+  suggestion: {
+    display: "block",
+  },
+  suggestionsList: {
+    margin: 0,
+    padding: 0,
+    listStyleType: "none",
+  },
+  textField: {
+    width: "100%",
+  },
+});
+
+export const Typeahead = withStyles(styles)(TypeaheadImpl);
+

@@ -6,4 +6,5 @@
   height: calc(100% - 28px);
   margin: -2px 0;
   transition: all 0.15s;
+  z-index: 2;
 }

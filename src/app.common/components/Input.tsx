@@ -26,18 +26,6 @@ export class Input extends React.Component<InputProps, InputState> {
     };
   }
 
-  static propTypes = {
-    value: React.PropTypes.string.isRequired,
-    errorMessage: React.PropTypes.string,
-    placeholder: React.PropTypes.string,
-    onChange: React.PropTypes.func.isRequired,
-    invalid: React.PropTypes.bool,
-    onTouch: React.PropTypes.func,
-    onFocus: React.PropTypes.func,
-    onBlur: React.PropTypes.func,
-    onKeyDown: React.PropTypes.func,
-  };
-
   onFocus() {
     if (this.props.onFocus) {
       this.props.onFocus();

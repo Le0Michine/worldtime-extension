@@ -20,6 +20,9 @@ jobs:
           name: Install npm dependencies
           command: |
             npm install
+      - store_artifacts:
+          path: /home/circleci/.npm/_logs/2017-12-09T20_18_51_716Z-debug.log
+          destination: ./npm-logs/
       - save_cache:
           paths:
             - node_modules

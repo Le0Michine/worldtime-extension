@@ -21,7 +21,7 @@ jobs:
           command: |
             npm install
       - store_artifacts:
-          path: /home/circleci/.npm/_logs/2017-12-09T20_18_51_716Z-debug.log
+          path: /home/circleci/.npm/_logs
           destination: ./npm-logs/
       - save_cache:
           paths:

@@ -1,3 +1,4 @@
+import { formatTime } from "../util/time";
 import * as React from "react";
 import * as moment from "moment";
 import Typography from "material-ui/Typography";
@@ -34,14 +35,15 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
   }
 
   getCurrentTime(offset: number) {
-    return moment().utcOffset(offset).format("HH:mm");
+    const use24HoursFormat = this.props.displaySettings.use24HoursTime;
+    return formatTime(moment().utcOffset(offset), use24HoursFormat);
   }
 
   isDST(tz: string) {
     return moment().tz(tz).isDST();
   }
 
-  renderHourCell(h, i, currentHour) {
+  renderHourCell(h: number, i: number, currentHour: number) {
     const classes = [style.hour];
     const { theme } = this.props;
     let background = theme.palette.primary[50];
@@ -69,7 +71,22 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
       color,
       borderBottom: theme.palette.grey.A400
     } as React.CSSProperties);
-    return (<span className={classes.join(" ")} style={styles} key={`${h}_${i}`}>{h}</span>);
+    const use24HoursFormat = this.props.displaySettings.use24HoursTime;
+    let displayHour = String(h);
+    if (!use24HoursFormat) {
+      switch (h) {
+        case 0:
+          displayHour = "am";
+          break;
+        case 12:
+          displayHour = "pm";
+          break;
+        default:
+          displayHour = String(h % 12 + 1);
+          break;
+      }
+    }
+    return (<span className={classes.join(" ")} style={styles} key={`${h}_${i}`}>{displayHour}</span>);
   }
 
   renderTimeLine(hours, offset) {

@@ -1,3 +1,4 @@
+import { formatTime } from "../../app.common/util/time";
 import * as React from "react";
 import { connect, ActionCreator } from "react-redux";
 import * as moment from "moment";
@@ -66,7 +67,9 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
           {displaySettings.showControlPanel ? (<div className={style.timeSpanSelector}>
             <div className="bottom-panel-container">
               <div className="">
-                <Typography type="subheading">{startTime.format("HH:mm")} - {endTime.format("HH:mm")} duration: {duration.asHours().toFixed(1)}h</Typography>
+                <Typography type="subheading">
+                  {formatTime(startTime, displaySettings.use24HoursTime)} - {formatTime(endTime, displaySettings.use24HoursTime)} ({duration.asHours().toFixed(1)}h)
+                </Typography>
               </div>
               <div className="">
                 <Button
@@ -98,7 +101,7 @@ export const Layout = connect<ILayoutStateProps, ILayoutDispatchProps, ILayoutPr
   (store: IAppState) => ({
     timeLines: store.timeLines,
     displaySettings: store.displaySettings,
-    selectedTimeSpan: store.selectedTimeSpan
+    selectedTimeSpan: store.selectedTimeSpan,
   } as ILayoutProps),
   { changeSelectedTimeSpan: changeSelectedTimeSpan }
 )(LayoutImpl);

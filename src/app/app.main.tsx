@@ -19,6 +19,19 @@ interface MainStateProps {
 type MainProps = MainStateProps & MainDispatchProps;
 
 class AppMain extends React.Component<MainProps, any> {
+  componentWillMount() {
+    // setTimeout(() => {
+    //   const body = document.getElementsByTagName("body").item(0);
+    //   const width = body.clientWidth;
+    //   body.style.width = `${width + 1}px`;
+    //   setTimeout(() => body.style.width = "", 100);
+    // }, 1000)
+    setTimeout(() => {
+      const { clientWidth, clientHeight } = document.body;
+      window.resizeTo(clientWidth, clientHeight);
+    }, 100);
+  }
+
   render() {
     const { useDarkTheme, appTheme } = this.props;
     const theme = getTheme(useDarkTheme, appTheme);

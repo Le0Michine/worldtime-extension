@@ -15,6 +15,7 @@ import {
   changeShowDSTSetting,
   changeShowTimezoneIdSetting,
   changeShowUTCOffsetSetting,
+  change24HoursTimeFormatSetting,
 } from "../../app.common/actions";
 import { DisplaySettingsInfo } from "../../app.common/models";
 import { AppTheme } from "../../app.common/models/AppTheme";
@@ -30,6 +31,7 @@ interface DisplaySettingsDispatchProps {
   changeDarkThemeSetting?: ActionCreator<boolean>;
   changePrimaryColorSetting?: ActionCreator<string>;
   changeSecondaryColorSetting?: ActionCreator<string>;
+  change24HoursTimeFormatSetting?: ActionCreator<boolean>;
 }
 
 interface DisplaySettingsStateProps {
@@ -54,6 +56,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       changeShowTimezoneIdSetting,
       changeShowDSTSetting,
       changeShowControlPanelSetting,
+      change24HoursTimeFormatSetting,
       changeDarkThemeSetting,
       changePrimaryColorSetting,
       changeSecondaryColorSetting,
@@ -119,6 +122,19 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
         </div>
         <div className="row">
           <div className="col-6">
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={displaySettings.use24HoursTime}
+                  onChange={(event, value) => change24HoursTimeFormatSetting(value)}
+                />
+              }
+              label="Use 24 hours format"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-6">
             <FormControl fullWidth>
               <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
               <Select
@@ -171,5 +187,6 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
     changeDarkThemeSetting: changeDarkThemeSetting as ActionCreator<any>,
     changePrimaryColorSetting: changePrimaryColor as ActionCreator<any>,
     changeSecondaryColorSetting: changeSecondaryColor as ActionCreator<any>,
+    change24HoursTimeFormatSetting: change24HoursTimeFormatSetting as ActionCreator<any>,
   }
 )(DisplaySettingsImpl);

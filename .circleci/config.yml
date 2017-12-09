@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:9.1.0
+      - image: circleci/node:9.2.1
     environment:
       - APP_ID: pekgbpmeppfghkiaaolmjhiooapokgbk
     working_directory: /home/circleci/project

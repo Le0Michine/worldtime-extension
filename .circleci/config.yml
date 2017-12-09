@@ -55,7 +55,7 @@ jobs:
                 echo Error: $(echo $result | jq .itemError | jq -r first.error_code)
                 echo Detail: $(echo $result | jq .itemError | jq -r first.error_detail)
                 echo *********************************************************************
-                exit 1
+                # exit 1
               fi
             fi
       - run:
@@ -70,7 +70,7 @@ jobs:
                 echo Status: $(echo $PUBLISH_RESULT | jq -r .status)
                 echo Detail: $(echo $PUBLISH_RESULT | jq -r .statusDetail)
                 echo *********************************************************************
-                exit 1
+                # exit 1
               fi
             fi
 

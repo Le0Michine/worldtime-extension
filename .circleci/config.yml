@@ -11,8 +11,8 @@ jobs:
       - run:
           name: "Install Dependencies"
           command: |
-            apt-get update
-            apt-get -y install curl jq
+            sudo apt-get update
+            sudo apt-get -y install curl jq
       - restore_cache:
           keys:
           - npm-dependencies-{{ checksum "package.json" }}

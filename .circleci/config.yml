@@ -39,10 +39,10 @@ jobs:
           path: out/out.zip
           destination: ./canary.zip
       - run:
-          name: "Upload & Publish Extension to the Google Chrome Store"
+          name: "Upload Extension to the Google Chrome Store"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
+              export ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
               UPLOAD_RESULT=(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -X PUT -T out/out.zip -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}")
               if [ "$(echo $UPLOAD_RESULT | jq -r .uploadState)" == "FAILURE" ]; then
                 echo *********************************************************************
@@ -52,6 +52,11 @@ jobs:
                 echo *********************************************************************
                 exit 1
               fi
+            fi
+      - run:
+          name: "Publish Extension to the Google Chrome Store"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
               PUBLISH_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish" | jq .uploadState)
               if [ "$(echo $PUBLISH_RESULT | jq -r .status)" != "["OK"]" ]; then
                 echo *********************************************************************

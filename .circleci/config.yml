@@ -36,9 +36,9 @@ jobs:
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          keys:
-            - *src-cache-key
-            - *npm-dependencies-cache-key
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
       - run:
           name: Build package
           command: |
@@ -59,9 +59,9 @@ jobs:
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          keys:
-            - *src-cache-key
-            - *npm-dependencies-cache-key
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
       - run:
           name: Build package
           command: |

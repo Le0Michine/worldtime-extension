@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:9.1.0
+    working_directory: /home/circleci/project
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - npm-dependencies-{{ checksum "package.json" }}
+          - npm-dependencies-
+      - run:
+          name: Install npm dependencies
+          command: |
+            npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: npm-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Build package
+          command: |
+            npm run build:prod
+      - store_artifacts:
+          path: out/out.zip
+          destination: ./
+
+

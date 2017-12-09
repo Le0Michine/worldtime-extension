@@ -39,6 +39,7 @@ const initialState: IAppState = {
     showUTCOffset: true,
     showControlPanel: true,
     useDarkTheme: false,
+    use24HoursTime: true,
   },
   selectedTimeSpan: { startHour: moment().hours(), startMinute: moment().minutes(), endHour: 24, endMinute: 0 },
   theme: {

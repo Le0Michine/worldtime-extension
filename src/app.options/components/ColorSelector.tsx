@@ -44,7 +44,6 @@ export class ColorSelector extends React.Component<ColorSelectorProps, any> {
   }
 
   renderColorValue(id: ColorId, color: ColorName) {
-    console.log("render color valie", color);
     return (
       <div className="d-flex">
         <span>{color.name}</span>

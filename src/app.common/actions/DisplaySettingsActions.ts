@@ -37,3 +37,10 @@ export function changeDarkThemeSetting(useDarkTheme: boolean): Action<boolean> {
     payload: useDarkTheme
   };
 }
+
+export function change24HoursTimeFormatSetting(value: boolean): Action<boolean> {
+  return {
+    type: "DISPLAY_SETTINGS/TOGGLE_24_HOURS",
+    payload: value
+  };
+}

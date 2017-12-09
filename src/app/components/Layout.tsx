@@ -29,9 +29,6 @@ interface ILayoutDispatchProps {
 type ILayoutProps = ILayoutStateProps & ILayoutDispatchProps;
 
 class LayoutImpl extends React.Component<ILayoutProps, any> {
-  onWheel(event) {
-    console.log("on wheel", event);
-  }
 
   render(): React.ReactElement<any> {
     const { displaySettings, selectedTimeSpan, changeSelectedTimeSpan, timeLines, rangeColor } = this.props;
@@ -54,7 +51,7 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
             </IconButton>
           </div>
         </div>
-        <div className={style.app + " mx-auto"} onWheel={(event) => this.onWheel(event)}>
+        <div className={style.app + " mx-auto"}>
           <TimeSelector selectedTimeSpan={selectedTimeSpan} color={rangeColor} />
           <div>
             {timeLines.map(tl =>

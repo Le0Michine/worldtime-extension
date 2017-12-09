@@ -115,7 +115,6 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
   render() {
     const { valueMin, valueMax } = this.state;
     const { color } = this.props;
-    console.log("color", color);
     const min = `${valueMin}%`;
     const max = `${valueMax}%`;
     const width = `${valueMax - valueMin}%`;

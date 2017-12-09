@@ -24,11 +24,10 @@ steps: &upload-and-publish
           echo Package uploaded
           echo $UPLOAD_RESULT
           if [ "$(echo $UPLOAD_RESULT | jq -r .uploadState)" == "FAILURE" ]; then
-            echo *********************************************************************
+            echo =====================================================================
             echo Package validation failed
-            echo Error: $(echo $result | jq .itemError | jq -r first.error_code)
-            echo Detail: $(echo $result | jq .itemError | jq -r first.error_detail)
-            echo *********************************************************************
+            echo Error: $(echo $result | jq .itemError)
+            echo =====================================================================
             # exit 1
           fi
         fi
@@ -40,10 +39,10 @@ steps: &upload-and-publish
           echo Package published
           echo $PUBLISH_RESULT
           if [ "$(echo $PUBLISH_RESULT | jq -r .status)" != "["OK"]" ]; then
-            echo *********************************************************************
+            echo =====================================================================
             echo Status: $(echo $PUBLISH_RESULT | jq -r .status)
             echo Detail: $(echo $PUBLISH_RESULT | jq -r .statusDetail)
-            echo *********************************************************************
+            echo =====================================================================
             # exit 1
           fi
         fi

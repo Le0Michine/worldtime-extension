@@ -13,9 +13,9 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt-get -y install curl jq
-      - restore_cache:
-          keys:
-          - npm-dependencies-{{ checksum "package.json" }}
+      # - restore_cache:
+      #     keys:
+      #     - npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Install npm dependencies
           command: |
@@ -23,10 +23,10 @@ jobs:
       - store_artifacts:
           path: /home/circleci/.npm/_logs
           destination: ./npm-logs/
-      - save_cache:
-          paths:
-            - node_modules
-          key: npm-dependencies-{{ checksum "package.json" }}
+      # - save_cache:
+      #     paths:
+      #       - node_modules
+      #     key: npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Build package
           command: |

@@ -24,6 +24,6 @@ jobs:
             npm run build:prod
       - store_artifacts:
           path: out/out.zip
-          destination: ./
+          destination: ./package.zip
 
 

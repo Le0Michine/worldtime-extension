@@ -10,7 +10,7 @@ steps: &upload-and-publish
       name: "Install Dependencies"
       command: |
         sudo apt-get update
-        sudo apt-get -y install curl jq
+        sudo apt-get -y --force-yes install curl jq
   - restore_cache:
       key: *npm-prod-package-cache-key
   - restore_cache:

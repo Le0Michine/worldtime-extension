@@ -1,6 +1,7 @@
 /node_modules
 /out
 /secret
+/tmp
 npm-debug.log*
 *.zip
 *.pem

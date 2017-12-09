@@ -13,7 +13,7 @@ const ZipBundlerPlugin = require('webpack-zip-bundler');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'developmen1t';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'production';
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 
 const helpers = require('./helpers');

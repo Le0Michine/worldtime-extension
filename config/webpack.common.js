@@ -10,22 +10,22 @@ const fs = require('fs');
 const helpers = require('./helpers');
 
 function versionReplacer(key, value) {
-    if (key === "version") {
-        var numbers = value.split(".");
-        var major = numbers[0];
-        var minor = numbers[1];
-        var build = Number(numbers[2]) + 1;
-        var version = major + "." + minor + "." + build;
-        console.log("update version to ", version);
-        return version;
-    }
-    return value;
+  if (key === "version") {
+    var numbers = value.split(".");
+    var major = numbers[0];
+    var minor = numbers[1];
+    var build = Number(numbers[2]) + 1;
+    var version = major + "." + minor + "." + build;
+    console.log("update version to ", version);
+    return version;
+  }
+  return value;
 }
 
 var filesToCopy = [
-    { from: './node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./", toType: "dir", flatten: true },
-    { from: './node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
-    { from: './src/*', to: "./", toType: "dir", flatten: true }
+  { from: './node_modules/bootstrap/dist/css/bootstrap.min.css', to: "./", toType: "dir", flatten: true },
+  { from: './node_modules/material-design-icons/iconfont/MaterialIcons-Regular.woff', to: "./", toType: "dir" },
+  { from: './src/*', to: "./", toType: "dir", flatten: true }
 ];
 
 var filesToIgnore = [
@@ -34,7 +34,7 @@ var filesToIgnore = [
 
 var optionalPlugins = [];
 
-module.exports = function(options) {
+module.exports = function (options) {
   isProd = options.env === 'production';
   if (options.filesToCopy) {
     filesToCopy = [...filesToCopy, ...options.filesToCopy];
@@ -46,8 +46,8 @@ module.exports = function(options) {
   if (options.cleanOutput) {
     optionalPlugins.push(
       new CleanWebpackPlugin(['out/*'], {
-        root: path.resolve(__dirname , '..'),
-        verbose: true, 
+        root: path.resolve(__dirname, '..'),
+        verbose: true,
         dry: false
       })
     );
@@ -56,7 +56,7 @@ module.exports = function(options) {
   return {
     name: "main",
     context: path.join(__dirname, "../"),
-    devtool: !isProd ? "inline-sourcemap" : null,
+    devtool: !isProd ? "inline-sourcemap" : false,
     entry: {
       "app": "./src/app/app.tsx",
       "app.options": "./src/app.options/app.options.tsx"
@@ -81,8 +81,8 @@ module.exports = function(options) {
           exclude: /node_modules/,
           loader: 'babel-loader',
           query: {
-              presets: ['react', 'es2015', 'stage-0'],
-              plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
+            presets: ['react', 'es2015', 'stage-0'],
+            plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
           }
         },
         {
@@ -107,14 +107,14 @@ module.exports = function(options) {
       ]
     },
     plugins: [
-      new CopyWebpackPlugin([ ...filesToCopy ], {
-          ignore: [ ...filesToIgnore ],
-          copyUnmodified: false
-        }
+      new CopyWebpackPlugin([...filesToCopy], {
+        ignore: [...filesToIgnore],
+        copyUnmodified: false
+      }
       ),
       new JsonReplacerPlugin({
         inputFile: "src/manifest.json",
-        replacers: [ versionReplacer ]
+        replacers: [versionReplacer]
       }),
       new webpack.ContextReplacementPlugin(
         // The (\\|\/) piece accounts for path separators in *nix and Windows

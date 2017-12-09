@@ -24,5 +24,12 @@ jobs:
       - store_artifacts:
           path: out/out.zip
           destination: ./package.zip
+      - run:
+          name: Build canary package
+          command: |
+            npm run build:canary
+      - store_artifacts:
+          path: out/out.zip
+          destination: ./canary.zip
 
 

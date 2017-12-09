@@ -140,5 +140,5 @@ workflows:
             - install_dependencies
       - upload_and_publish:
           requires:
-            - build_prod:
+            - build_prod
             - build_canary

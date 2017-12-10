@@ -44,3 +44,10 @@ export function change24HoursTimeFormatSetting(value: boolean): Action<boolean> 
     payload: value
   };
 }
+
+export function changeTimeSelectionStepSetting(value: number): Action<number> {
+  return {
+    type: "DISPLAY_SETTINGS/CHANGE_TIME_SELECTION_STEP",
+    payload: value
+  };
+}

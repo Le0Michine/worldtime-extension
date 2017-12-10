@@ -17,6 +17,7 @@ import {
   changeShowTimezoneIdSetting,
   changeShowUTCOffsetSetting,
   change24HoursTimeFormatSetting,
+  changeTimeSelectionStepSetting,
 } from "../../app.common/actions";
 import { DisplaySettingsInfo } from "../../app.common/models";
 import { AppTheme } from "../../app.common/models/AppTheme";
@@ -33,6 +34,7 @@ interface DisplaySettingsDispatchProps {
   changePrimaryColorSetting?: ActionCreator<string>;
   changeSecondaryColorSetting?: ActionCreator<string>;
   change24HoursTimeFormatSetting?: ActionCreator<boolean>;
+  changeTimeSelectionStepSetting?: ActionCreator<number>;
 }
 
 interface DisplaySettingsStateProps {
@@ -61,6 +63,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       changeDarkThemeSetting,
       changePrimaryColorSetting,
       changeSecondaryColorSetting,
+      changeTimeSelectionStepSetting,
       theme,
     } = this.props;
 
@@ -140,6 +143,21 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                 </FormControl>
               </div>
             </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="timeSelectionStepSetting">Time selection step</InputLabel>
+                  <Select
+                    value={displaySettings.selectionStep}
+                    onChange={(event) => changeTimeSelectionStepSetting(event.target.value)}
+                    input={<Input name="timeSelectionStepSetting" id="timeSelectionStepSetting" />}
+                  >
+                    <MenuItem value={15}>15</MenuItem>
+                    <MenuItem value={30}>30</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
           </div>
           <div className="col-6">
             <Typography type="headline" className="mt-2">Theme</Typography>
@@ -197,5 +215,6 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
     changePrimaryColorSetting: changePrimaryColor as ActionCreator<any>,
     changeSecondaryColorSetting: changeSecondaryColor as ActionCreator<any>,
     change24HoursTimeFormatSetting: change24HoursTimeFormatSetting as ActionCreator<any>,
+    changeTimeSelectionStepSetting: changeTimeSelectionStepSetting as ActionCreator<any>,
   }
 )(DisplaySettingsImpl);

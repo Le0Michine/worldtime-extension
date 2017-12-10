@@ -34,6 +34,9 @@ export const reducer = function (state: State = initialState, action: Action<any
     case "DISPLAY_SETTINGS/TOGGLE_24_HOURS": {
       return updateState(state, { use24HoursTime: action.payload });
     }
+    case "DISPLAY_SETTINGS/CHANGE_TIME_SELECTION_STEP": {
+      return updateState(state, { selectionStep: action.payload });
+    }
     default:
       return state;
   }

@@ -1,8 +1,14 @@
 import { Action } from "../actions";
 import { AppTheme } from "../models";
-import { getColorById } from "../themes/themes";
+import { getColorById, initialPalette } from "../themes/themes";
 
-export const theme = function (state: AppTheme = {} as AppTheme, action: Action<any>): AppTheme {
+export type State = AppTheme;
+
+export const initialState: State = {
+  palette: initialPalette,
+};
+
+export const reducer = function (state: State = initialState, action: Action<any>): State {
   switch (action.type) {
     case "THEME/SET_PRIMARY_COLOR":
       const newState = Object.assign({}, state);

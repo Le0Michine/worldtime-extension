@@ -2,7 +2,14 @@ import { updateState } from "./UpdateStateHelper";
 import { TimeZoneInfo } from "../models";
 import { Action } from "../actions";
 
-export const editTimeLineForm = function (state: TimeZoneInfo = {} as TimeZoneInfo, action: Action<any>): TimeZoneInfo {
+export type State = TimeZoneInfo;
+
+export const initialState: State = {
+  name: "",
+  timeZoneId: ""
+} as State;
+
+export const reducer = function (state: State = initialState, action: Action<any>): State {
   switch(action.type) {
     case "EDIT_TIMELINE/CHANGE_DISPLAY_NAME":
       return updateState(state, { name: action.payload })

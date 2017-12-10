@@ -23,11 +23,26 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
 
   constructor(props: IRangeProps) {
     super(props);
+    const { rangeSize, valueMin, valueMax } = props;
     this.state = {
-      valueMin: props.rangeSize ? props.valueMin / props.rangeSize * 100 : props.valueMin,
-      valueMax: props.rangeSize ? props.valueMax / props.rangeSize * 100 : props.valueMax,
+      valueMin: rangeSize ? valueMin / rangeSize * 100 : valueMin,
+      valueMax: rangeSize ? valueMax / rangeSize * 100 : valueMax,
       hold: false
     };
+  }
+
+  componentWillReceiveProps(props: IRangeProps) {
+    if (props) {
+      this.updateState(props);
+    }
+  }
+  
+  updateState(props: IRangeProps) {
+    const { valueMax, valueMin, rangeSize } = props;
+    this.setState({
+      valueMin: rangeSize ? valueMin / rangeSize * 100 : valueMin,
+      valueMax: rangeSize ? valueMax / rangeSize * 100 : valueMax,
+    });
   }
 
   onChange(valueMin: number, valueMax: number) {
@@ -122,9 +137,9 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
       <div className="range-material-container">
         <div ref="rangeBase" className="range-material-base-clickable" onMouseDown={(event) => this.onRangeBaseClick(event)}>
           <div ref="rangeBase" className="range-material-base">
-            <div className="range-material-min-selector" style={{left: min, background: color}} onMouseDown={() => this.onHold("min")}></div>
-            <div className="range-material-range-selected" style={{left: min, width, background: color}}></div>
-            <div className="range-material-max-selector" style={{left: max, background: color}} onMouseDown={() => this.onHold("max")}></div>
+            <div className="range-material-min-selector" style={{ left: min, background: color }} onMouseDown={() => this.onHold("min")}></div>
+            <div className="range-material-range-selected" style={{ left: min, width, background: color }}></div>
+            <div className="range-material-max-selector" style={{ left: max, background: color }} onMouseDown={() => this.onHold("max")}></div>
           </div>
         </div>
       </div>

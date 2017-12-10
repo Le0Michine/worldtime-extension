@@ -1,106 +1,41 @@
-import { createStore, applyMiddleware, combineReducers, compose, Store, Reducer, ReducersMapObject, StoreEnhancer } from "redux";
-import { createLogger } from "redux-logger";
-import * as persistState from "redux-localstorage";
 import * as moment from "moment";
+import { applyMiddleware, compose, createStore, Store, StoreEnhancer } from "redux";
+import { createLogger } from "redux-logger";
 
 import {
-  timeLines,
-  editTimeLineForm,
-  displaySettings,
-  selectedTimeSpan,
-  theme,
-  scrollPosition
-} from "./reducers";
-import { TimeZoneInfo, createTimeZoneInfo, DisplaySettingsInfo, TimeSpanInfo, AppTheme, ScrollPosition } from "../app.common/models";
+  AppTheme,
+  createTimeZoneInfo,
+  DisplaySettingsInfo,
+  ScrollPosition,
+  TimeSpanInfo,
+  TimeZoneInfo,
+} from "../app.common/models";
+import { localStorageEnchancer } from "./localstorage-enchancer";
+import { rootReducer, initialState, IAppState } from "./reducers";
 import { initialPalette } from "./themes/themes";
 
-
-export interface IAppState {
-  timeLines: TimeZoneInfo[];
-  editTimeLineForm: TimeZoneInfo;
-  displaySettings: DisplaySettingsInfo;
-  selectedTimeSpan: TimeSpanInfo;
-  theme: AppTheme;
-  scrollPosition: ScrollPosition;
-}
-
-export interface IAppStoreDispatcher extends ReducersMapObject {
-  timeLines: Reducer<TimeZoneInfo[]>;
-  editTimeLineForm: Reducer<TimeZoneInfo>;
-  displaySettings: Reducer<DisplaySettingsInfo>;
-  selectedTimeSpan: Reducer<TimeSpanInfo>;
-  theme: Reducer<AppTheme>;
-  scrollPosition: Reducer<ScrollPosition>;
-}
-
-const initialState: IAppState = {
-  timeLines: [
-    createTimeZoneInfo("Europe/Warsaw", "Kraków"),
-    createTimeZoneInfo("US/Pacific", "San Francisco"),
-    createTimeZoneInfo("Europe/Moscow", "Saint Petersburg"),
-    createTimeZoneInfo("Australia/Melbourne", "Melbourne"),
-    createTimeZoneInfo("Asia/Calcutta", "India")
-    // createTimeZoneInfo("Asia/Yekaterinburg", "Yekaterinburg")
-  ],
-  editTimeLineForm: { name: "", timeZoneId: "" } as TimeZoneInfo,
-  displaySettings: {
-    showDST: "hide",
-    showTimeZoneId: false,
-    showUTCOffset: true,
-    showControlPanel: true,
-    useDarkTheme: false,
-    use24HoursTime: true,
-  },
-  selectedTimeSpan: {
-    startHour: moment().hours(),
-    startMinute: moment().minutes(),
-    endHour: 24,
-    endMinute: 0
-  },
-  theme: {
-    palette: initialPalette,
-  },
-  scrollPosition: {
-    maxLimit: 0,
-    minLimit: -100 / 3 * 2 + 100 / 3 / 24,
-    position: -100 / 3,
-    step: 100 / 3 / 24 * 6,
-  }
-} as IAppState;
-
-const reducers: IAppStoreDispatcher = {
-  timeLines,
-  editTimeLineForm,
-  displaySettings,
-  selectedTimeSpan,
-  theme,
-  scrollPosition
-};
+export { IAppState, IAppStoreDispatcher } from "./reducers";
 
 let enchancer: StoreEnhancer<IAppState>;
 
-const localStorageState = [
-  persistState("timeLines", { key: "timeLines@0.0.259" }),
-  persistState("displaySettings", { key: "displaySettings@0.1.265" }),
-  persistState("theme", { key: "theme@1.2.45" }),
-];
 if (process.env.NODE_ENV === "development") {
   const devEnchansers = [
     applyMiddleware((<any>createLogger)())
   ];
-  const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancers = compose;
+  // const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   enchancer = composeEnhancers(
     ...devEnchansers,
-    ...localStorageState
+    ...localStorageEnchancer
   ) as any;
 } else {
   enchancer = compose(
-    ...localStorageState
+    ...localStorageEnchancer
   ) as any;
 }
 
 export const store: Store<IAppState> = createStore<IAppState>(
-  combineReducers<IAppState>(reducers),
+  rootReducer,
   initialState,
   enchancer
 );

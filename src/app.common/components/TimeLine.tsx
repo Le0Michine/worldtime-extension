@@ -91,8 +91,10 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
     const currentHour = +moment().utcOffset(offset).format("HH");
     const uiOffset = (offset % 60) / 60;
     const oneDay = 100 / 3;
+    const oneHour = oneDay / 24;
+    const position = this.props.scrollPosition;
     const inlineStyle = {
-      transform: `translateX(${(this.props.scrollPosition || (-oneDay)) - oneDay / 24 * uiOffset}%)`
+      transform: `translateX(${-oneDay + oneHour * position - oneHour * uiOffset}%)`
     };
     return (
       <div className={style.timeLine} style={inlineStyle}>

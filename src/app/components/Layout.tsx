@@ -99,7 +99,6 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
       scrollPosition
     } = this.props;
     const { valueMin, valueMax, rangeSize } = this.rangeValue;
-    console.log("min, max", valueMin, valueMax);
     const startTime = moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute);
     const endTime = moment().hours(selectedTimeSpan.endHour).minutes(selectedTimeSpan.endMinute);
     if (selectedTimeSpan.endHour === 24) {

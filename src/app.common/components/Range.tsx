@@ -80,7 +80,15 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
     event.preventDefault();
     const { valueMin, valueMax } = this.state;
     const x = this.getCoordinateInRange(event);
-    const hold = Math.abs(x - valueMin) <= Math.abs(x - valueMax) ? "min" : "max";
+    const distToMin = Math.abs(x - valueMin);
+    const distToMax = Math.abs(x - valueMax);
+    const hold = distToMin == distToMax
+      ? x > valueMax
+        ? "max"
+        : "min"
+      : distToMin < distToMax
+        ? "min"
+        : "max";
     this.onHold(hold);
     this.movePointer(x, hold);
   }
@@ -123,7 +131,6 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
   }
 
   getRangeRect() {
-    // tslint:disable-next-line:no-string-literal
     return ReactDOM.findDOMNode(this.refs["rangeBase"]).getBoundingClientRect();
   }
 

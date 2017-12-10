@@ -54,8 +54,8 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
     const rangeSize = stepsInHour * 24;
 
     return {
-      valueMin: Math.max(startHour * stepsInHour + startMinute / selectionStep, 0),
-      valueMax: Math.min(endHour * stepsInHour + endMinute / selectionStep, rangeSize),
+      valueMin: Math.min(rangeSize, Math.max((startHour + position) * stepsInHour + startMinute / selectionStep, 0)),
+      valueMax: Math.max(Math.min((endHour + position) * stepsInHour + endMinute / selectionStep, rangeSize), 0),
       rangeSize,
     };
   }
@@ -79,9 +79,9 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
     const { position } = this.props.scrollPosition;
     const { selectionStep } = this.props.displaySettings;
     const stepsInHour = 60 / selectionStep;
-    const startHour = Math.floor(start / stepsInHour) + position;
+    const startHour = Math.floor(start / stepsInHour) - position;
     const startMinute = (start % stepsInHour) * selectionStep;
-    const endHour = Math.floor(end / stepsInHour) + position;
+    const endHour = Math.floor(end / stepsInHour) - position;
     const endMinute = (end % stepsInHour) * selectionStep;
     this.props.changeSelectedTimeSpan(startHour, startMinute, endHour, endMinute);
   }

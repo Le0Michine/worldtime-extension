@@ -122,12 +122,14 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
               </IconButton>
             </Tooltip>
             <Tooltip title="Now" placement="bottom">
-              <IconButton
-                disabled={this.positionCentered}
-                onClick={() => this.resetScrollPosition()}
-              >
-                <AdjustIcon />
-              </IconButton>
+              <div>
+                <IconButton
+                  disabled={this.positionCentered}
+                  onClick={() => this.resetScrollPosition()}
+                >
+                  <AdjustIcon />
+                </IconButton>
+              </div>
             </Tooltip>
             <Tooltip title={`+${scrollStep} Hours`} placement="bottom">
               <IconButton

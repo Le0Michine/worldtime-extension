@@ -32,8 +32,8 @@ function getPalette(dark: boolean, overridePalette: Partial<Palette>): Partial<P
 }
 
 export const initialPalette = {
-    primary: "blue",
-    secondary: "teal"
+    primary: "blue" as ColorId,
+    secondary: "teal" as ColorId
 };
 
 export function getTheme(dark: boolean, appTheme: AppTheme): Theme {

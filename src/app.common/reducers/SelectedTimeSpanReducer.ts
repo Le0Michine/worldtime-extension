@@ -1,8 +1,18 @@
 import { updateState } from "./UpdateStateHelper";
 import { TimeSpanInfo } from "../models";
 import { Action } from "../actions";
+import * as moment from "moment";
 
-export const selectedTimeSpan = function (state: TimeSpanInfo = {} as TimeSpanInfo, action: Action<any>): TimeSpanInfo {
+export type State = TimeSpanInfo;
+
+export const initialState: State = {
+  startHour: moment().hours(),
+  startMinute: moment().minutes(),
+  endHour: 24,
+  endMinute: 0
+};
+
+export const reducer = function (state: State = initialState, action: Action<any>): State {
   switch(action.type) {
     case "SELECTED_TIMESPAN/CHANGE_SELECTED_TIMESPAN": {
       return updateState(state, action.payload)

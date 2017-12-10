@@ -45,11 +45,7 @@ export function changeEndMinute(minute: number) {
   };
 }
 
-export function changeSelectedTimeSpan(start: number, end: number): Action<TimeSpanInfo> {
-  const startHour = Math.floor(start / 2);
-  const startMinute = (start % 2) * 30;
-  const endHour = Math.floor(end / 2);
-  const endMinute = (end % 2) * 30;
+export function changeSelectedTimeSpan(startHour: number, startMinute: number, endHour: number, endMinute: number): Action<TimeSpanInfo> {
   return {
     type: "SELECTED_TIMESPAN/CHANGE_SELECTED_TIMESPAN",
     payload: { startHour, startMinute, endHour, endMinute }

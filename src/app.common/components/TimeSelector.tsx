@@ -5,15 +5,17 @@ const style = require("./TimeSelector.css");
 import { TimeZoneInfo, TimeSpanInfo } from "../models";
 
 interface TimeSelectorProps {
-  selectedTimeSpan: TimeSpanInfo;
+  valueMin: number;
+  valueMax: number;
+  rangeSize: number;
   color: string;
 }
 
 export class TimeSelector extends React.Component<TimeSelectorProps, any> {
   render() {
-    const { selectedTimeSpan, color } = this.props;
-    const left = (selectedTimeSpan.startHour * 2 + selectedTimeSpan.startMinute / 30) / 48 * 100;
-    const right = (selectedTimeSpan.endHour * 2 + selectedTimeSpan.endMinute / 30) / 48 * 100;
+    const { valueMin, valueMax, rangeSize, color } = this.props;
+    const left = valueMin / rangeSize * 100;
+    const right = valueMax / rangeSize * 100;
     const visibilityLeft = left <= 0.001 ? "hidden" : "visible";
     const visibilityRight = right >= 99.999 ? "hidden" : "visible";
     return (

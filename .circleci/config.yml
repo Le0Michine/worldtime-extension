@@ -16,7 +16,7 @@ steps: &upload-and-publish
   - restore_cache:
       key: *npm-canary-package-cache-key
   - run:
-      name: "Upload Extension to the Google Chrome Store"
+      name: "Upload & Publish Extension to the Google Chrome Store"
       command: |
         if [ "${CIRCLE_BRANCH}" == "develop" ]; then
           export ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
@@ -30,11 +30,6 @@ steps: &upload-and-publish
             echo =====================================================================
             # exit 1
           fi
-        fi
-  - run:
-      name: "Publish Extension to the Google Chrome Store"
-      command: |
-        if [ "${CIRCLE_BRANCH}" == "develop" ]; then
           PUBLISH_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish")
           echo Package published
           echo $PUBLISH_RESULT

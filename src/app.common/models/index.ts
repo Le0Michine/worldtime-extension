@@ -5,3 +5,4 @@ export * from "./DisplaySettingsInfo";
 export * from "./CalendarEvent";
 export * from "./AppTheme";
 export * from "./ScrollPosition";
+export * from "./RangeValue";

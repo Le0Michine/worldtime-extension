@@ -6,6 +6,7 @@ import Button from "material-ui/Button";
 import IconButton from "material-ui/IconButton";
 import Paper from "material-ui/Paper";
 import Typography from "material-ui/Typography";
+import Tooltip from "material-ui/Tooltip";
 import * as moment from "moment";
 import * as React from "react";
 import { ActionCreator, connect } from "react-redux";
@@ -98,6 +99,7 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
       rangeColor,
       scrollPosition
     } = this.props;
+    const scrollStep = scrollPosition.step;
     const { valueMin, valueMax, rangeSize } = this.rangeValue;
     const startTime = moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute);
     const endTime = moment().hours(selectedTimeSpan.endHour).minutes(selectedTimeSpan.endMinute);
@@ -111,27 +113,35 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
         <div className={style.app + " mx-auto"}>
           <div className={style.header}>
             <span className={style.clock}><Clock /></span>
-            <IconButton
-              disabled={this.maxPositionReached}
-              onClick={() => this.incrementScrollPosition()}
-            >
-              <KeyboardArrowLeftIcon />
-            </IconButton>
-            <IconButton
-              disabled={this.positionCentered}
-              onClick={() => this.resetScrollPosition()}
-            >
-              <AdjustIcon />
-            </IconButton>
-            <IconButton
-              disabled={this.minPositionReached}
-              onClick={() => this.decrementScrollPosition()}
-            >
-              <KeyboardArrowRightIcon />
-            </IconButton>
-            <IconButton aria-label="settings" target="_blank" href="options.html">
-              <SettingsIcon />
-            </IconButton>
+            <Tooltip title={`-${scrollStep} Hours`} placement="bottom">
+              <IconButton
+                disabled={this.maxPositionReached}
+                onClick={() => this.incrementScrollPosition()}
+              >
+                <KeyboardArrowLeftIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Now" placement="bottom">
+              <IconButton
+                disabled={this.positionCentered}
+                onClick={() => this.resetScrollPosition()}
+              >
+                <AdjustIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={`+${scrollStep} Hours`} placement="bottom">
+              <IconButton
+                disabled={this.minPositionReached}
+                onClick={() => this.decrementScrollPosition()}
+              >
+                <KeyboardArrowRightIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Settings" placement="bottom">
+              <IconButton aria-label="settings" target="_blank" href="options.html">
+                <SettingsIcon />
+              </IconButton>
+            </Tooltip>
           </div>
         </div>
         <div className={style.app + " mx-auto"}>

@@ -20,7 +20,7 @@ export const reducer = function (state: State = initialState, action: Action<any
       return updateState(state, action.payload);
     }
     case "EDIT_TIMELINE/CLEAR_FORM": {
-      return action.payload;
+      return updateState(state, { name: "", timeZoneId: "" });
     }
     default:
       return state;

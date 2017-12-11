@@ -14,7 +14,10 @@ import { TimeZoneInfo } from "../../app.common/models";
 import { Typeahead } from "../../app.common/components";
 import { changeDisplayName, changeTimezoneId, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
 import { IAppState } from "../../app.common/store";
+import { KeyboardEvent } from "react";
 const style = require("./AddNewTimeline.css");
+
+let compKey = 0;
 
 interface AddNewTimeLineStateProps {
   selectedTimeLine?: TimeZoneInfo;
@@ -35,8 +38,6 @@ interface AddNewTimeLineState {
 }
 
 type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProps;
-
-var compKey: number = 0;
 
 class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLineState> {
   constructor(props: AddNewTimeLineProps) {
@@ -62,13 +63,40 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
     return this.state.touched && !Boolean(this.props.selectedTimeLine.name);
   }
 
+  get addButtonDisabled(): boolean {
+    const { selectedTimeLine } = this.props;
+    return !selectedTimeLine.name || !selectedTimeLine.timeZoneId;
+  }
+
   onBlur() {
     this.setState({ touched: true });
   }
+  
+  resetForm() {
+    this.setState({ touched: false });
+  }
+
+  saveTimeLine(selectedTimeLine: TimeZoneInfo) {
+    this.props.saveTimeLine(selectedTimeLine);
+    this.props.clearForm();
+    this.resetForm();
+    compKey++;
+  }
+
+  onKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.which == 13 && !this.addButtonDisabled) {
+      this.saveTimeLine(this.props.selectedTimeLine);
+    }
+  }
 
   render() {
-    const { changeTimezoneId, changeDisplayName, selectedTimeLine, saveTimeLine, clearForm } = this.props;
-    const addButtonDisabled = !selectedTimeLine.name || !selectedTimeLine.timeZoneId;
+    const {
+      changeTimezoneId,
+      changeDisplayName,
+      selectedTimeLine,
+      saveTimeLine,
+      clearForm
+    } = this.props;
     return (
       <div key={compKey} className="row">
         <div className="col-md-5">
@@ -88,6 +116,7 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
               value: selectedTimeLine.name,
               onChange: (event) => changeDisplayName(event.target.value),
               onBlur: () => this.onBlur(),
+              onKeyPress: (event) => this.onKeyPress(event),
             }}
             helperText={this.showError ? "Field can't be empty" : ""}
           />
@@ -95,13 +124,9 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
         <div className="col-md-2">
           <Button
             raised
-            disabled={addButtonDisabled}
+            disabled={this.addButtonDisabled}
             color={Boolean(selectedTimeLine.timeLineid) ? "accent" : "primary"}
-            onClick={() => {
-              saveTimeLine(selectedTimeLine);
-              clearForm();
-              compKey++;
-            }}
+            onClick={() => this.saveTimeLine(selectedTimeLine)}
           >{selectedTimeLine.timeLineid ? "Save" : "Add"}</Button>
         </div>
       </div>

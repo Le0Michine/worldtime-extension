@@ -3,7 +3,7 @@
   position: absolute;
   width: 0;
   bottom: 0;
-  height: calc(100% - 60px);
+  height: 100%;
   margin: -2px 0;
   transition: all 0.15s;
   z-index: 2;

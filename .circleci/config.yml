@@ -126,7 +126,7 @@ jobs:
     docker:
       - image: circleci/node:9.2.1
     environment:
-      - APP_ID: pekgbpmeppfghkiaaolmjhiooapokgbk
+      - APP_ID: ibnegikgmnfnmljianjgnhhlcabonobd
       - PACKAGE_NAME: out/package.zip
     working_directory: /home/circleci/project
     steps:

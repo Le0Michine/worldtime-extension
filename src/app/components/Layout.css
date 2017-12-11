@@ -54,7 +54,7 @@
 }
 
 .fixedPanel {
-    position: fixed;
+    position: sticky;
 }
 
 .fixedPanelTop {
@@ -65,13 +65,4 @@
 .fixedPanelBottom {
     bottom: 0;
     z-index: 5;
-}
-
-.app.scrollableArea {
-    padding-top: 50px;
-    padding-bottom: 25px;
-}
-
-.scrollableArea.paddingBottomPanel {
-    padding-bottom: 70px;
 }

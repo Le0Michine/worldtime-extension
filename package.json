@@ -11,7 +11,8 @@
         "dev": "webpack-dev-server --config config/webpack.dev.js --content-base src --inline --hot --env.clean false",
         "build": "webpack --config config/webpack.dev.js --progress --profile --display-error-details --env.clean true --watch",
         "build:prod": "webpack --config config/webpack.prod.js",
-        "build:canary": "webpack --config config/webpack.canary.js -p"
+        "build:canary": "webpack --config config/webpack.canary.js -p",
+        "build:firefox": "export TARGET=firefox && webpack --config config/webpack.prod.js -p"
     },
     "dependencies": {
         "autosuggest-highlight": "^3.1.1",

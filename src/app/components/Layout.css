@@ -69,5 +69,9 @@
 
 .app.scrollableArea {
     padding-top: 50px;
+    padding-bottom: 25px;
+}
+
+.paddingBottomPanel {
     padding-bottom: 70px;
 }

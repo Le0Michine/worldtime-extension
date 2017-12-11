@@ -17,7 +17,6 @@ const style = require("./Layout.css");
 interface ILayoutStateProps {
   timeLines?: any[];
   displaySettings?: DisplaySettingsInfo;
-  rangeColor?: string;
   scrollPosition?: ScrollPosition;
 }
 

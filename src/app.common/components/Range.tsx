@@ -1,5 +1,3 @@
-// tslint:disable:typedef
-// tslint:disable:max-line-length
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 

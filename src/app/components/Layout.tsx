@@ -76,9 +76,9 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
         <Paper elevation={0} square className={style.fixedPanel + " " + style.fixedPanelTop}>
           <TopPanel />
         </Paper>
-        <Timelines rangeValue={this.rangeValue}/>
+        <Timelines rangeValue={this.rangeValue} rangeColor={rangeColor} />
         <Paper elevation={0} square className={style.fixedPanel + " " + style.fixedPanelBottom}>
-          <BottomPanel rangeValue={this.rangeValue} />
+          <BottomPanel rangeValue={this.rangeValue} rangeColor={rangeColor} />
         </Paper>
       </Paper>
     );

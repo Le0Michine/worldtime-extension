@@ -11,3 +11,7 @@ ReactDOM.render(
     <AppMain />
   </Provider>
   , app);
+
+if (process.env.TARGET === "firefox") {
+  document.rootElement.style.overflow = "hidden";
+}

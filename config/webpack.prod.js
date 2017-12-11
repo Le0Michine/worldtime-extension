@@ -1,39 +1,32 @@
 const webpack = require('webpack');
 
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const webpackMerge = require("webpack-merge");
+const commonConfig = require("./webpack.common.js");
 
-/**
- * Webpack Plugins
- */
-const DefinePlugin = require('webpack/lib/DefinePlugin');
-const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
-const ZipBundlerPlugin = require('webpack-zip-bundler');
+const DefinePlugin = require("webpack/lib/DefinePlugin");
+const NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin");
+const ZipBundlerPlugin = require("webpack-zip-bundler");
 
-/**
- * Webpack Constants
- */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'production';
+const ENV = process.env.ENV = process.env.NODE_ENV = "production";
+const TARGET = process.env.TARGET;
 const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
 
-const helpers = require('./helpers');
+const helpers = require("./helpers");
 
 const webpackOptions = {
     env: ENV,
     cleanOutput: true,
-    filesToCopy: [{ from: './src/icons_prod/*.png', to: "./icons", toType: "dir", flatten: true }],
+    filesToCopy: [{ from: "./src/icons_prod/*.png", to: "./icons", toType: "dir", flatten: true }],
 };
 
-/**
- * Webpack configuration
- */
 module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
         plugins: [
             new ZipBundlerPlugin(),
             new webpack.DefinePlugin({
-                'process.env': {
-                    'NODE_ENV': '"production"'
+                "process.env": {
+                    "NODE_ENV": `"production"`,
+                    "TARGET": `"${TARGET}"`
                 }
             }),
             new webpack.optimize.UglifyJsPlugin({

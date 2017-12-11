@@ -4,6 +4,7 @@ key: &src-cache-key src-{{ .Branch }}-{{ .Revision }}
 key: &npm-dependencies-cache-key npm-dependencies-{{ checksum "package.json" }}
 key: &npm-prod-package-cache-key prod-package-{{ .Branch }}-{{ .Revision }}
 key: &npm-canary-package-cache-key canary-package-{{ .Branch }}-{{ .Revision }}
+key: &npm-firefox-package-cache-key firefox-package-{{ .Branch }}-{{ .Revision }}
 
 steps: &upload-and-publish
   - run:
@@ -111,6 +112,29 @@ jobs:
           paths:
             - out/canary.zip
           key: *npm-canary-package-cache-key
+  build_firefox:
+    docker:
+      - image: circleci/node:9.2.1
+    working_directory: /home/circleci/project
+    steps:
+      - restore_cache:
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
+      - run:
+          name: Build package
+          command: |
+            npm run build:firefox
+      - store_artifacts:
+          path: out/out.zip
+          destination: ./firefox.zip
+      - run:
+          name: Rename package
+          command: mv out/out.zip out/firefox.zip
+      - save_cache:
+          paths:
+            - out/firefox.zip
+          key: *npm-firefox-package-cache-key
   upload_and_publish_canary:
     docker:
       - image: circleci/node:9.2.1
@@ -139,6 +163,9 @@ workflows:
           requires:
             - install_dependencies
       - build_canary:
+          requires:
+            - install_dependencies
+      - build_firefox:
           requires:
             - install_dependencies
       - upload_and_publish_canary:

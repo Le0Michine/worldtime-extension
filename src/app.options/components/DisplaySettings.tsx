@@ -6,6 +6,7 @@ import { ActionCreator, connect } from "react-redux";
 import Select from "material-ui/Select";
 import { FormControl } from "material-ui/Form";
 import Input, { InputLabel } from "material-ui/Input";
+import Typography from "material-ui/Typography";
 
 import {
   changeDarkThemeSetting,
@@ -16,6 +17,7 @@ import {
   changeShowTimezoneIdSetting,
   changeShowUTCOffsetSetting,
   change24HoursTimeFormatSetting,
+  changeTimeSelectionStepSetting,
 } from "../../app.common/actions";
 import { DisplaySettingsInfo } from "../../app.common/models";
 import { AppTheme } from "../../app.common/models/AppTheme";
@@ -32,6 +34,7 @@ interface DisplaySettingsDispatchProps {
   changePrimaryColorSetting?: ActionCreator<string>;
   changeSecondaryColorSetting?: ActionCreator<string>;
   change24HoursTimeFormatSetting?: ActionCreator<boolean>;
+  changeTimeSelectionStepSetting?: ActionCreator<number>;
 }
 
 interface DisplaySettingsStateProps {
@@ -60,6 +63,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       changeDarkThemeSetting,
       changePrimaryColorSetting,
       changeSecondaryColorSetting,
+      changeTimeSelectionStepSetting,
       theme,
     } = this.props;
 
@@ -70,103 +74,126 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       <div>
         <div className="row">
           <div className="col-6">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displaySettings.useDarkTheme}
-                  onChange={(event, value) => changeDarkThemeSetting(value)}
+            <Typography type="headline" className="mt-2">User interface</Typography>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showUTCOffset}
+                      onChange={(event, value) => changeShowUTCOffsetSetting(value)}
+                    />
+                  }
+                  label="Show UTC offset"
                 />
-              }
-              label="Use dark theme"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displaySettings.showUTCOffset}
-                  onChange={(event, value) => changeShowUTCOffsetSetting(value)}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showTimeZoneId}
+                      onChange={(event, value) => changeShowTimezoneIdSetting(value)}
+                    />
+                  }
+                  label="Show Timezone name"
                 />
-              }
-              label="Show UTC offset"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displaySettings.showTimeZoneId}
-                  onChange={(event, value) => changeShowTimezoneIdSetting(value)}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showControlPanel}
+                      onChange={(event, value) => changeShowControlPanelSetting(value)}
+                    />
+                  }
+                  label="Show bottom panel"
                 />
-              }
-              label="Show Timezone name"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displaySettings.showControlPanel}
-                  onChange={(event, value) => changeShowControlPanelSetting(value)}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.use24HoursTime}
+                      onChange={(event, value) => change24HoursTimeFormatSetting(value)}
+                    />
+                  }
+                  label="Use 24 hours format"
                 />
-              }
-              label="Show bottom panel"
-            />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
+                  <Select
+                    value={displaySettings.showDST}
+                    onChange={(event) => changeShowDSTSetting(event.target.value)}
+                    input={<Input name="showDstSetting" id="showDstSetting" />}
+                  >
+                    <MenuItem value="hide">Hide</MenuItem>
+                    <MenuItem value="DST">DST</MenuItem>
+                    <MenuItem value="Summer/Winter">Summer/Winter</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControl fullWidth>
+                  <InputLabel htmlFor="timeSelectionStepSetting">Time selection step</InputLabel>
+                  <Select
+                    value={displaySettings.selectionStep}
+                    onChange={(event) => changeTimeSelectionStepSetting(event.target.value)}
+                    input={<Input name="timeSelectionStepSetting" id="timeSelectionStepSetting" />}
+                  >
+                    <MenuItem value={15}>15</MenuItem>
+                    <MenuItem value={30}>30</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="row">
           <div className="col-6">
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={displaySettings.use24HoursTime}
-                  onChange={(event, value) => change24HoursTimeFormatSetting(value)}
+            <Typography type="headline" className="mt-2">Theme</Typography>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.useDarkTheme}
+                      onChange={(event, value) => changeDarkThemeSetting(value)}
+                    />
+                  }
+                  label="Use dark theme"
                 />
-              }
-              label="Use 24 hours format"
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <FormControl fullWidth>
-              <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
-              <Select
-                value={displaySettings.showDST}
-                onChange={(event) => changeShowDSTSetting(event.target.value)}
-                input={<Input name="showDstSetting" id="showDstSetting" />}
-              >
-                <MenuItem value="hide">hide</MenuItem>
-                <MenuItem value="DST">DST</MenuItem>
-                <MenuItem value="Summer/Winter">Summer/Winter</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <ColorSelector
-              id="primary"
-              label="Primary color"
-              color={primary}
-              onChange={(color) => changePrimaryColorSetting(color.id)}
-            />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-6">
-            <ColorSelector
-              id="secondary"
-              label="Secondary color"
-              color={secondary}
-              onChange={(color) => changeSecondaryColorSetting(color.id)}
-            />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <ColorSelector
+                  id="primary"
+                  label="Primary color"
+                  color={primary}
+                  onChange={(color) => changePrimaryColorSetting(color.id)}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <ColorSelector
+                  id="secondary"
+                  label="Secondary color"
+                  color={secondary}
+                  onChange={(color) => changeSecondaryColorSetting(color.id)}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -188,5 +215,6 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
     changePrimaryColorSetting: changePrimaryColor as ActionCreator<any>,
     changeSecondaryColorSetting: changeSecondaryColor as ActionCreator<any>,
     change24HoursTimeFormatSetting: change24HoursTimeFormatSetting as ActionCreator<any>,
+    changeTimeSelectionStepSetting: changeTimeSelectionStepSetting as ActionCreator<any>,
   }
 )(DisplaySettingsImpl);

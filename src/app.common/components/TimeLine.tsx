@@ -5,7 +5,7 @@ import Typography from "material-ui/Typography";
 import { withTheme, Theme } from "material-ui/styles";
 const style = require("./TimeLine.css");
 
-import { TimeZoneInfo, getOffset, DisplaySettingsInfo } from "../models";
+import { TimeZoneInfo, getOffset, DisplaySettingsInfo, ScrollPosition } from "../models";
 
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
@@ -13,6 +13,7 @@ interface TimeLineProps {
   hours: number[];
   displaySettings: DisplaySettingsInfo;
   theme: Theme;
+  scrollPosition: number;
 }
 
 interface TimeLineState {
@@ -54,15 +55,12 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
       // classes.push(style.timeLineBorderRight);
     }
     if (h < 8 || h > 21) {
-      // classes.push(style.nightHour);
       background = theme.palette.primary[100];
     }
     if (h === 0) {
-      // classes.push(style.hourMidnight);
       background = theme.palette.primary[200];
     }
     if (h === currentHour) {
-      // classes.push(style.currentHour);
       background = theme.palette.primary[700];
     }
     const color = theme.palette.getContrastText(background);
@@ -93,8 +91,10 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
     const currentHour = +moment().utcOffset(offset).format("HH");
     const uiOffset = (offset % 60) / 60;
     const oneDay = 100 / 3;
+    const oneHour = oneDay / 24;
+    const position = this.props.scrollPosition;
     const inlineStyle = {
-      transform: `translateX(${-oneDay - oneDay / 24 * uiOffset}%)`
+        transform: `translateX(${-oneDay + oneHour * position - oneHour * uiOffset}%)`
     };
     return (
       <div className={style.timeLine} style={inlineStyle}>

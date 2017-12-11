@@ -52,3 +52,22 @@
     width: 30px;
     display: inline-block;
 }
+
+.fixedPanel {
+    position: fixed;
+}
+
+.fixedPanelTop {
+    top: 0;
+    z-index: 10;
+}
+
+.fixedPanelBottom {
+    bottom: 0;
+    z-index: 5;
+}
+
+.app.scrollableArea {
+    padding-top: 50px;
+    padding-bottom: 70px;
+}

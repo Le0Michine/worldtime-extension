@@ -1,18 +1,58 @@
 version: 2
+
+key: &src-cache-key src-{{ .Branch }}-{{ .Revision }}
+key: &npm-dependencies-cache-key npm-dependencies-{{ checksum "package.json" }}
+key: &npm-prod-package-cache-key prod-package-{{ .Branch }}-{{ .Revision }}
+key: &npm-canary-package-cache-key canary-package-{{ .Branch }}-{{ .Revision }}
+
+steps: &upload-and-publish
+  - run:
+      name: "Install Dependencies"
+      command: |
+        sudo apt-get update
+        sudo apt-get -y --force-yes install curl jq
+  - restore_cache:
+      key: *npm-prod-package-cache-key
+  - restore_cache:
+      key: *npm-canary-package-cache-key
+  - run:
+      name: "Upload & Publish Extension to the Google Chrome Store"
+      command: |
+        if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+          export ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
+          UPLOAD_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -X PUT -T $PACKAGE_NAME -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}")
+          echo Package uploaded
+          echo $UPLOAD_RESULT
+          if [ "$(echo $UPLOAD_RESULT | jq -r .uploadState)" == "FAILURE" ]; then
+            echo =====================================================================
+            echo Package validation failed
+            echo Error: $(echo $result | jq .itemError)
+            echo =====================================================================
+            # exit 1
+          fi
+          PUBLISH_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish")
+          echo Package published
+          echo $PUBLISH_RESULT
+          if [ "$(echo $PUBLISH_RESULT | jq -r .status)" != "["OK"]" ]; then
+            echo =====================================================================
+            echo Status: $(echo $PUBLISH_RESULT | jq -r .status)
+            echo Detail: $(echo $PUBLISH_RESULT | jq -r .statusDetail)
+            echo =====================================================================
+            # exit 1
+          fi
+        fi
+
 jobs:
-  build:
+  install_dependencies:
     docker:
       - image: circleci/node:9.2.1
-    environment:
-      - APP_ID: pekgbpmeppfghkiaaolmjhiooapokgbk
     working_directory: /home/circleci/project
     steps:
       - checkout
-      - run:
-          name: "Install Dependencies"
-          command: |
-            sudo apt-get update
-            sudo apt-get -y install curl jq
+      - save_cache:
+          paths:
+            - ./
+          key: *src-cache-key
       # - restore_cache:
       #     keys:
       #     - npm-dependencies-{{ checksum "package.json" }}
@@ -23,10 +63,19 @@ jobs:
       - store_artifacts:
           path: /home/circleci/.npm/_logs
           destination: ./npm-logs/
-      # - save_cache:
-      #     paths:
-      #       - node_modules
-      #     key: npm-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - node_modules
+          key: npm-dependencies-{{ checksum "package.json" }}
+  build_prod:
+    docker:
+      - image: circleci/node:9.2.1
+    working_directory: /home/circleci/project
+    steps:
+      - restore_cache:
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
       - run:
           name: Build package
           command: |
@@ -35,43 +84,78 @@ jobs:
           path: out/out.zip
           destination: ./package.zip
       - run:
-          name: Build canary package
+          name: Rename package
+          command: mv out/out.zip out/package.zip
+      - save_cache:
+          paths:
+            - out/package.zip
+          key: *npm-prod-package-cache-key
+  build_canary:
+    docker:
+      - image: circleci/node:9.2.1
+    working_directory: /home/circleci/project
+    steps:
+      - restore_cache:
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
+      - run:
+          name: Build package
           command: |
             npm run build:canary
       - store_artifacts:
           path: out/out.zip
           destination: ./canary.zip
       - run:
-          name: "Upload Extension to the Google Chrome Store"
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              export ACCESS_TOKEN=$(curl "https://accounts.google.com/o/oauth2/token" -d "client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&refresh_token=${REFRESH_TOKEN}&grant_type=refresh_token&redirect_uri=urn:ietf:wg:oauth:2.0:oob" | jq -r .access_token)
-              UPLOAD_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -X PUT -T out/out.zip -v "https://www.googleapis.com/upload/chromewebstore/v1.1/items/${APP_ID}")
-              echo Package uploaded
-              echo $UPLOAD_RESULT
-              if [ "$(echo $UPLOAD_RESULT | jq -r .uploadState)" == "FAILURE" ]; then
-                echo *********************************************************************
-                echo Package validation failed
-                echo Error: $(echo $result | jq .itemError | jq -r first.error_code)
-                echo Detail: $(echo $result | jq .itemError | jq -r first.error_detail)
-                echo *********************************************************************
-                # exit 1
-              fi
-            fi
-      - run:
-          name: "Publish Extension to the Google Chrome Store"
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              PUBLISH_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish")
-              echo Package published
-              echo $PUBLISH_RESULT
-              if [ "$(echo $PUBLISH_RESULT | jq -r .status)" != "["OK"]" ]; then
-                echo *********************************************************************
-                echo Status: $(echo $PUBLISH_RESULT | jq -r .status)
-                echo Detail: $(echo $PUBLISH_RESULT | jq -r .statusDetail)
-                echo *********************************************************************
-                # exit 1
-              fi
-            fi
+          name: Rename package
+          command: mv out/out.zip out/canary.zip
+      - save_cache:
+          paths:
+            - out/canary.zip
+          key: *npm-canary-package-cache-key
+  upload_and_publish_canary:
+    docker:
+      - image: circleci/node:9.2.1
+    environment:
+      - APP_ID: pekgbpmeppfghkiaaolmjhiooapokgbk
+      - PACKAGE_NAME: out/canary.zip
+    working_directory: /home/circleci/project
+    steps:
+      *upload-and-publish
+  upload_and_publish_prod:
+    docker:
+      - image: circleci/node:9.2.1
+    environment:
+      - APP_ID: ibnegikgmnfnmljianjgnhhlcabonobd
+      - PACKAGE_NAME: out/package.zip
+    working_directory: /home/circleci/project
+    steps:
+      *upload-and-publish
 
-
+workflows:
+  version: 2
+  build:
+    jobs:
+      - install_dependencies
+      - build_prod:
+          requires:
+            - install_dependencies
+      - build_canary:
+          requires:
+            - install_dependencies
+      - upload_and_publish_canary:
+          requires:
+            - build_prod
+            - build_canary
+          filters:
+            branches:
+              only:
+                - develop
+      - upload_and_publish_prod:
+          requires:
+            - build_prod
+            - build_canary
+          filters:
+            branches:
+              only:
+                - master

@@ -13,7 +13,6 @@ import { ActionCreator, connect } from "react-redux";
 
 import { TopPanel } from "./TopPanel";
 import { Timelines } from "./Timelines";
-import { BottomPanel } from "./BottomPanel";
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
 import { Clock, Range, TimeLine, TimeSelector } from "../../app.common/components";
 import { CalendarEvent, DisplaySettingsInfo, getOffset, ScrollPosition, TimeSpanInfo, getHoursWithOffset, RangeValue } from "../../app.common/models";
@@ -28,6 +27,7 @@ interface ILayoutStateProps {
   selectedTimeSpan?: TimeSpanInfo;
   rangeColor?: string;
   scrollPosition?: ScrollPosition;
+  rangeValue: RangeValue;
 }
 
 interface ILayoutDispatchProps {
@@ -38,20 +38,21 @@ interface ILayoutDispatchProps {
 
 type ILayoutProps = ILayoutStateProps & ILayoutDispatchProps;
 
-class LayoutImpl extends React.Component<ILayoutProps, any> {
+class BottomPanelImpl extends React.Component<ILayoutProps, any> {
 
-  get rangeValue(): RangeValue {
+  updateSelectedTimeRange(start: number, end: number) {
     const { position } = this.props.scrollPosition;
-    const { startHour, startMinute, endHour, endMinute } = this.props.selectedTimeSpan;
     const { selectionStep } = this.props.displaySettings;
     const stepsInHour = 60 / selectionStep;
-    const rangeSize = stepsInHour * 24;
+    const startHour = Math.floor(start / stepsInHour) - position;
+    const startMinute = (start % stepsInHour) * selectionStep;
+    const endHour = Math.floor(end / stepsInHour) - position;
+    const endMinute = (end % stepsInHour) * selectionStep;
+    this.props.changeSelectedTimeSpan(startHour, startMinute, endHour, endMinute);
+  }
 
-    return {
-      valueMin: Math.min(rangeSize, Math.max((startHour + position) * stepsInHour + startMinute / selectionStep, 0)),
-      valueMax: Math.max(Math.min((endHour + position) * stepsInHour + endMinute / selectionStep, rangeSize), 0),
-      rangeSize,
-    };
+  resetScrollPosition() {
+    this.props.resetScrollPostion();
   }
 
   render(): React.ReactElement<any> {
@@ -60,10 +61,11 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
       selectedTimeSpan,
       timeLines,
       rangeColor,
-      scrollPosition
+      scrollPosition,
+      rangeValue,
     } = this.props;
     const scrollStep = scrollPosition.step;
-    const { valueMin, valueMax, rangeSize } = this.rangeValue;
+    const { valueMin, valueMax, rangeSize } = rangeValue;
     const startTime = moment().hours(selectedTimeSpan.startHour).minutes(selectedTimeSpan.startMinute);
     const endTime = moment().hours(selectedTimeSpan.endHour).minutes(selectedTimeSpan.endMinute);
     if (selectedTimeSpan.endHour === 24) {
@@ -72,20 +74,43 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
     const duration = moment.duration((selectedTimeSpan.endHour - selectedTimeSpan.startHour) * 60 + (selectedTimeSpan.endMinute - selectedTimeSpan.startMinute), "minutes");
     const buttonDisabled = false;
     return (
-      <Paper elevation={0} square className="px-3">
-        <Paper elevation={0} square className={style.fixedPanel + " " + style.fixedPanelTop}>
-          <TopPanel />
-        </Paper>
-        <Timelines rangeValue={this.rangeValue}/>
-        <Paper elevation={0} square className={style.fixedPanel + " " + style.fixedPanelBottom}>
-          <BottomPanel rangeValue={this.rangeValue} />
-        </Paper>
-      </Paper>
+      <div className={style.app + " mx-auto pb-2"}>
+        <div className={style.timeSpanSelector}>
+          <Range color={rangeColor} rangeSize={rangeSize} valueMin={valueMin} valueMax={valueMax} onChange={({ valueMin, valueMax }) => this.updateSelectedTimeRange(valueMin, valueMax)} />
+        </div>
+        {displaySettings.showControlPanel ? (<div className={style.timeSpanSelector}>
+          <div className="bottom-panel-container">
+            <div className="">
+              <Typography type="subheading">
+                {formatTime(startTime, displaySettings.use24HoursTime)} - {formatTime(endTime, displaySettings.use24HoursTime)} ({duration.asHours().toFixed(1)}h)
+                  </Typography>
+            </div>
+            <div className="">
+              <Button
+                raised
+                color="primary"
+                onClick={() => CalendarEvent.copyToClipboard(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
+              >Copy</Button>
+              <Button
+                raised
+                color="primary"
+                className="mx-2"
+                onClick={() => CalendarEvent.getGoogleCalendarLink(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
+              >To Google Cal</Button>
+              <Button
+                raised
+                color="primary"
+                onClick={() => CalendarEvent.exportToICS(selectedTimeSpan, timeLines[0].timeZoneId, timeLines)}
+              >Export to .ics</Button>
+            </div>
+          </div>
+        </div>) : null}
+      </div>
     );
   }
 }
 
-export const Layout = connect<ILayoutStateProps, ILayoutDispatchProps, ILayoutProps>(
+export const BottomPanel = connect<ILayoutStateProps, ILayoutDispatchProps, ILayoutProps>(
   (store: IAppState) => ({
     timeLines: store.timeLines,
     displaySettings: store.displaySettings,
@@ -93,5 +118,6 @@ export const Layout = connect<ILayoutStateProps, ILayoutDispatchProps, ILayoutPr
     scrollPosition: store.scrollPosition,
   } as ILayoutProps),
   {
+    changeSelectedTimeSpan: changeSelectedTimeSpan,
   }
-)(LayoutImpl);
+)(BottomPanelImpl);

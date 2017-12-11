@@ -27,6 +27,7 @@ interface OptionsLayoutStateProps {
   timeLines: TimeZoneInfo[];
   selectedTimeLine: TimeZoneInfo;
   displaySettings: DisplaySettingsInfo;
+  scrollPosition: number;
 }
 
 type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
@@ -47,7 +48,8 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
       selectTimeLine,
       deleteTimeLine,
       selectedTimeLine,
-      displaySettings
+      displaySettings,
+      scrollPosition,
     } = this.props;
 
     const onMouseEnter = (i) => this.setState({ mouseOverTimeLineIndex: i });
@@ -69,7 +71,7 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
           <div>
             {timeLines.map((tl, index) =>
               <div key={tl.timeLineid} className={style.timeLineContainer} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave()}>
-                <TimeLine timeLine={tl} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
+                <TimeLine timeLine={tl} scrollPosition={scrollPosition} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
                 <div>
                   <TimeLineControls
                     onEdit={() => selectTimeLine(tl)}
@@ -106,7 +108,8 @@ export default connect<OptionsLayoutStateProps, OptionsLayoutDispatchProps, Opti
   (state: IAppState) => ({
     timeLines: state.timeLines,
     selectedTimeLine: state.editTimeLineForm,
-    displaySettings: state.displaySettings
+    displaySettings: state.displaySettings,
+    scrollPosition: state.scrollPosition.position,
   } as OptionsLayoutStateProps),
   {
     swapTimeLines: swapTimeLines as ActionCreator<any>,

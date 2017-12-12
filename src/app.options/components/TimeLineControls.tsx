@@ -5,7 +5,7 @@ import DeleteForeverIcon from 'material-ui-icons/DeleteForever';
 import KeyboardArrowUpIcon from 'material-ui-icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from 'material-ui-icons/KeyboardArrowDown';
 
-const style = require("./TimeLineControls.css");
+const style = require("./TimeLineControls.scss");
 
 export class TimeLineControls extends React.Component<any, any> {
   render() {

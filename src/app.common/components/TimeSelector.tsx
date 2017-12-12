@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as moment from "moment";
-const style = require("./TimeSelector.css");
+const style = require("./TimeSelector.scss");
 
 import { TimeZoneInfo, TimeSpanInfo } from "../models";
 

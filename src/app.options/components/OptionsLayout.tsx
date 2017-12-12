@@ -15,7 +15,7 @@ import { NavTab } from "./NavTab";
 import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
 import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
-const style = require("./OptionsLayout.css");
+const style = require("./OptionsLayout.scss");
 
 interface OptionsLayoutDispatchProps {
   swapTimeLines: ActionCreator<any>;

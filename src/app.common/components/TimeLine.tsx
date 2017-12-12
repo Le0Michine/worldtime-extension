@@ -3,7 +3,7 @@ import * as React from "react";
 import * as moment from "moment";
 import Typography from "material-ui/Typography";
 import { withTheme, Theme } from "material-ui/styles";
-const style = require("./TimeLine.css");
+const style = require("./TimeLine.scss");
 
 import { TimeZoneInfo, getOffset, DisplaySettingsInfo, ScrollPosition } from "../models";
 

@@ -1,0 +1,45 @@
+.clock {
+    flex: 1;
+}
+
+.app {
+    width: calc(24 * 25px);
+    position: relative;
+    box-sizing: border-box;
+
+    &:first-child {
+        margin-top: 0;
+        margin-bottom: 0;
+        z-index: 10;
+    }
+
+    &:not(:last-child) {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeSpanSelector {
+    width: 600px;
+    margin-top: 10px;
+}
+
+.fixedPanel {
+    position: sticky;
+}
+
+.fixedPanelTop {
+    top: 0;
+    z-index: 10;
+}
+
+.fixedPanelBottom {
+    bottom: 0;
+    z-index: 5;
+}

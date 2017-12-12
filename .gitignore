@@ -8,4 +8,5 @@ npm-debug.log*
 *.crx
 *.log
 *.d.ts
+!*-shims.d.ts
 /.vscode/

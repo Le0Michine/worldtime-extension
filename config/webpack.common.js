@@ -86,6 +86,10 @@ module.exports = function (options) {
           }
         },
         {
+          test: /\.scss$/,
+          loaders: ["style-loader", "css-loader", "sass-loader"]
+        },
+        {
           test: /\.css$/,
           loaders: [
             'style-loader',

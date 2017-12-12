@@ -20,7 +20,7 @@ import { CalendarEvent, DisplaySettingsInfo, getOffset, ScrollPosition, TimeSpan
 import { IAppState } from "../../app.common/store";
 import { formatTime } from "../../app.common/util/time";
 
-const style = require("./Layout.scss");
+import * as style from "./Layout.scss";
 
 interface ILayoutStateProps {
   timeLines?: any[];

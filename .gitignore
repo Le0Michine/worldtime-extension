@@ -7,4 +7,5 @@ npm-debug.log*
 *.pem
 *.crx
 *.log
+*.d.ts
 /.vscode/

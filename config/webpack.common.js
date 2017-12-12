@@ -96,11 +96,12 @@ module.exports = function (options) {
           use: [
             "style-loader",
             {
-              loader: "css-loader",
+              loader: "typings-for-css-modules-loader",
               options: {
                 modules: true,
+                namedExport: true,
                 importLoaders: 1,
-                localIdentName: "[name]__[local]___[hash:base64:5]"
+                localIdentName: "[name]__[local]___[hash:base64:5]",
               }
             },
             "postcss-loader",

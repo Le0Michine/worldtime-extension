@@ -6,7 +6,6 @@ import TextField from "material-ui/TextField";
 import Typography from "material-ui/Typography";
 import * as React from "react";
 import * as Autosuggest from "react-autosuggest";
-import * as style from "./Typeahead.scss";
 
 import { Suggestion } from "../models";
 

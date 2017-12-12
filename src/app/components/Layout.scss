@@ -6,30 +6,17 @@
     width: calc(24 * 25px);
     position: relative;
     box-sizing: border-box;
-}
 
-.app:not(:last-child) {
-    margin-top: 0;
-    margin-bottom: 0;
-}
+    &:first-child {
+        margin-top: 0;
+        margin-bottom: 0;
+        z-index: 10;
+    }
 
-.app:first-child {
-    margin-top: 0;
-    margin-bottom: 0;
-    z-index: 10;
-}
-
-.settingsBtn {
-    cursor: pointer;
-    font-size: 36px;
-    border: none;
-    background: none;
-    height: 100%;
-}
-
-.settingsBtn, .settingsBtn:hover, .settingsBtn:focus {
-    text-decoration: none;
-    outline: none;
+    &:not(:last-child) {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 }
 
 .header {
@@ -41,11 +28,6 @@
 .timeSpanSelector {
     width: 600px;
     margin-top: 10px;
-}
-
-.timeSpanSelectorInput {
-    width: 30px;
-    display: inline-block;
 }
 
 .fixedPanel {

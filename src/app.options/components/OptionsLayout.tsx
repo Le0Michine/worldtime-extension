@@ -63,7 +63,6 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutSta
     const onMouseEnter = (i) => this.setState({ mouseOverTimeLineIndex: i });
     const onMouseLeave = () => this.setState({ mouseOverTimeLineIndex: -1 });
     const sectionSpacing = "mt-5";
-    console.log(manifestData);
 
     return (
       <Card className="m-3">

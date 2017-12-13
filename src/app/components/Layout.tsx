@@ -21,6 +21,7 @@ import { IAppState } from "../../app.common/store";
 import { formatTime } from "../../app.common/util/time";
 
 import * as style from "./Layout.scss";
+import { getPlatformInfo } from "../../app.common/util/platforminfo";
 
 interface ILayoutStateProps {
   timeLines?: any[];
@@ -36,11 +37,24 @@ interface ILayoutDispatchProps {
   resetScrollPostion?: ActionCreator<any>,
 }
 
+interface ILayoutState {
+  currentOs: string;
+}
+
 type ILayoutProps = ILayoutStateProps & ILayoutDispatchProps;
 
-class LayoutImpl extends React.Component<ILayoutProps, any> {
+class LayoutImpl extends React.Component<ILayoutProps, ILayoutState> {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentOs: ""
+    }
+    getPlatformInfo().then(info => this.setState({ currentOs: info.os }));
+  }
 
   get rangeValue(): RangeValue {
+    const { currentOs } = this.state;
     const { position } = this.props.scrollPosition;
     const { startHour, startMinute, endHour, endMinute } = this.props.selectedTimeSpan;
     const { selectionStep } = this.props.displaySettings;
@@ -55,6 +69,7 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
   }
 
   render(): React.ReactElement<any> {
+    const { currentOs } = this.state;
     const {
       displaySettings,
       selectedTimeSpan,
@@ -72,7 +87,7 @@ class LayoutImpl extends React.Component<ILayoutProps, any> {
     const duration = moment.duration((selectedTimeSpan.endHour - selectedTimeSpan.startHour) * 60 + (selectedTimeSpan.endMinute - selectedTimeSpan.startMinute), "minutes");
     const buttonDisabled = false;
     return (
-      <Paper elevation={0} square className="px-3">
+      <Paper elevation={0} square className={`px-3 ${currentOs === "win" ? style.appWindows : style.appDefault}`}>
         <Paper elevation={0} square className={style.fixedPanel + " " + style.fixedPanelTop}>
           <TopPanel />
         </Paper>

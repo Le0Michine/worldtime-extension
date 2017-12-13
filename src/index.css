@@ -51,4 +51,5 @@ button.default-focus-receiver {
     width: 0;
     height: 0;
     z-index: -1;
+    top: -20px;
 }

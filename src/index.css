@@ -2,14 +2,16 @@ h1 {
     font-weight: 200;
 }
 
-body, *, h1 {
+body,
+*,
+h1 {
     font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
     -webkit-font-smoothing: antialiased;
-       -moz-font-smoothing: antialiased;
-            font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    font-smoothing: antialiased;
     -webkit-text-rendering: optimizeLegibility;
-       -moz-text-rendering: optimizeLegibility;
-            text-rendering: optimizeLegibility;
+    -moz-text-rendering: optimizeLegibility;
+    text-rendering: optimizeLegibility;
 }
 
 @font-face {
@@ -41,4 +43,13 @@ div#app.app-options {
 a:hover {
     text-decoration: none;
     color: initial;
+}
+
+button.default-focus-receiver {
+    outline: none;
+    position: absolute;
+    width: 0;
+    height: 0;
+    z-index: -1;
+    top: -20px;
 }

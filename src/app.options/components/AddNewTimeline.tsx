@@ -15,7 +15,6 @@ import { Typeahead } from "../../app.common/components";
 import { changeDisplayName, changeTimezoneId, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
 import { IAppState } from "../../app.common/store";
 import { KeyboardEvent } from "react";
-const style = require("./AddNewTimeline.css");
 
 let compKey = 0;
 

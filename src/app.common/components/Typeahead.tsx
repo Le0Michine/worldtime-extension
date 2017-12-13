@@ -11,7 +11,6 @@ import { Suggestion } from "../models";
 
 const match = require("autosuggest-highlight/match");
 const parse = require("autosuggest-highlight/parse");
-const style = require("./Typeahead.css");
 
 interface TypeaheadProps {
   suggestions: Suggestion[];

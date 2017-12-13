@@ -12,7 +12,7 @@ import { Clock } from "../../app.common/components";
 import { DisplaySettingsInfo, ScrollPosition } from "../../app.common/models";
 import { IAppState } from "../../app.common/store";
 
-const style = require("./Layout.css");
+import * as style from "./Layout.scss";
 
 interface ILayoutStateProps {
   timeLines?: any[];

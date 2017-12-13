@@ -16,6 +16,7 @@ import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHo
 import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
 import * as style from "./OptionsLayout.scss";
+import { getManifest } from "../../app.common/util/manifest";
 
 interface OptionsLayoutDispatchProps {
   swapTimeLines: ActionCreator<any>;
@@ -30,18 +31,25 @@ interface OptionsLayoutStateProps {
   scrollPosition: number;
 }
 
+interface OptionsLayoutState {
+  mouseOverTimeLineIndex: number;
+  manifestData: chrome.runtime.Manifest;  
+}
+
 type OptionsLayoutProps = OptionsLayoutStateProps & OptionsLayoutDispatchProps;
 
-class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
+class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutState> {
+
   constructor(props) {
     super(props);
     this.state = {
-      mouseOverTimeLineIndex: -1
+      mouseOverTimeLineIndex: -1,
+      manifestData: getManifest(),
     };
   }
 
   render() {
-    const { mouseOverTimeLineIndex } = this.state;
+    const { mouseOverTimeLineIndex, manifestData } = this.state;
     const {
       timeLines,
       swapTimeLines,
@@ -55,6 +63,7 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
     const onMouseEnter = (i) => this.setState({ mouseOverTimeLineIndex: i });
     const onMouseLeave = () => this.setState({ mouseOverTimeLineIndex: -1 });
     const sectionSpacing = "mt-5";
+    console.log(manifestData);
 
     return (
       <Card className="m-3">
@@ -97,6 +106,9 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, any> {
                 location.reload();
               }}
             >Reset to default</Button>
+          </div>
+          <div className="align-items-center d-flex">
+            <Typography type="body2" className="ml-auto">v{manifestData.version}</Typography>
           </div>
         </div>
       </Card>

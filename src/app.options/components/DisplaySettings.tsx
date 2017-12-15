@@ -83,19 +83,6 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={displaySettings.showUTCOffset}
-                      onChange={(event, value) => changeShowUTCOffsetSetting(value)}
-                    />
-                  }
-                  label="Show UTC offset"
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <FormControlLabel
-                  control={
-                    <Switch
                       checked={displaySettings.showTimeZoneId}
                       onChange={(event, value) => changeShowTimezoneIdSetting(value)}
                     />
@@ -113,7 +100,20 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                       onChange={(event, value) => changeShowTimezoneAbbreviationSetting(value)}
                     />
                   }
-                  label="Show Timezone abbreviation"
+                  label="Show Timezone abbreviation (if available)"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showUTCOffset}
+                      onChange={(event, value) => changeShowUTCOffsetSetting(value)}
+                    />
+                  }
+                  label="Show UTC offset"
                 />
               </div>
             </div>
@@ -126,7 +126,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                       onChange={(event, value) => changeShowControlPanelSetting(value)}
                     />
                   }
-                  label="Show bottom panel"
+                  label="Show export panel (at the bottom)"
                 />
               </div>
             </div>
@@ -146,7 +146,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
             <div className="row">
               <div className="col-12">
                 <FormControl fullWidth>
-                  <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
+                  <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) flag</InputLabel>
                   <Select
                     value={displaySettings.showDST}
                     onChange={(event) => changeShowDSTSetting(event.target.value)}
@@ -168,8 +168,8 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                     onChange={(event) => changeTimeSelectionStepSetting(event.target.value)}
                     input={<Input name="timeSelectionStepSetting" id="timeSelectionStepSetting" />}
                   >
-                    <MenuItem value={15}>15</MenuItem>
-                    <MenuItem value={30}>30</MenuItem>
+                    <MenuItem value={15}>15 minutes</MenuItem>
+                    <MenuItem value={30}>30 minutes</MenuItem>
                   </Select>
                 </FormControl>
               </div>

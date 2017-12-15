@@ -59,6 +59,7 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
         value={value}
         inputRef={ref}
         label="Choose timezone"
+        placeholder="Type timezone name or offset"
         error={this.showError}
         helperText={this.errorMessage}
         InputProps={{
@@ -72,20 +73,26 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
   }
 
   renderSuggestion(suggestion: Suggestion, query, isHighlighted) {
-    const matches = getMatches(suggestion.title, query);
-    const parts = parse(suggestion.title, matches) as SuggestionMatchPart[];
+    const titleMatches = getMatches(suggestion.title, query);
+    const subHeadingMatches = getMatches(suggestion.subheading, query);
+    const titleParts = parse(suggestion.title, titleMatches) as SuggestionMatchPart[];
+    const subHeadingParts = parse(suggestion.subheading, subHeadingMatches) as SuggestionMatchPart[];
 
     return (
       <MenuItem selected={isHighlighted} component="div">
         <div className="d-flex w-100">
-          {parts.map((part, index) => {
-            return (
+          {titleParts.map((part, index) => (
+            <span key={index} style={{ fontWeight: part.highlight ? "bolder" : "inherit" }}>
+              {part.text}
+            </span>
+          ))}
+          <span className="ml-auto" style={{ fontWeight: "lighter" }}>
+            {subHeadingParts.map((part, index) => (
               <span key={index} style={{ fontWeight: part.highlight ? "bolder" : "inherit" }}>
                 {part.text}
               </span>
-            )
-          })}
-          <span className="ml-auto" style={{ fontWeight: "lighter" }}>{suggestion.subheading}</span>
+            ))}
+          </span>
         </div>
       </MenuItem>
     );
@@ -112,7 +119,8 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
     const result = inputLength === 0
       ? []
       : suggestions.filter(suggestion => {
-        return suggestion.title.toLowerCase().includes(inputValue);
+        return suggestion.title.toLowerCase().includes(inputValue)
+          || suggestion.subheading.toLowerCase().includes(inputValue);
       }).slice(0, 100);
     return result;
   }

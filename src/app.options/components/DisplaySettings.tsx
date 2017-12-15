@@ -15,6 +15,7 @@ import {
   changeShowControlPanelSetting,
   changeShowDSTSetting,
   changeShowTimezoneIdSetting,
+  changeShowTimezoneAbbreviationSetting,
   changeShowUTCOffsetSetting,
   change24HoursTimeFormatSetting,
   changeTimeSelectionStepSetting,
@@ -28,6 +29,7 @@ import { ColorSelector } from "./ColorSelector";
 interface DisplaySettingsDispatchProps {
   changeShowUTCOffsetSetting?: ActionCreator<any>;
   changeShowTimezoneIdSetting?: ActionCreator<any>;
+  changeShowTimezoneAbbreviationSetting?: ActionCreator<any>;
   changeShowDSTSetting?: ActionCreator<any>;
   changeShowControlPanelSetting?: ActionCreator<any>;
   changeDarkThemeSetting?: ActionCreator<boolean>;
@@ -57,6 +59,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       displaySettings,
       changeShowUTCOffsetSetting,
       changeShowTimezoneIdSetting,
+      changeShowTimezoneAbbreviationSetting,
       changeShowDSTSetting,
       changeShowControlPanelSetting,
       change24HoursTimeFormatSetting,
@@ -80,19 +83,6 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={displaySettings.showUTCOffset}
-                      onChange={(event, value) => changeShowUTCOffsetSetting(value)}
-                    />
-                  }
-                  label="Show UTC offset"
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-12">
-                <FormControlLabel
-                  control={
-                    <Switch
                       checked={displaySettings.showTimeZoneId}
                       onChange={(event, value) => changeShowTimezoneIdSetting(value)}
                     />
@@ -106,11 +96,37 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                 <FormControlLabel
                   control={
                     <Switch
+                      checked={displaySettings.showTimeZoneAbbreviation}
+                      onChange={(event, value) => changeShowTimezoneAbbreviationSetting(value)}
+                    />
+                  }
+                  label="Show Timezone abbreviation (if available)"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showUTCOffset}
+                      onChange={(event, value) => changeShowUTCOffsetSetting(value)}
+                    />
+                  }
+                  label="Show UTC offset"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
                       checked={displaySettings.showControlPanel}
                       onChange={(event, value) => changeShowControlPanelSetting(value)}
                     />
                   }
-                  label="Show bottom panel"
+                  label="Show export panel (at the bottom)"
                 />
               </div>
             </div>
@@ -130,7 +146,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
             <div className="row">
               <div className="col-12">
                 <FormControl fullWidth>
-                  <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) DST</InputLabel>
+                  <InputLabel htmlFor="showDstSetting">Show DST (daylight saving time) flag</InputLabel>
                   <Select
                     value={displaySettings.showDST}
                     onChange={(event) => changeShowDSTSetting(event.target.value)}
@@ -152,8 +168,8 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                     onChange={(event) => changeTimeSelectionStepSetting(event.target.value)}
                     input={<Input name="timeSelectionStepSetting" id="timeSelectionStepSetting" />}
                   >
-                    <MenuItem value={15}>15</MenuItem>
-                    <MenuItem value={30}>30</MenuItem>
+                    <MenuItem value={15}>15 minutes</MenuItem>
+                    <MenuItem value={30}>30 minutes</MenuItem>
                   </Select>
                 </FormControl>
               </div>
@@ -209,6 +225,7 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
   {
     changeShowDSTSetting: changeShowDSTSetting as ActionCreator<any>,
     changeShowTimezoneIdSetting: changeShowTimezoneIdSetting as ActionCreator<any>,
+    changeShowTimezoneAbbreviationSetting: changeShowTimezoneAbbreviationSetting as ActionCreator<any>,
     changeShowUTCOffsetSetting: changeShowUTCOffsetSetting as ActionCreator<any>,
     changeShowControlPanelSetting: changeShowControlPanelSetting as ActionCreator<any>,
     changeDarkThemeSetting: changeDarkThemeSetting as ActionCreator<any>,

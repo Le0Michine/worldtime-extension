@@ -24,6 +24,13 @@ export function changeShowTimezoneIdSetting(showTZId: boolean): Action<boolean> 
   };
 }
 
+export function changeShowTimezoneAbbreviationSetting(showTZId: boolean): Action<boolean> {
+  return {
+    type: "DISPLAY_SETTINGS/SHOW_TIMEZONE_ABBREVIATION",
+    payload: showTZId
+  };
+}
+
 export function changeShowControlPanelSetting(ShowControlPanel: boolean): Action<boolean> {
   return {
     type: "DISPLAY_SETTINGS/SHOW_SHOW_CONTROL_PANEL",

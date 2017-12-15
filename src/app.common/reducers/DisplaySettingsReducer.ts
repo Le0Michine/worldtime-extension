@@ -7,6 +7,7 @@ export type State = DisplaySettingsInfo;
 export const initialState: State = {
     showDST: "hide",
     showTimeZoneId: false,
+    showTimeZoneAbbreviation: true,
     showUTCOffset: true,
     showControlPanel: true,
     useDarkTheme: false,
@@ -24,6 +25,9 @@ export const reducer = function (state: State = initialState, action: Action<any
     }
     case "DISPLAY_SETTINGS/SHOW_TIMEZONE_ID": {
       return updateState(state, { showTimeZoneId: action.payload });
+    }
+    case "DISPLAY_SETTINGS/SHOW_TIMEZONE_ABBREVIATION": {
+      return updateState(state, { showTimeZoneAbbreviation: action.payload });
     }
     case "DISPLAY_SETTINGS/SHOW_SHOW_CONTROL_PANEL": {
       return updateState(state, { showControlPanel: action.payload });

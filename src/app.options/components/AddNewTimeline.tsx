@@ -1,3 +1,4 @@
+import { getTimeZoneAbbreviation } from "../../app.common/util/time";
 import { Suggestion } from "../../app.common/models/TimeZoneShort";
 import * as React from "react";
 import { connect, ActionCreator } from "react-redux";
@@ -44,10 +45,11 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
     const tzNames: Suggestion[] = _.chain(moment.tz.names()).map(name => ({
       id: name,
       title: name,
+      abbr: getTimeZoneAbbreviation(name),
       utcOffset: moment().tz(name).utcOffset(),
     })).orderBy(x => x.utcOffset, "asc").map(x => ({
       id: x.id,
-      title: x.title,
+      title: x.title + (Boolean(x.abbr) ? ` (${x.abbr})` : ""),
       subheading: `UTC${x.utcOffset > 0 ? "+" : "-"}${Math.abs(x.utcOffset / 60)}`
     } as Suggestion)).value();
     this.state = {

@@ -15,6 +15,7 @@ import {
   changeShowControlPanelSetting,
   changeShowDSTSetting,
   changeShowTimezoneIdSetting,
+  changeShowTimezoneAbbreviationSetting,
   changeShowUTCOffsetSetting,
   change24HoursTimeFormatSetting,
   changeTimeSelectionStepSetting,
@@ -28,6 +29,7 @@ import { ColorSelector } from "./ColorSelector";
 interface DisplaySettingsDispatchProps {
   changeShowUTCOffsetSetting?: ActionCreator<any>;
   changeShowTimezoneIdSetting?: ActionCreator<any>;
+  changeShowTimezoneAbbreviationSetting?: ActionCreator<any>;
   changeShowDSTSetting?: ActionCreator<any>;
   changeShowControlPanelSetting?: ActionCreator<any>;
   changeDarkThemeSetting?: ActionCreator<boolean>;
@@ -57,6 +59,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       displaySettings,
       changeShowUTCOffsetSetting,
       changeShowTimezoneIdSetting,
+      changeShowTimezoneAbbreviationSetting,
       changeShowDSTSetting,
       changeShowControlPanelSetting,
       change24HoursTimeFormatSetting,
@@ -98,6 +101,19 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                     />
                   }
                   label="Show Timezone name"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showTimeZoneAbbreviation}
+                      onChange={(event, value) => changeShowTimezoneAbbreviationSetting(value)}
+                    />
+                  }
+                  label="Show Timezone abbreviation"
                 />
               </div>
             </div>
@@ -209,6 +225,7 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
   {
     changeShowDSTSetting: changeShowDSTSetting as ActionCreator<any>,
     changeShowTimezoneIdSetting: changeShowTimezoneIdSetting as ActionCreator<any>,
+    changeShowTimezoneAbbreviationSetting: changeShowTimezoneAbbreviationSetting as ActionCreator<any>,
     changeShowUTCOffsetSetting: changeShowUTCOffsetSetting as ActionCreator<any>,
     changeShowControlPanelSetting: changeShowControlPanelSetting as ActionCreator<any>,
     changeDarkThemeSetting: changeDarkThemeSetting as ActionCreator<any>,

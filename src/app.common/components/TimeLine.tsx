@@ -1,4 +1,4 @@
-import { formatTime } from "../util/time";
+import { formatTime, getTimeZoneAbbreviation } from "../util/time";
 import * as React from "react";
 import * as moment from "moment";
 import Typography from "material-ui/Typography";
@@ -106,6 +106,7 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
     const { offset, hours, displaySettings, timeLine } = this.props;
     const summer = displaySettings.showDST === "DST" ? "DST" : "Summer";
     const winter = displaySettings.showDST === "DST" ? "" : "Winter";
+    const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
 
     return (
       <div className={style.container}>
@@ -113,6 +114,9 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
           <Typography type="subheading" className="mr-2">{timeLine.name}</Typography>
           {displaySettings.showTimeZoneId ?
             <Typography type="subheading" color="secondary" className="mr-2">{timeLine.timeZoneId.replace("_", " ")}</Typography> : null
+          }
+          {displaySettings.showTimeZoneAbbreviation && Boolean(abbreviation) ?
+            <Typography type="subheading" color="secondary" className="mr-2">{abbreviation}</Typography> : null
           }
           {displaySettings.showUTCOffset ?
             <Typography type="subheading" color="secondary" className="mr-2">UTC{offset >= 0 ? "+" : ""}{offset / 60}</Typography> : null

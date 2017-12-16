@@ -18,6 +18,8 @@ interface SelectTimezoneDialogStateProps {
   timeZones?: Suggestion[],
   useDarkTheme?: boolean;
   use24TimeFormat? : boolean;
+  timeZoneId?: string;
+  onChange?: (value: string) => void;
 }
 
 interface SelectTimezoneDialogDispatchProps {
@@ -37,7 +39,7 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
 
     this.state = {
       open: false,
-      timeZoneId: "",
+      timeZoneId: props.timeZoneId,
     };
   }
 
@@ -46,15 +48,19 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
   }
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.setState({ open: true, timeZoneId: this.props.timeZoneId });
   };
 
-  handleRequestClose = () => {
+  handleRequestCancel = () => {
     this.setState({ open: false });
   };
 
+  handleRequestSave = () => {
+    this.setState({ open: false });
+    this.props.onChange(this.state.timeZoneId);
+  };
+
   changeTimezoneId(value: string) {
-    console.log("change tz", value);
     this.setState({ timeZoneId: value });
   }
 
@@ -62,7 +68,10 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
     const {
       useDarkTheme,
       use24TimeFormat,
+      timeZones,
     } = this.props;
+
+    const { timeZoneId, open } = this.state;
 
     return (
       <div>
@@ -73,23 +82,28 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
         </Tooltip>
         <Dialog
           classes={{paper: style.dialogRoot}}
-          open={this.state.open}
-          onRequestClose={this.handleRequestClose}
+          open={open}
+          onRequestClose={this.handleRequestCancel}
         >
           <DialogTitle>Select timezone</DialogTitle>
           <DialogContent>
-            <WorldMap useDarkTheme={useDarkTheme} use24TimeFormat={use24TimeFormat} />
+            <WorldMap
+              useDarkTheme={useDarkTheme}
+              use24TimeFormat={use24TimeFormat}
+              onSelect={(value) => this.changeTimezoneId(value)}
+              timeZoneId={timeZoneId}
+            />
             <Typeahead
-              suggestions={this.props.timeZones}
+              suggestions={timeZones}
               onChange={(value) => this.changeTimezoneId(value)}
-              value={this.state.timeZoneId}
+              value={timeZoneId}
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleRequestClose} color="primary">
+            <Button onClick={this.handleRequestCancel} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.handleRequestClose} color="primary">
+            <Button onClick={this.handleRequestSave} color="primary">
               Save
             </Button>
           </DialogActions>

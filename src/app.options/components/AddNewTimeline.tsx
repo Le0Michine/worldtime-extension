@@ -103,7 +103,11 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
             onChange={(value) => changeTimezoneId(value)}
             value={selectedTimeLine.timeZoneId}
           />
-          <SelectTimezoneDialog timeZones={this.state.timeZones} />
+          <SelectTimezoneDialog
+            timeZones={this.state.timeZones}
+            timeZoneId={selectedTimeLine.timeZoneId}
+            onChange={(value) => changeTimezoneId(value)}
+          />
         </div>
         <div className="col-md-4">
           <TextField

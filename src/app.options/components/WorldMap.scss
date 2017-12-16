@@ -35,5 +35,12 @@
     border-radius: 50%;
     border: 1px solid;
     position: absolute;
+    transition: all 0.2s;
     transform: translate3d(-50%, -50%, 0);
+}
+
+.pointSelected {
+    border-width: 3px;
+    width: 10px;
+    height: 10px;
 }

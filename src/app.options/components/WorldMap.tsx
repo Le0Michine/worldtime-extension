@@ -28,12 +28,15 @@ interface WorldMapProps {
   classes: any;
   useDarkTheme: boolean;
   use24TimeFormat: boolean;
+  timeZoneId: string;
+  onSelect: (timeZoneId: string) => void;
 }
 
 interface WorldMapState {
   pointerX: number;
   pointerY: number;
   selectedPoint: string;
+  mouseHover: boolean;
 }
 
 interface MapPoint {
@@ -49,7 +52,7 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
   constructor(props) {
     super(props);
     const projection = this.projection;
-    const guessedZone = moment.tz.guess();
+    const guessedZone = props.timeZoneId || moment.tz.guess();
     const guessedZoneMeta = timezoneMeta.zones[guessedZone];
     const [x, y] = guessedZoneMeta
       ? projection([guessedZoneMeta.long, guessedZoneMeta.lat])
@@ -64,12 +67,13 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
       pointerX: x,
       pointerY: y,
       selectedPoint: guessedZone,
+      mouseHover: false,
     };
   }
 
   get mapSize() {
     const { clientWidth, clientHeight } = document.documentElement;
-    return { width: (clientWidth - 48) * 0.8, height: (clientHeight - 68 * 2 - 36) * 0.8 };
+    return { width: (clientWidth - 48) * 0.6, height: (clientHeight - 68 * 2 - 50) * 0.8 };
   }
 
   get mapPath() {
@@ -86,10 +90,19 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
 
   getPoints() {
     const { classes } = this.props;
+    const { selectedPoint } = this.state;
     const timezones = moment.tz.names();
     const projection = this.projection;
     const points = this.points.map(zone => {
       const { x, y, name } = zone;
+      const pointClasses = [style.point, classes.point];
+      if (name === selectedPoint) {
+        pointClasses.push(style.pointSelected);
+      }
+      if (name === this.props.timeZoneId) {
+        pointClasses.push(style.pointSelected);
+        pointClasses.push(classes.pointSelected);
+      }
       return (
         <span
           key={name}
@@ -97,7 +110,7 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
             left: `${x}px`,
             top: `${y}px`
           }}
-          className={`${style.point} ${classes.point}`}
+          className={pointClasses.join(" ")}
         ></span>
       );
     });
@@ -110,6 +123,10 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
 
   getEuclideanDistance(point1: number[], point2: number[]): number {
     return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
+  }
+
+  onMouseLeave() {
+    this.setState({ mouseHover: false });
   }
 
   onMouseMove(event: React.MouseEvent<HTMLDivElement>) {
@@ -125,13 +142,21 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
       pointerX: minDistance.point.x,
       pointerY: minDistance.point.y,
       selectedPoint: minDistance.point.name,
+      mouseHover: true,
     });
+  }
+
+  onSelect(value: string) {
+    this.props.onSelect(value);
   }
 
   render() {
     const { classes, use24TimeFormat } = this.props;
     const { width, height } = this.mapSize;
-    const { pointerX, pointerY, selectedPoint } = this.state;
+    const { pointerX, pointerY, mouseHover } = this.state;
+    const selectedPoint = !this.state.mouseHover && this.props.timeZoneId
+      ? this.props.timeZoneId
+      : this.state.selectedPoint;
     const selectedZone = moment.tz.zone(selectedPoint);
     const selectedZoneTime = moment.tz(selectedZone.name);
     const formattedTime = formatTime(selectedZoneTime, use24TimeFormat);
@@ -139,7 +164,12 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
     return (
       <Paper elevation={0}>
         <Typography className="text-center">{selectedZone.name} {formattedTime} {selectedZone.abbr(selectedZoneTime.unix())}</Typography>
-        <div className={classes.mapContainer} onMouseMove={(event) => this.onMouseMove(event)}>
+        <div
+          className={`d-flex align-items-center justify-content-center ${classes.mapContainer}`}
+          onMouseMove={(event) => this.onMouseMove(event)}
+          onMouseLeave={() => this.onMouseLeave()}
+          onClick={() => this.onSelect(selectedPoint)}
+        >
           <div className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisX}`} style={{ top: pointerY }}></div>
           <div className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisY}`} style={{ left: pointerX }}></div>
           <svg
@@ -178,6 +208,9 @@ const styles = (theme: Theme): { [className: string]: React.CSSProperties } => (
       ? theme.palette.common.lightWhite
       : theme.palette.common.lightBlack,
   },
+  pointSelected: {
+    borderColor: theme.palette.secondary.A400,
+  }
 });
 
 export const WorldMap = withStyles(styles)(WorldMapImpl) as React.ComponentClass<Partial<WorldMapProps>>;

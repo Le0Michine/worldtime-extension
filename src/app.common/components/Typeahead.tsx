@@ -15,7 +15,8 @@ const parse = require("autosuggest-highlight/parse");
 interface TypeaheadProps {
   suggestions: Suggestion[];
   classes: any;
-  onChange: Function;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 interface TypeaheadState {
@@ -26,12 +27,15 @@ interface TypeaheadState {
 }
 
 class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
+  private oldValue: string;
+
   constructor(props) {
     super(props);
     const { suggestions } = this.props;
+    this.oldValue = props.value;
     this.state = {
       suggestions,
-      value: "",
+      value: props.value,
       valid: false,
       touched: false,
     };
@@ -143,7 +147,7 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
     });
     const selectedValue = this.props.suggestions.find(x => x.title === newValue);
     if (selectedValue) {
-      this.props.onChange(selectedValue.title);
+      this.props.onChange(selectedValue.id);
       this.setState({ valid: true });
     } else {
       this.setState({ valid: false });
@@ -152,7 +156,12 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
 
   render() {
     const { classes } = this.props;
-    const { value, suggestions } = this.state;
+    const { suggestions } = this.state;
+    let { value } = this.state;
+    if (this.oldValue !== this.props.value) {
+      value = this.props.value;
+      this.oldValue = value;
+    }
 
     return (
       <Autosuggest

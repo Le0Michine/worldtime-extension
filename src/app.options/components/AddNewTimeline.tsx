@@ -1,21 +1,18 @@
-import { getTimeZoneAbbreviation } from "../../app.common/util/time";
-import { Suggestion } from "../../app.common/models/TimeZoneShort";
-import * as React from "react";
-import { connect, ActionCreator } from "react-redux";
-import * as moment from "moment-timezone";
 import * as _ from "lodash";
 import Button from "material-ui/Button";
-import { MenuItem } from "material-ui/Menu";
-import Paper from "material-ui/Paper";
 import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
-import { FormControl, FormHelperText } from "material-ui/Form";
-
-import { TimeZoneInfo } from "../../app.common/models";
-import { Typeahead } from "../../app.common/components";
-import { changeDisplayName, changeTimezoneId, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
-import { IAppState } from "../../app.common/store";
+import * as moment from "moment-timezone";
+import * as React from "react";
 import { KeyboardEvent } from "react";
+import { ActionCreator, connect } from "react-redux";
+
+import { changeDisplayName, changeTimezoneId, clearForm, createOrUpdateTimeLine } from "../../app.common/actions";
+import { Typeahead } from "../../app.common/components";
+import { TimeZoneInfo } from "../../app.common/models";
+import { Suggestion } from "../../app.common/models/TimeZoneShort";
+import { IAppState } from "../../app.common/store";
+import { getTimeZoneAbbreviation } from "../../app.common/util/time";
+import { SelectTimezoneDialog } from "./SelectTimezoneDialog";
 
 let compKey = 0;
 
@@ -100,14 +97,15 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
     } = this.props;
     return (
       <div key={compKey} className="row">
-        <div className="col-md-5">
+        <div className="col-md-6 d-flex">
           <Typeahead
             suggestions={this.state.timeZones}
             onChange={(value) => changeTimezoneId(value)}
             value={selectedTimeLine.timeZoneId}
           />
+          <SelectTimezoneDialog timeZones={this.state.timeZones} />
         </div>
-        <div className="col-md-5">
+        <div className="col-md-4">
           <TextField
             required={true}
             label="Enter name to display"

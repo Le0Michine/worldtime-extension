@@ -184,17 +184,17 @@ const styles = (theme: Theme): React.CSSProperties => ({
   container: {
     flexGrow: 1,
     position: "relative",
-    height: 200,
   },
   suggestionsContainerOpen: {
     position: "absolute",
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: "48px",
     overflowY: "scroll",
     maxHeight: 200,
     zIndex: 10,
     left: 0,
     right: 0,
+    bottom: 0,
   },
   suggestion: {
     display: "block",

@@ -1,11 +1,11 @@
-import { formatTime, getTimeZoneAbbreviation } from "../util/time";
-import * as React from "react";
-import * as moment from "moment";
+import { Theme, withTheme } from "material-ui/styles";
 import Typography from "material-ui/Typography";
-import { withTheme, Theme } from "material-ui/styles";
-import * as style from "./TimeLine.scss";
+import * as moment from "moment";
+import * as React from "react";
 
-import { TimeZoneInfo, getOffset, DisplaySettingsInfo, ScrollPosition } from "../models";
+import { DisplaySettingsInfo, getOffset, TimeZoneInfo } from "../models";
+import { formatTime, fromatOffset, getTimeZoneAbbreviation } from "../util/time";
+import * as style from "./TimeLine.scss";
 
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
@@ -119,7 +119,7 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
             <Typography type="subheading" color="secondary" className="mr-2">{abbreviation}</Typography> : null
           }
           {displaySettings.showUTCOffset ?
-            <Typography type="subheading" color="secondary" className="mr-2">UTC{offset >= 0 ? "+" : ""}{offset / 60}</Typography> : null
+            <Typography type="subheading" color="secondary" className="mr-2">UTC{fromatOffset(offset)}</Typography> : null
           }
           {displaySettings.showDST !== "hide" ?
             <Typography type="subheading" color="secondary">{this.isDST(timeLine.timeZoneId) ? summer : winter}</Typography> : null

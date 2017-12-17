@@ -2,8 +2,8 @@ import * as _ from "lodash";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
 import * as moment from "moment-timezone";
-import * as React from "react";
 import { KeyboardEvent } from "react";
+import * as React from "react";
 import { ActionCreator, connect } from "react-redux";
 
 import { changeDisplayName, changeTimezoneId, clearForm, createOrUpdateTimeLine } from "../../app.common/actions";
@@ -11,7 +11,7 @@ import { Typeahead } from "../../app.common/components";
 import { TimeZoneInfo } from "../../app.common/models";
 import { Suggestion } from "../../app.common/models/TimeZoneShort";
 import { IAppState } from "../../app.common/store";
-import { getTimeZoneAbbreviation } from "../../app.common/util/time";
+import { fromatOffset, getTimeZoneAbbreviation } from "../../app.common/util/time";
 import { SelectTimezoneDialog } from "./SelectTimezoneDialog";
 
 let compKey = 0;
@@ -47,7 +47,7 @@ class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLine
     })).orderBy(x => x.utcOffset, "asc").map(x => ({
       id: x.id,
       title: x.title + (Boolean(x.abbr) ? ` (${x.abbr})` : ""),
-      subheading: `UTC${x.utcOffset > 0 ? "+" : "-"}${Math.abs(x.utcOffset / 60)}`
+      subheading: `UTC${fromatOffset(x.utcOffset)}`
     } as Suggestion)).value();
     this.state = {
       timeZones: tzNames,

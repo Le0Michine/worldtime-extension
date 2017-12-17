@@ -1,6 +1,7 @@
-import { updateState } from "./UpdateStateHelper";
-import { DisplaySettingsInfo } from "../models";
 import { Action } from "../actions";
+import { DisplaySettingsInfo } from "../models";
+import { BuildTargets, getBuildTarget } from "../util/target";
+import { updateState } from "./UpdateStateHelper";
 
 export type State = DisplaySettingsInfo;
 
@@ -9,7 +10,7 @@ export const initialState: State = {
     showTimeZoneId: false,
     showTimeZoneAbbreviation: true,
     showUTCOffset: true,
-    showControlPanel: true,
+    showControlPanel: getBuildTarget() === BuildTargets.demo ? false : true,
     useDarkTheme: false,
     use24HoursTime: true,
     selectionStep: 30,

@@ -4,7 +4,7 @@ import * as moment from "moment";
 import * as React from "react";
 
 import { DisplaySettingsInfo, getOffset, TimeZoneInfo } from "../models";
-import { formatTime, fromatOffset, getTimeZoneAbbreviation } from "../util/time";
+import { formatTime, fromatOffset, getTimeZoneAbbreviation, formatDate } from "../util/time";
 import * as style from "./TimeLine.scss";
 
 interface TimeLineProps {
@@ -42,6 +42,14 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
 
   isDST(tz: string) {
     return moment().tz(tz).isDST();
+  }
+
+  getTimeLineOffsetY(utcOffset: number) {
+    const uiOffset = (utcOffset % 60) / 60;
+    const oneDay = 100 / 3;
+    const oneHour = oneDay / 24;
+    const position = this.props.scrollPosition;
+    return -oneDay + oneHour * position - oneHour * uiOffset;
   }
 
   renderHourCell(h: number, i: number, currentHour: number) {
@@ -87,14 +95,10 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
     return (<span className={classes.join(" ")} style={styles} key={`${h}_${i}`}>{displayHour}</span>);
   }
 
-  renderTimeLine(hours, offset) {
-    const currentHour = +moment().utcOffset(offset).format("HH");
-    const uiOffset = (offset % 60) / 60;
-    const oneDay = 100 / 3;
-    const oneHour = oneDay / 24;
-    const position = this.props.scrollPosition;
+  renderTimeLine(hours: number[], offset: number) {
+    const currentHour = Number(moment().utcOffset(offset).format("HH"));
     const inlineStyle = {
-        transform: `translateX(${-oneDay + oneHour * position - oneHour * uiOffset}%)`
+        transform: `translateX(${this.getTimeLineOffsetY(offset)}%)`
     };
     return (
       <div className={style.timeLine} style={inlineStyle}>
@@ -102,10 +106,31 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
       </div>);
   }
 
+  renderTimeLineNotes(hours: number[], offset: number) {
+    const inlineStyle = {
+        transform: `translateX(${this.getTimeLineOffsetY(offset)}%)`
+    };
+    const dateNote = [-1, 0, 1].map(x => formatDate(offset, x));
+    const toDayNotes = (hours, date) => hours.map(x => x === 0 ? date : "")
+    return (
+      <div className={style.timeLine} style={inlineStyle}>
+        {[...toDayNotes(hours, dateNote[0]), ...toDayNotes(hours, dateNote[1]), ...toDayNotes(hours, dateNote[2])].map((text, i) => this.renderHourNote(text, i))}
+      </div>);
+  }
+
+  renderHourNote(text: string, i: number) {
+    const { theme } = this.props;
+    const background = theme.palette.background.paper;
+    const color = theme.palette.getContrastText(background);
+    return (
+      <span key={i} className={style.hourNote} style={{ color }}>{text}</span>
+    );
+  }
+
   render() {
     const { offset, hours, displaySettings, timeLine } = this.props;
-    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer";
-    const winter = displaySettings.showDST === "DST" ? "" : "Winter";
+    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer time";
+    const winter = displaySettings.showDST === "DST" ? "" : "Winter time";
     const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
 
     return (
@@ -128,6 +153,9 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
         </div>
         <div>
           {this.renderTimeLine(hours, offset)}
+        </div>
+        <div className={style.timeLineNotes}>
+          {displaySettings.showDateLabels ? this.renderTimeLineNotes(hours, offset) : null}
         </div>
       </div>
     );

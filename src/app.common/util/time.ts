@@ -12,6 +12,10 @@ export function fromatOffset(offset: number) {
     return `${sign}${hours >= 10 ? "" : "0" }${hours}:${minutes >= 10 ? "" : "0" }${minutes}`;
 }
 
+export function formatDate(utcOffset: number, daysOffset: number) {
+    return moment().utcOffset(utcOffset).add(daysOffset, "days").format("MMM D");
+}
+
 export function getTimeZoneAbbreviation(timeZoneId: string) {
     const abbreviation = moment.tz.zone(timeZoneId).abbr(moment().unix());
     return /^[^\d]*$/.test(abbreviation) ? abbreviation : "";

@@ -58,3 +58,10 @@ export function changeTimeSelectionStepSetting(value: number): Action<number> {
     payload: value
   };
 }
+
+export function changeShowDateLabelsSetting(value: boolean): Action<boolean> {
+  return {
+    type: "DISPLAY_SETTINGS/TOGGLE_SHOW_DATE_LABELS",
+    payload: value
+  };
+}

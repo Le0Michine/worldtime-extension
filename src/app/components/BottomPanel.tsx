@@ -75,7 +75,7 @@ class BottomPanelImpl extends React.Component<ILayoutProps, any> {
     const buttonDisabled = false;
     return (
       <div className={style.app + " mx-auto pb-2"}>
-        <div className={style.timeSpanSelector}>
+        <div className={`${style.timeSpanSelector} mt-0`}>
           <Range color={rangeColor} rangeSize={rangeSize} valueMin={valueMin} valueMax={valueMax} onChange={({ valueMin, valueMax }) => this.updateSelectedTimeRange(valueMin, valueMax)} />
         </div>
         {displaySettings.showControlPanel ? (<div className={style.timeSpanSelector}>

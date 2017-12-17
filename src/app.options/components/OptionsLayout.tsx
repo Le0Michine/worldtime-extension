@@ -80,7 +80,7 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutSta
             {timeLines.map((tl, index) =>
               <div key={tl.timeLineid} className={style.timeLineContainer} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave()}>
                 <TimeLine timeLine={tl} scrollPosition={scrollPosition} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
-                <div>
+                <div className={style.timLineControlsContainer}>
                   <TimeLineControls
                     onEdit={() => selectTimeLine(tl)}
                     onDelete={() => deleteTimeLine(tl)}

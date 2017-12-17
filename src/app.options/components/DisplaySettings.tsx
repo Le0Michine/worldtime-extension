@@ -19,6 +19,7 @@ import {
   changeShowUTCOffsetSetting,
   change24HoursTimeFormatSetting,
   changeTimeSelectionStepSetting,
+  changeShowDateLabelsSetting,
 } from "../../app.common/actions";
 import { DisplaySettingsInfo } from "../../app.common/models";
 import { AppTheme } from "../../app.common/models/AppTheme";
@@ -37,6 +38,7 @@ interface DisplaySettingsDispatchProps {
   changeSecondaryColorSetting?: ActionCreator<string>;
   change24HoursTimeFormatSetting?: ActionCreator<boolean>;
   changeTimeSelectionStepSetting?: ActionCreator<number>;
+  changeShowDateLabelsSetting?: ActionCreator<number>;
 }
 
 interface DisplaySettingsStateProps {
@@ -67,6 +69,7 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
       changePrimaryColorSetting,
       changeSecondaryColorSetting,
       changeTimeSelectionStepSetting,
+      changeShowDateLabelsSetting,
       theme,
     } = this.props;
 
@@ -127,6 +130,19 @@ class DisplaySettingsImpl extends React.Component<DisplaySettingsProps, any> {
                     />
                   }
                   label="Show export panel (at the bottom)"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-12">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={displaySettings.showDateLabels}
+                      onChange={(event, value) => changeShowDateLabelsSetting(value)}
+                    />
+                  }
+                  label="Show date labels"
                 />
               </div>
             </div>
@@ -233,5 +249,6 @@ export const DisplaySettings = connect<DisplaySettingsStateProps, DisplaySetting
     changeSecondaryColorSetting: changeSecondaryColor as ActionCreator<any>,
     change24HoursTimeFormatSetting: change24HoursTimeFormatSetting as ActionCreator<any>,
     changeTimeSelectionStepSetting: changeTimeSelectionStepSetting as ActionCreator<any>,
+    changeShowDateLabelsSetting: changeShowDateLabelsSetting as ActionCreator<any>,
   }
 )(DisplaySettingsImpl);

@@ -14,6 +14,7 @@ export const initialState: State = {
     useDarkTheme: false,
     use24HoursTime: true,
     selectionStep: 30,
+    showDateLabels: true,
 }
 
 export const reducer = function (state: State = initialState, action: Action<any>): State {
@@ -41,6 +42,9 @@ export const reducer = function (state: State = initialState, action: Action<any
     }
     case "DISPLAY_SETTINGS/CHANGE_TIME_SELECTION_STEP": {
       return updateState(state, { selectionStep: action.payload });
+    }
+    case "DISPLAY_SETTINGS/TOGGLE_SHOW_DATE_LABELS": {
+      return updateState(state, { showDateLabels: action.payload });
     }
     default:
       return state;

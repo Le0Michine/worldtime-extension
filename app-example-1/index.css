@@ -41,7 +41,8 @@ div#app.app-options {
 }
 
 a:hover {
-    font-weight: initial;
+    text-decoration: none;
+    color: initial;
 }
 
 button.default-focus-receiver {

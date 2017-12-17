@@ -172,10 +172,6 @@ workflows:
           requires:
             - build_prod
             - build_canary
-          filters:
-            branches:
-              only:
-                - develop
       - upload_and_publish_prod:
           requires:
             - build_prod

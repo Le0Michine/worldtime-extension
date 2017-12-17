@@ -1,7 +1,10 @@
 /node_modules
 /out
+/secret
+/.vscode
 npm-debug.log
 *.zip
+*.d.ts
 *.pem
 *.crx
 *.log

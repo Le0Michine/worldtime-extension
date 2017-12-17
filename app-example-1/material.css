@@ -20,8 +20,8 @@
     height: 100%;
     z-index: 2;
     cursor: pointer;
-    padding: 250px 0 10px 0;
-    top: -250px;
+    padding: 1000px 0 10px 0;
+    top: -1000px;
     box-sizing: content-box;
 }
 
@@ -230,6 +230,10 @@
     /*visibility: hidden;*/
     opacity: 0;
     transition: opacity .1s ease-out;
+}
+
+.reset-button {
+    background: rgba(255,82,82,0.87);
 }
 
 .checkbox-material-container {

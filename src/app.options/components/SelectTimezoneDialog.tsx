@@ -86,7 +86,7 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
           onRequestClose={this.handleRequestCancel}
         >
           <DialogTitle>Select timezone</DialogTitle>
-          <DialogContent>
+          <DialogContent className="pb-0">
             <WorldMap
               useDarkTheme={useDarkTheme}
               use24TimeFormat={use24TimeFormat}

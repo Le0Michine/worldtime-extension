@@ -73,7 +73,8 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
 
   get mapSize() {
     const { clientWidth, clientHeight } = document.documentElement;
-    return { width: (clientWidth - 48) * 0.6, height: (clientHeight - 68 * 2 - 50) * 0.8 };
+    const height = (clientHeight - 68 * 2 - 50) * 0.8;
+    return { width: height * 2, height: height };
   }
 
   get mapPath() {
@@ -86,6 +87,14 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
     return d3.geoEquirectangular()
       .scale(width / 2 / Math.PI)
       .translate([width / 2, height / 2]);
+  }
+
+  getSelectedTimeZonePosition(timeZoneId: string) {
+    const selectedZoneMeta = timezoneMeta.zones[timeZoneId];
+    const [x, y] = selectedZoneMeta
+      ? this.projection([selectedZoneMeta.long, selectedZoneMeta.lat])
+      : [0, 0];
+    return { x, y };
   }
 
   getPoints() {
@@ -153,10 +162,11 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
   render() {
     const { classes, use24TimeFormat } = this.props;
     const { width, height } = this.mapSize;
-    const { pointerX, pointerY, mouseHover } = this.state;
+    const { mouseHover } = this.state;
     const selectedPoint = !this.state.mouseHover && this.props.timeZoneId
       ? this.props.timeZoneId
       : this.state.selectedPoint;
+    const { x: pointerX, y: pointerY } = this.getSelectedTimeZonePosition(selectedPoint);
     const selectedZone = moment.tz.zone(selectedPoint);
     const selectedZoneTime = moment.tz(selectedZone.name);
     const formattedTime = formatTime(selectedZoneTime, use24TimeFormat);

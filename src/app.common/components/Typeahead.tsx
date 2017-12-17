@@ -27,15 +27,13 @@ interface TypeaheadState {
 }
 
 class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
-  private oldValue: string;
 
   constructor(props) {
     super(props);
     const { suggestions } = this.props;
-    this.oldValue = props.value;
     this.state = {
       suggestions,
-      value: props.value,
+      value: this.getTitleById(props.value),
       valid: false,
       touched: false,
     };
@@ -47,6 +45,20 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
 
   get errorMessage(): string {
     return this.showError ? "Select value from the list, value can't be empty" : "";
+  }
+
+  getTitleById(suggestionId: string) {
+    return (this.props.suggestions.find(x => x.id === suggestionId) || { title: "" }).title;
+  }
+
+  validate(newValue: string): boolean {
+    const selectedValue = this.props.suggestions.find(x => x.title === newValue);
+    if (selectedValue) {
+      this.props.onChange(selectedValue.id);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   onBlur() {
@@ -144,24 +156,21 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
   handleChange(newValue) {
     this.setState({
       value: newValue,
+      valid: this.validate(newValue)
     });
-    const selectedValue = this.props.suggestions.find(x => x.title === newValue);
-    if (selectedValue) {
-      this.props.onChange(selectedValue.id);
-      this.setState({ valid: true });
-    } else {
-      this.setState({ valid: false });
-    }
   };
+
+  componentWillReceiveProps(nextProps: TypeaheadProps) {
+    if (this.props && nextProps) {
+      if (this.props.value !== nextProps.value) {
+        this.handleChange(this.getTitleById(nextProps.value));
+      }
+    }
+  }
 
   render() {
     const { classes } = this.props;
-    const { suggestions } = this.state;
-    let { value } = this.state;
-    if (this.oldValue !== this.props.value) {
-      value = this.props.value;
-      this.oldValue = value;
-    }
+    const { suggestions, value } = this.state;
 
     return (
       <Autosuggest
@@ -193,6 +202,7 @@ const styles = (theme: Theme): React.CSSProperties => ({
   container: {
     flexGrow: 1,
     position: "relative",
+    minHeight: 68,
   },
   suggestionsContainerOpen: {
     position: "absolute",

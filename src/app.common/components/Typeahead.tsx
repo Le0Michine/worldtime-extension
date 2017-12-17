@@ -15,7 +15,8 @@ const parse = require("autosuggest-highlight/parse");
 interface TypeaheadProps {
   suggestions: Suggestion[];
   classes: any;
-  onChange: Function;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 interface TypeaheadState {
@@ -26,12 +27,13 @@ interface TypeaheadState {
 }
 
 class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
+
   constructor(props) {
     super(props);
     const { suggestions } = this.props;
     this.state = {
       suggestions,
-      value: "",
+      value: this.getTitleById(props.value),
       valid: false,
       touched: false,
     };
@@ -43,6 +45,20 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
 
   get errorMessage(): string {
     return this.showError ? "Select value from the list, value can't be empty" : "";
+  }
+
+  getTitleById(suggestionId: string) {
+    return (this.props.suggestions.find(x => x.id === suggestionId) || { title: "" }).title;
+  }
+
+  validate(newValue: string): boolean {
+    const selectedValue = this.props.suggestions.find(x => x.title === newValue);
+    if (selectedValue) {
+      this.props.onChange(selectedValue.id);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   onBlur() {
@@ -140,19 +156,21 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
   handleChange(newValue) {
     this.setState({
       value: newValue,
+      valid: this.validate(newValue)
     });
-    const selectedValue = this.props.suggestions.find(x => x.title === newValue);
-    if (selectedValue) {
-      this.props.onChange(selectedValue.title);
-      this.setState({ valid: true });
-    } else {
-      this.setState({ valid: false });
-    }
   };
+
+  componentWillReceiveProps(nextProps: TypeaheadProps) {
+    if (this.props && nextProps) {
+      if (this.props.value !== nextProps.value) {
+        this.handleChange(this.getTitleById(nextProps.value));
+      }
+    }
+  }
 
   render() {
     const { classes } = this.props;
-    const { value, suggestions } = this.state;
+    const { suggestions, value } = this.state;
 
     return (
       <Autosuggest
@@ -184,17 +202,18 @@ const styles = (theme: Theme): React.CSSProperties => ({
   container: {
     flexGrow: 1,
     position: "relative",
-    height: 200,
+    minHeight: 68,
   },
   suggestionsContainerOpen: {
     position: "absolute",
     marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
+    marginBottom: "48px",
     overflowY: "scroll",
     maxHeight: 200,
     zIndex: 10,
     left: 0,
     right: 0,
+    bottom: 0,
   },
   suggestion: {
     display: "block",

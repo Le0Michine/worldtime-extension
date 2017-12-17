@@ -1,6 +1,7 @@
 import { compose } from "redux";
 import * as persistState from "redux-localstorage";
 import * as _ from "lodash";
+import * as moment from "moment";
 import { IAppState } from "./reducers";
 
 function merge(initialState: IAppState, persistedState: IAppState) {
@@ -9,7 +10,7 @@ function merge(initialState: IAppState, persistedState: IAppState) {
         return initialState;
     }
     if (persistedState.timeLines) {
-        mergedState.timeLines = persistedState.timeLines;
+        mergedState.timeLines = persistedState.timeLines.filter(x => Boolean(moment.tz.zone(x.timeZoneId)));
     }
     if (persistedState.displaySettings) {
         mergedState.displaySettings = _.merge(mergedState.displaySettings, persistedState.displaySettings);

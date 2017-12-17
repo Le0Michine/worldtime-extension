@@ -17,6 +17,9 @@
     "dependencies": {
         "autosuggest-highlight": "^3.1.1",
         "bootstrap": "^4.0.0-beta.2",
+        "d3": "^4.12.0",
+        "d3-geo": "^1.9.1",
+        "d3-geo-projection": "^2.3.2",
         "es6-promise": "^4.0.5",
         "history": "^4.4.0",
         "jquery": "^1.9.1",
@@ -37,10 +40,13 @@
         "redux-localstorage": "^0.4.1",
         "redux-logger": "^3.0.6",
         "redux-thunk": "^2.2.0",
-        "rxjs": "^5.5.5"
+        "rxjs": "^5.5.5",
+        "topojson": "^3.0.2"
     },
     "devDependencies": {
         "@types/chrome": "0.0.55",
+        "@types/d3": "^4.12.0",
+        "@types/d3-geo": "^1.9.4",
         "@types/lodash": "^4.14.88",
         "@types/moment-timezone": "^0.5.2",
         "@types/react": "^16.0.28",
@@ -50,6 +56,7 @@
         "@types/react-router-dom": "^4.2.3",
         "@types/react-router-redux": "^5.0.10",
         "@types/redux-logger": "^3.0.5",
+        "@types/topojson": "^3.0.2",
         "@types/webpack": "^2.2.5",
         "autoprefixer": "^7.2.2",
         "awesome-typescript-loader": "^3.0.3",

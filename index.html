@@ -1,45 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Worldtime extension</title>
-    <link rel="stylesheet" type="text/css" media="screen" href="slate/assets/css/style.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/ibnegikgmnfnmljianjgnhhlcabonobd">
-    <link href="app-example-1/bootstrap.min.css" type="text/css" rel="stylesheet"/>
-    <link href="app-example-1/material.css" type="text/css" rel="stylesheet"/>
-    <link href="app-example-1/index.css" type="text/css" rel="stylesheet"/>
-    <link href="index.css" type="text/css" rel="stylesheet"/>
-  </head>
 
-  <body>
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="installme_button" href="#">Install to Chrome</a>
-          <a id="forkme_banner" href="https://github.com/Le0Michine/worldtime-extension">View on GitHub</a>
+<head>
+  <meta charset="utf-8">
+  <title>Worldtime extension</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="slate/assets/css/style.css">
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/ibnegikgmnfnmljianjgnhhlcabonobd">
+  <link href="app-example-1/bootstrap.min.css" type="text/css" rel="stylesheet" />
+  <link href="app-example-1/material.css" type="text/css" rel="stylesheet" />
+  <link href="app-example-1/index.css" type="text/css" rel="stylesheet" />
+  <link href="index.css" type="text/css" rel="stylesheet" />
+</head>
 
-          <h1 id="project_title">Worldtime</h1>
-          <h2 id="project_tagline">A browser extension to make coordination in different timezones easier.</h2>
-        </header>
-    </div>
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <!--<button id="install-button">Add to Chrome</button>-->
+<body>
+  <div id="header_wrap" class="outer">
+    <header class="inner">
+      <a id="installme_button" href="#">Install to Chrome</a>
+      <a id="forkme_banner" href="https://github.com/Le0Michine/worldtime-extension">View on GitHub</a>
+
+      <h1 id="project_title">Worldtime</h1>
+      <h2 id="project_tagline">A browser extension to make coordination in different timezones easier.</h2>
+    </header>
+  </div>
+  <div id="main_content_wrap" class="outer">
+    <section id="main_content" class="inner">
+      <!--<button id="install-button">Add to Chrome</button>-->
+      <div class="top_content">
         <p>To install the extension please follow the link below. It is compatible with Chrome and Firefox</p>
 
-        <p><a href="https://chrome.google.com/webstore/detail/ibnegikgmnfnmljianjgnhhlcabonobd" id="link-to-webstore" target="_blank">Chrome web store page.</a></p>
-        <p><a href="https://addons.mozilla.org/en-US/firefox/addon/worldtime/" target="_blank">Firefox Add-ons.</a></p>
+        <p>
+          <a href="https://chrome.google.com/webstore/detail/ibnegikgmnfnmljianjgnhhlcabonobd" id="link-to-webstore" target="_blank">Chrome web store page.</a>
+        </p>
+        <p>
+          <a href="https://addons.mozilla.org/en-US/firefox/addon/worldtime/" target="_blank">Firefox Add-ons.</a>
+        </p>
 
-        <p>This extension allows to see time of the day in different regions, you can customize regions names and add new ones. Worldtime can show you UTC offset in hours for each timeline it also can show if <a href="https://en.wikipedia.org/wiki/Daylight_saving_time">DST (Daylight Saving Time)</a> is applied. You can see an example below</p>
-
-        <div class="card"><div id="app"></div></div>
-
+        <p>This extension allows to see time of the day in different regions, you can customize regions names and add new ones.
+          Worldtime can show you UTC offset in hours for each timeline it also can show if
+          <a href="https://en.wikipedia.org/wiki/Daylight_saving_time">DST (Daylight Saving Time)</a> is applied. You can see an example below</p>
+      </div>
+      <div class="card">
+        <div id="app"></div>
+      </div>
+      <div class="bottom_content">
         <h3>Main features</h3>
-
         <p>With worldtime you can</p>
-
         <ul>
-          <li>get information from full most recent <a href="http://www.iana.org/time-zones">IANA timezone database</a></li>
+          <li>get information from full most recent
+            <a href="http://www.iana.org/time-zones">IANA timezone database</a>
+          </li>
           <li>get information about time accounting DST</li>
           <li>compare time of the day in several regions which you can choose and customize on your own</li>
           <li>get information about UTC offset for different timezones</li>
@@ -47,18 +57,21 @@
           <li>hide part of the UI to make application more compact</li>
           <li>export selected time interval into Google calendar, download as .ics file or just copy it into the clipboard</li>
         </ul>
+        <p>If you don't see functionality that must have for you you can let me know by creating an issue/feature request on
+          <a href="https://github.com/Le0Michine/worldtime-extension/issues">GitHub</a> or you can fork the repository and create a pull request.</p>
+        <p>Please note that this application is fully network independent, i.e. it reads information about current time and
+          date from your computer.</p>
+        <p>This extension was inspired by
+          <a href="http://www.worldtimebuddy.com/">worldtimebuddy.com</a>.
+        </p>
+      </div>
+    </section>
+  </div>
+  <script src="index.js"></script>
+  <script src="app-example-1/app.min.js"></script>
+  <script>
+    (function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-92018676-1', 'auto'); ga('send', 'pageview');
+  </script>
+</body>
 
-        <p>If you don't see functionality that must have for you you can let me know by creating an issue/feature request on <a href="https://github.com/Le0Michine/worldtime-extension/issues">GitHub</a> or you can fork the repository and create a pull request.</p>
-
-        <p>Please note that this application is fully network independent, i.e. it reads information about current time and date from your computer.</p>
-
-        <p>This extension was inspired by <a href="http://www.worldtimebuddy.com/">worldtimebuddy.com</a>.</p>
-      </section>
-    </div>
-    <script src="index.js"></script>
-    <script src="app-example-1/app.min.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create', 'UA-92018676-1', 'auto');ga('send', 'pageview');
-    </script>
-  </body>
 </html>

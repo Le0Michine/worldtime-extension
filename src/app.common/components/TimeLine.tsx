@@ -3,7 +3,7 @@ import Typography from "material-ui/Typography";
 import * as moment from "moment";
 import * as React from "react";
 
-import { DisplaySettingsInfo, getOffset, TimeZoneInfo } from "../models";
+import { DisplaySettingsInfo, getOffset, TimeZoneInfo, HourDay } from "../models";
 import { formatTime, fromatOffset, getTimeZoneAbbreviation } from "../util/time";
 import { HourCellList } from "./HourCellList";
 import { HourNoteList } from "./HourNoteList";
@@ -12,7 +12,7 @@ import * as style from "./TimeLine.scss";
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
   offset: number;
-  hours: number[];
+  hourDayList: HourDay[];
   displaySettings: DisplaySettingsInfo;
   theme: Theme;
   scrollPosition: number;
@@ -55,7 +55,7 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
   }
 
   render() {
-    const { offset, hours, displaySettings, timeLine } = this.props;
+    const { offset, hourDayList, displaySettings, timeLine } = this.props;
     const summer = displaySettings.showDST === "DST" ? "DST" : "Summer time";
     const winter = displaySettings.showDST === "DST" ? "" : "Winter time";
     const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
@@ -80,7 +80,7 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
         </div>
         <div>
           <HourCellList
-            hours={hours}
+            hours={hourDayList.map(x => x.hour)}
             utcOffset={offset}
             scrollOffset={this.getTimeLineOffsetY(offset)}
             use24HoursTime={displaySettings.use24HoursTime}
@@ -89,7 +89,7 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
         <div className={style.timeLineNotes}>
           {displaySettings.showDateLabels
             ? <HourNoteList
-                hours={hours}
+                hourDayList={hourDayList}
                 utcOffset={offset}
                 scrollOffset={this.getTimeLineOffsetY(offset)}
               />

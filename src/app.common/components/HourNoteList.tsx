@@ -1,13 +1,13 @@
 import { Theme, withStyles } from "material-ui/styles";
 import * as React from "react";
 
-import { ClassMap } from "../models";
+import { ClassMap, HourDay } from "../models";
 import { formatDate } from "../util/time";
 import { HourNote } from "./HourNote";
 import * as style from "./TimeLine.scss";
 
 interface HourNoteListProps {
-  hours: number[];
+  hourDayList: HourDay[];
   scrollOffset: number;
   utcOffset: number;
 }
@@ -20,17 +20,20 @@ class HourNoteListImpl extends React.Component<HourNoteListProps> {
     };
   }
 
-  generateNotes(hours: number[], dateNote: string[]): string[] {
-    const toDayNotes = (hours, date) => hours.map(x => x === 0 ? date : "")
-    return dateNote.reduce((acc, x) => acc.concat(toDayNotes(hours, x)), []);
+  generateNotes(hourDayList: HourDay[], dayOffsetList: number[], utcOffset: number): string[] {
+    const toDayNotes = (hours: HourDay[], dayOffset: number) =>
+      hours.map(x => x.hour === 0 ? formatDate(utcOffset, x.dayOffset + dayOffset, 0) : "");
+    return dayOffsetList
+      .map(dayOffset => toDayNotes(hourDayList, dayOffset))
+      .reduce((acc, x) => acc.concat(x), []);
   }
 
   render() {
-    const { hours, scrollOffset, utcOffset } = this.props;
-    const dateNote = [-1, 0, 1].map(x => formatDate(utcOffset, x));
+    const { hourDayList, scrollOffset, utcOffset } = this.props;
+    const dateNote = [-1, 0, 1];
     return (
       <div className={style.timeLine} style={this.inlineStyle}>
-        {this.generateNotes(hours, dateNote).map((text, i) =>
+        {this.generateNotes(hourDayList, dateNote, utcOffset).map((text, i) =>
           <HourNote text={text} key={i} />
         )}
       </div>

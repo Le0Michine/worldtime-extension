@@ -3,6 +3,7 @@ import * as React from "react";
 
 import { HourCell } from "./HourCell";
 import * as style from "./TimeLine.scss";
+import { HourDay } from "../models";
 
 interface HourCellListProps {
   hours: number[];

@@ -76,7 +76,7 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutSta
             <DisplaySettings />
           </div>
           <Typography type="display2" className={sectionSpacing}>Selected timelines</Typography>
-          <div>
+          <div id="timeLinesContainer">
             {timeLines.map((tl, index) =>
               <div key={tl.timeLineid} className={style.timeLineContainer} onMouseEnter={() => onMouseEnter(index)} onMouseLeave={() => onMouseLeave()}>
                 <TimeLine timeLine={tl} scrollPosition={scrollPosition} offset={getOffset(tl)} hours={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />

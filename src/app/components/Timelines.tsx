@@ -48,7 +48,7 @@ class TimelinesImpl extends React.Component<ILayoutProps, any> {
     } = this.props;
     const { valueMin, valueMax, rangeSize } = rangeValue;
     return (
-      <div className={`${style.app} mx-auto`}>
+      <div className={`${style.app} mx-auto`} id="timeLinesContainer">
         <TimeSelector valueMin={valueMin} valueMax={valueMax} rangeSize={rangeSize} color={rangeColor} />
         <div>
           {timeLines.map(tl =>

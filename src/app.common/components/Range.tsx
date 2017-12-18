@@ -133,7 +133,7 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
   }
 
   getClicableAreaHeight() {
-    const appElement = document.getElementById("app");
+    const appElement = document.getElementById("timeLinesContainer");
     if (appElement) {
       return appElement.clientHeight;
     } else {

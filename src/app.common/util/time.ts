@@ -12,13 +12,12 @@ export function fromatOffset(offset: number) {
     return `${sign}${hours >= 10 ? "" : "0" }${hours}:${minutes >= 10 ? "" : "0" }${minutes}`;
 }
 
-export function formatDate(utcOffset: number, daysOffset: number, hours: number) {
+export function formatDate(daysOffset: number, hours: number) {
     return moment()
         .hour(hours)
         .minute(0)
         .second(0)
         .millisecond(0)
-        .utcOffset(utcOffset)
         .add(daysOffset, "days")
         .format("MMM D");
 }

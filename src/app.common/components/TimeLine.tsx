@@ -90,7 +90,6 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
           {displaySettings.showDateLabels
             ? <HourNoteList
                 hourDayList={hourDayList}
-                utcOffset={offset}
                 scrollOffset={this.getTimeLineOffsetY(offset)}
               />
             : null

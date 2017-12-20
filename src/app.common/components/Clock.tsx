@@ -1,9 +1,19 @@
-import * as React from "react";
-import * as moment from "moment";
 import Typography from "material-ui/Typography";
+import * as moment from "moment";
+import * as React from "react";
 
-export class Clock extends React.Component<{}, ClockState> {
-  constructor(props: {}) {
+import { formatTime } from "../util/time";
+
+interface ClockProps {
+  use24HoursFormat: boolean;
+}
+
+interface ClockState {
+  time: string;
+}
+
+export class Clock extends React.Component<ClockProps, ClockState> {
+  constructor(props: ClockProps) {
     super(props);
     this.state = {
       time: moment().format("HH:mm:ss"),
@@ -12,7 +22,7 @@ export class Clock extends React.Component<{}, ClockState> {
   }
 
   updateTime(): void {
-    this.setState({time: moment().format("HH:mm:ss")});
+    this.setState({time: formatTime(moment(), this.props.use24HoursFormat, true)});
   }
 
   render() {
@@ -20,8 +30,4 @@ export class Clock extends React.Component<{}, ClockState> {
       <Typography type="display1">{this.state.time}</Typography>
     );
   }
-}
-
-interface ClockState {
-  time: string;
 }

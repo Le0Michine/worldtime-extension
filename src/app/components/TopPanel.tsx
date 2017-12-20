@@ -61,13 +61,14 @@ class TopPanelImpl extends React.Component<ILayoutProps, any> {
 
   render(): React.ReactElement<any> {
     const {
-      scrollPosition
+      scrollPosition,
+      displaySettings,
     } = this.props;
     const scrollStep = scrollPosition.step;
     return (
       <div className={style.app + " mx-auto"}>
         <div className={style.header}>
-          <span className={style.clock}><Clock /></span>
+          <span className={style.clock}><Clock use24HoursFormat={displaySettings.use24HoursTime} /></span>
           <Tooltip title={`-${scrollStep} Hours`} placement="bottom">
             <IconButton
               disabled={this.maxPositionReached}

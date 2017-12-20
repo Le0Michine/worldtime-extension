@@ -18,10 +18,10 @@ export class TimeLineControls extends React.Component<any, any> {
         <IconButton className={style.iconButtonSmall} onClick={this.props.onDelete} aria-label="delete">
           <DeleteForeverIcon />
         </IconButton>
-        <IconButton className={style.iconButtonSmall} onClick={this.props.onUp} aria-label="up">
+        <IconButton className={style.iconButtonSmall} disabled={upDisabled} onClick={this.props.onUp} aria-label="up">
           <KeyboardArrowUpIcon />
         </IconButton>
-        <IconButton className={style.iconButtonSmall} onClick={this.props.onDown} aria-label="down">
+        <IconButton className={style.iconButtonSmall} disabled={downDisabled} onClick={this.props.onDown} aria-label="down">
           <KeyboardArrowDownIcon />
         </IconButton>
       </div>

@@ -3,14 +3,16 @@ import Typography from "material-ui/Typography";
 import * as moment from "moment";
 import * as React from "react";
 
-import { DisplaySettingsInfo, getOffset, TimeZoneInfo } from "../models";
+import { DisplaySettingsInfo, getOffset, TimeZoneInfo, HourDay } from "../models";
 import { formatTime, fromatOffset, getTimeZoneAbbreviation } from "../util/time";
+import { HourCellList } from "./HourCellList";
+import { HourNoteList } from "./HourNoteList";
 import * as style from "./TimeLine.scss";
 
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
   offset: number;
-  hours: number[];
+  hourDayList: HourDay[];
   displaySettings: DisplaySettingsInfo;
   theme: Theme;
   scrollPosition: number;
@@ -44,68 +46,18 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
     return moment().tz(tz).isDST();
   }
 
-  renderHourCell(h: number, i: number, currentHour: number) {
-    const classes = [style.hour];
-    const { theme } = this.props;
-    let background = theme.palette.primary[50];
-    if (i === 0) {
-      // classes.push(style.timeLineBorderLeft);
-    }
-    if (i === 23) {
-      // classes.push(style.timeLineBorderRight);
-    }
-    if (h < 8 || h > 21) {
-      background = theme.palette.primary[100];
-    }
-    if (h === 0) {
-      background = theme.palette.primary[200];
-    }
-    if (h === currentHour) {
-      background = theme.palette.primary[700];
-    }
-    const color = theme.palette.getContrastText(background);
-    const styles: React.CSSProperties = Object.assign({}, theme.typography.subheading, {
-      background,
-      color,
-      borderBottom: theme.palette.grey.A400
-    } as React.CSSProperties);
-    const use24HoursFormat = this.props.displaySettings.use24HoursTime;
-    let displayHour = String(h);
-    if (!use24HoursFormat) {
-      switch (h) {
-        case 0:
-          displayHour = "am";
-          break;
-        case 12:
-          displayHour = "pm";
-          break;
-        default:
-          displayHour = String(h % 12 + 1);
-          break;
-      }
-    }
-    return (<span className={classes.join(" ")} style={styles} key={`${h}_${i}`}>{displayHour}</span>);
-  }
-
-  renderTimeLine(hours, offset) {
-    const currentHour = +moment().utcOffset(offset).format("HH");
-    const uiOffset = (offset % 60) / 60;
+  getTimeLineOffsetY(utcOffset: number) {
+    const uiOffset = (utcOffset % 60) / 60;
     const oneDay = 100 / 3;
     const oneHour = oneDay / 24;
     const position = this.props.scrollPosition;
-    const inlineStyle = {
-        transform: `translateX(${-oneDay + oneHour * position - oneHour * uiOffset}%)`
-    };
-    return (
-      <div className={style.timeLine} style={inlineStyle}>
-        {[...hours, ...hours, ...hours].map((h, i) => this.renderHourCell(h, i, currentHour))}
-      </div>);
+    return -oneDay + oneHour * position - oneHour * uiOffset;
   }
 
   render() {
-    const { offset, hours, displaySettings, timeLine } = this.props;
-    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer";
-    const winter = displaySettings.showDST === "DST" ? "" : "Winter";
+    const { offset, hourDayList, displaySettings, timeLine } = this.props;
+    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer time";
+    const winter = displaySettings.showDST === "DST" ? "" : "Winter time";
     const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
 
     return (
@@ -127,7 +79,21 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
           <Typography type="subheading" className="ml-auto">{this.state.time}</Typography>
         </div>
         <div>
-          {this.renderTimeLine(hours, offset)}
+          <HourCellList
+            hours={hourDayList.map(x => x.hour)}
+            utcOffset={offset}
+            scrollOffset={this.getTimeLineOffsetY(offset)}
+            use24HoursTime={displaySettings.use24HoursTime}
+          />
+        </div>
+        <div className={style.timeLineNotes}>
+          {displaySettings.showDateLabels
+            ? <HourNoteList
+                hourDayList={hourDayList}
+                scrollOffset={this.getTimeLineOffsetY(offset)}
+              />
+            : null
+          }
         </div>
       </div>
     );

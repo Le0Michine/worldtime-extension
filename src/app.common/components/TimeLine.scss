@@ -6,21 +6,10 @@
   box-sizing: border-box;
 }
 
-.timeLineBorderRight {
-  /* border-right: 1px solid #ccc; */
-  /* border-radius: 0 5px 5px 0; */
-}
-
-.timeLineBorderLeft {
-  /* border-left: 1px solid #ccc; */
-  /* border-radius: 5px 0 0 5px; */
-}
-
 .container {
   display: inline-block;
   width: max-content;
   font-size: 16px;
-  margin-top: 10px;
   max-width: calc(25px * 24);
   white-space: nowrap;
   overflow: hidden;
@@ -31,4 +20,16 @@
   cursor: default;
   transform: translateX(-33.33333%);
   transition: all 0.15s;
+}
+
+.timeLineNotes {
+  line-height: 0;
+  min-height: 10px;
+}
+
+.hourNote {
+  display: inline-block;
+  width: 25px;
+  font-size: xx-small;
+  line-height: initial;
 }

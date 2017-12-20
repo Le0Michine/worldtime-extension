@@ -28,7 +28,7 @@ steps: &upload-and-publish
           echo Package validation failed
           echo Error: $(echo $result | jq .itemError)
           echo =====================================================================
-          # exit 1
+          exit 1
         fi
         PUBLISH_RESULT=$(curl -H "Authorization: Bearer ${ACCESS_TOKEN}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST -v "https://www.googleapis.com/chromewebstore/v1.1/items/${APP_ID}/publish")
         echo Package published
@@ -172,10 +172,6 @@ workflows:
           requires:
             - build_prod
             - build_canary
-          filters:
-            branches:
-              only:
-                - develop
       - upload_and_publish_prod:
           requires:
             - build_prod

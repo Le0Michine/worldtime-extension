@@ -7,6 +7,11 @@ export interface TimeZoneInfo {
     name: string;
 }
 
+export interface HourDay {
+  hour: number;
+  dayOffset: number;
+}
+
 var tzId = 1;
 
 export function createTimeZoneInfo(timeZoneId, name: string, timeLineid: number = undefined): TimeZoneInfo {
@@ -14,10 +19,11 @@ export function createTimeZoneInfo(timeZoneId, name: string, timeLineid: number 
   return timeZoneInfo;
 }
 
-export function getHoursWithOffset(offset: number): number[] {
+export function getHoursWithOffset(offset: number): HourDay[] {
   const relativeOffset = (offset - moment().utcOffset()) / 60;
-  let result = Array(24).fill(1).map((x, i) => i);
-  result = [...result, ...result, ...result];
+  const toHourDayPair = (hours: number[], dayOffset: number): HourDay[] => hours.map(x => ({ hour: x, dayOffset }));
+  const hours24 = Array(24).fill(1).map((x, i) => i);
+  const result = [-1, 0, 1].map(dayOffset => toHourDayPair(hours24, dayOffset)).reduce((acc, x) => acc.concat(x), []);
   const startIndex = 24 + relativeOffset;
   return result.slice(startIndex, startIndex + 24);
 };

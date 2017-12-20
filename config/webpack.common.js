@@ -154,6 +154,11 @@ module.exports = function (options) {
           ]
         }
       }),
+      new webpack.DefinePlugin({
+        "process.env": {
+          "OPTIONS_PAGE_URL": `"/options.html"`,
+        }
+      }),
       ...optionalPlugins
     ]
   }

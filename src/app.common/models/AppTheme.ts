@@ -1,5 +1,6 @@
+import { Theme } from "material-ui/styles";
+
 import { ColorId } from "../themes/themes";
-import { Palette } from "material-ui/styles/createPalette";
 
 export interface AppTheme {
     palette: {
@@ -7,3 +8,6 @@ export interface AppTheme {
         secondary: ColorId;
     };
 }
+
+export type ClassMap = {[className: string]: React.CSSProperties};
+export type ComponentThemeStyles = (theme: Theme) => ClassMap;

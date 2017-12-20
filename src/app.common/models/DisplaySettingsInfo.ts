@@ -7,6 +7,7 @@ export interface DisplaySettingsInfo {
   useDarkTheme: boolean;
   use24HoursTime: boolean;
   selectionStep: number;
+  showDateLabels: boolean;
 }
 
 export type DSTSetting = "hide" | "DST" | "Summer/Winter";

@@ -1,24 +1,14 @@
-import AdjustIcon from "material-ui-icons/Adjust";
-import KeyboardArrowLeftIcon from "material-ui-icons/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "material-ui-icons/KeyboardArrowRight";
-import SettingsIcon from "material-ui-icons/Settings";
 import Button from "material-ui/Button";
-import IconButton from "material-ui/IconButton";
-import Paper from "material-ui/Paper";
 import Typography from "material-ui/Typography";
-import Tooltip from "material-ui/Tooltip";
 import * as moment from "moment";
 import * as React from "react";
 import { ActionCreator, connect } from "react-redux";
 
-import { TopPanel } from "./TopPanel";
-import { Timelines } from "./Timelines";
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
-import { Clock, Range, TimeLine, TimeSelector } from "../../app.common/components";
-import { CalendarEvent, DisplaySettingsInfo, getOffset, ScrollPosition, TimeSpanInfo, getHoursWithOffset, RangeValue } from "../../app.common/models";
+import { Range } from "../../app.common/components";
+import { CalendarEvent, DisplaySettingsInfo, RangeValue, ScrollPosition, TimeSpanInfo } from "../../app.common/models";
 import { IAppState } from "../../app.common/store";
 import { formatTime } from "../../app.common/util/time";
-
 import * as style from "./Layout.scss";
 
 interface ILayoutStateProps {
@@ -75,7 +65,7 @@ class BottomPanelImpl extends React.Component<ILayoutProps, any> {
     const buttonDisabled = false;
     return (
       <div className={style.app + " mx-auto pb-2"}>
-        <div className={style.timeSpanSelector}>
+        <div className={`${style.timeSpanSelector} mt-0`}>
           <Range color={rangeColor} rangeSize={rangeSize} valueMin={valueMin} valueMax={valueMax} onChange={({ valueMin, valueMax }) => this.updateSelectedTimeRange(valueMin, valueMax)} />
         </div>
         {displaySettings.showControlPanel ? (<div className={style.timeSpanSelector}>

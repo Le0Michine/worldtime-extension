@@ -68,7 +68,7 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutSta
       <Card className="m-3">
         <div className="p-3">
           <div className={style.header}>
-            <span className={style.clock}><Clock /></span>
+            <span className={style.clock}><Clock use24HoursFormat={displaySettings.use24HoursTime} /></span>
           </div>
           <Divider />
           <Typography type="display2" className="mt-2">Display settings</Typography>

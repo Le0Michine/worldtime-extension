@@ -1,7 +1,8 @@
 import * as moment from "moment";
 
-export function formatTime(time: moment.Moment, use24HoursFormat: boolean): string {
-    return moment(time).format(use24HoursFormat ? "HH:mm" : "h.mma");
+export function formatTime(time: moment.Moment, use24HoursFormat: boolean, withSeconds: boolean = false): string {
+    const seconds = withSeconds ? ":ss" : "";
+    return moment(time).format(use24HoursFormat ? `HH:mm${seconds}` : `h:mm${seconds}a`);
 }
 
 export function fromatOffset(offset: number) {

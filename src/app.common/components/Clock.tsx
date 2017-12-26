@@ -16,7 +16,7 @@ export class Clock extends React.Component<ClockProps, ClockState> {
   constructor(props: ClockProps) {
     super(props);
     this.state = {
-      time: moment().format("HH:mm:ss"),
+      time: formatTime(moment(), props.use24HoursFormat, true),
     };
     setInterval(() => this.updateTime(), 1000);
   }

@@ -41,7 +41,7 @@ class HourCellImpl extends React.Component<HourCellProps> {
           displayHour = "pm";
           break;
         default:
-          displayHour = String(hour % 12 + 1);
+          displayHour = String(hour % 12);
           break;
       }
     }

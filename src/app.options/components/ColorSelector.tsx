@@ -63,7 +63,7 @@ export class ColorSelector extends React.Component<ColorSelectorProps, any> {
         <Select
           style={{ textTransform: "capitalize" }}
           value={color.id}
-          renderValue={(x) => this.renderColorValue(x, color)}
+          renderValue={(x: ColorId) => this.renderColorValue(x, color)}
           onChange={(event) => this.onChange(event.target.value as ColorId)}
           input={<Input name={id} id={id} />}
         >

@@ -83,7 +83,7 @@ class SelectTimezoneDialogImpl extends React.Component<SelectTimezoneDialogProps
         <Dialog
           classes={{paper: style.dialogRoot}}
           open={open}
-          onRequestClose={this.handleRequestCancel}
+          onClose={this.handleRequestCancel}
         >
           <DialogTitle>Select timezone</DialogTitle>
           <DialogContent className="pb-0">

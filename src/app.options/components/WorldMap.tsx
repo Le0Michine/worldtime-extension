@@ -1,28 +1,18 @@
-import { Theme, withStyles } from "material-ui/styles";
-import { formatTime, getTimeZoneAbbreviation } from "../../app.common/util/time";
-import { Suggestion } from "../../app.common/models/TimeZoneShort";
-import * as React from "react";
-import { connect, ActionCreator } from "react-redux";
-import * as moment from "moment-timezone";
-import * as _ from "lodash";
-import Button from "material-ui/Button";
-import { MenuItem } from "material-ui/Menu";
-import Paper from "material-ui/Paper";
-import TextField from "material-ui/TextField";
-import Input, { InputLabel } from "material-ui/Input";
-import { FormControl, FormHelperText } from "material-ui/Form";
 import * as d3 from "d3";
-import * as topojson from "topojson";
+import * as _ from "lodash";
+import { Color } from "material-ui";
+import Paper from "material-ui/Paper";
+import { Theme, withStyles } from "material-ui/styles";
+import Typography from "material-ui/Typography/Typography";
+import * as moment from "moment-timezone";
+import * as React from "react";
+import { KeyboardEvent } from "react";
+
+import { formatTime } from "../../app.common/util/time";
 import * as style from "./WorldMap.scss";
+
 const world110 = require("../../assets/world-110m.json");
 const timezoneMeta = require("../../assets/momet-timezone-meta.json");
-
-import { TimeZoneInfo } from "../../app.common/models";
-import { Typeahead } from "../../app.common/components";
-import { changeDisplayName, changeTimezoneId, createOrUpdateTimeLine, clearForm } from "../../app.common/actions";
-import { IAppState } from "../../app.common/store";
-import { KeyboardEvent } from "react";
-import Typography from "material-ui/Typography/Typography";
 
 interface WorldMapProps {
   classes: any;
@@ -219,7 +209,7 @@ const styles = (theme: Theme): { [className: string]: React.CSSProperties } => (
       : theme.palette.common.lightBlack,
   },
   pointSelected: {
-    borderColor: theme.palette.secondary.A400,
+    borderColor: (theme.palette.secondary as Color).A400,
   }
 });
 

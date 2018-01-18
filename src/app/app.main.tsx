@@ -1,12 +1,12 @@
-import { AppTheme } from "../app.common/models/AppTheme";
+import { Color } from "material-ui";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import * as React from "react";
 import { connect } from "react-redux";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 
+import { AppTheme } from "../app.common/models/AppTheme";
 import { IAppState } from "../app.common/store";
-import { Layout } from "./components/Layout";
 import { getDefaultColor, getTheme } from "../app.common/themes/themes";
+import { Layout } from "./components/Layout";
 
 interface MainDispatchProps {
 }
@@ -37,7 +37,7 @@ class AppMain extends React.Component<MainProps, any> {
     const theme = getTheme(useDarkTheme, appTheme);
     return (
       <MuiThemeProvider theme={theme}>
-        <Layout rangeColor={getDefaultColor(theme.palette.secondary)}/>
+        <Layout rangeColor={getDefaultColor(theme.palette.secondary as Color)}/>
       </MuiThemeProvider>
     );
   }

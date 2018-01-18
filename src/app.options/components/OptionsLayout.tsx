@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as moment from "moment";
 import { Link } from "react-router-dom";
 import { connect, ActionCreator } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -108,6 +109,8 @@ class OptionsLayout extends React.Component<OptionsLayoutProps, OptionsLayoutSta
           </div>
           <div className="align-items-center d-flex">
             <Typography type="body2" className="ml-auto">v{manifestData.version}</Typography>
+            <Typography type="body2" className="mx-1">|</Typography>
+            <Typography type="body2" className="">db{(moment.tz as any).dataVersion}</Typography>
           </div>
         </div>
       </Card>

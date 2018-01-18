@@ -51,4 +51,4 @@ class HourCellImpl extends React.Component<HourCellProps> {
   }
 }
 
-export const HourCell = withTheme<Partial<HourCellProps>>()(HourCellImpl);
+export const HourCell = withTheme()(HourCellImpl) as React.ComponentClass<Partial<HourCellProps>>;

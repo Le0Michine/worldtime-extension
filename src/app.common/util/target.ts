@@ -1,5 +1,5 @@
 export function getBuildTarget(): BuildTargetType {
-    return process.env.TARGET;
+    return process.env.TARGET as BuildTargetType;
 }
 
 export type BuildTargetType = "demo" | "firefox";

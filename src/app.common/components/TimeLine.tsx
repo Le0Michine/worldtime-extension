@@ -100,4 +100,4 @@ class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
   }
 }
 
-export const TimeLine = withTheme<Partial<TimeLineProps>>()(TimeLineImpl);
+export const TimeLine = withTheme()(TimeLineImpl);

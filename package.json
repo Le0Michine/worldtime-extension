@@ -29,7 +29,7 @@
         "material-ui": "^1.0.0-beta.22",
         "material-ui-icons": "^1.0.0-beta.17",
         "moment": "^2.20.1",
-        "moment-timezone": "^0.5.14",
+        "moment-timezone": "^0.5.16",
         "react": "^16.2.0",
         "react-autosuggest": "^9.3.2",
         "react-dom": "^16.2.0",

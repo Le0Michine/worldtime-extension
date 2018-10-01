@@ -66,6 +66,19 @@ jobs:
           paths:
             - node_modules
           key: npm-dependencies-{{ checksum "package.json" }}
+  test:
+    docker:
+      - image: circleci/node:9.2.1
+    working_directory: /home/circleci/project
+    steps:
+      - restore_cache:
+          key: *src-cache-key
+      - restore_cache:
+          key: *npm-dependencies-cache-key
+      - run:
+          name: Test package
+          command: |
+            npm run test
   build_prod:
     docker:
       - image: circleci/node:9.2.1
@@ -159,15 +172,18 @@ workflows:
   build:
     jobs:
       - install_dependencies
+      - test:
+          requires:
+            - install_dependencies
       - build_prod:
           requires:
-            - install_dependencies
+            - test
       - build_canary:
           requires:
-            - install_dependencies
+            - test
       - build_firefox:
           requires:
-            - install_dependencies
+            - test
       - upload_and_publish_canary:
           requires:
             - build_prod

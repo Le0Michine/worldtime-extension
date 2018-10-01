@@ -1,7 +1,5 @@
-import { ActionCreator } from "react-redux";
-import * as Redux from "redux";
+import { TimeZoneInfo } from "../models";
 import { Action } from "./Action";
-import { TimeZoneInfo, createTimeZoneInfo } from "../models";
 
 export function clearForm(id: number): Action<TimeZoneInfo> {
   return {

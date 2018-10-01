@@ -1,23 +1,21 @@
-import * as React from "react";
-import * as moment from "moment";
-import { Link } from "react-router-dom";
-import { connect, ActionCreator } from "react-redux";
-import { bindActionCreators } from "redux";
 import Button from "material-ui/Button";
 import Card from "material-ui/Card";
 import Divider from "material-ui/Divider";
 import Typography from "material-ui/Typography";
+import * as moment from "moment";
+import * as React from "react";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
-import { TimeLine, Clock } from "../../app.common/components";
-import AddNewTimeline from "./AddNewTimeline";
-import { TimeLineControls } from "./TimeLineControls";
-import { DisplaySettings } from "./DisplaySettings";
-import { NavTab } from "./NavTab";
-import { DisplaySettingsInfo, TimeZoneInfo, createTimeZoneInfo, getOffset, getHoursWithOffset } from "../../app.common/models";
-import { IAppState, IAppStoreDispatcher } from "../../app.common/store";
 import { removeTimeLine, startEdit, swapTimeLines } from "../../app.common/actions";
-import * as style from "./OptionsLayout.scss";
+import { Clock, TimeLine } from "../../app.common/components";
+import { DisplaySettingsInfo, getHoursWithOffset, getOffset, TimeZoneInfo } from "../../app.common/models";
+import { IAppState } from "../../app.common/store";
 import { getManifest } from "../../app.common/util/manifest";
+import AddNewTimeline from "./AddNewTimeline";
+import { DisplaySettings } from "./DisplaySettings";
+import * as style from "./OptionsLayout.scss";
+import { TimeLineControls } from "./TimeLineControls";
 
 interface OptionsLayoutDispatchProps {
   swapTimeLines: ActionCreator<any>;

@@ -4,7 +4,8 @@ import TextField from "material-ui/TextField";
 import * as moment from "moment-timezone";
 import { KeyboardEvent } from "react";
 import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import { changeDisplayName, changeTimezoneId, clearForm, createOrUpdateTimeLine } from "../../app.common/actions";
 import { Typeahead } from "../../app.common/components";

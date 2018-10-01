@@ -1,7 +1,4 @@
-import { ActionCreator } from "react-redux";
 import { Action } from "./Action";
-import { DisplaySettingsInfo, DSTSetting } from "../models";
-import * as moment from "moment-timezone";
 
 export function changeScrollPostion(position: number): Action<number> {
   return {

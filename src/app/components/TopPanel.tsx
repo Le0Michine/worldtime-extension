@@ -5,13 +5,13 @@ import SettingsIcon from "material-ui-icons/Settings";
 import IconButton from "material-ui/IconButton";
 import Tooltip from "material-ui/Tooltip";
 import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
 import { Clock } from "../../app.common/components";
 import { DisplaySettingsInfo, ScrollPosition } from "../../app.common/models";
 import { IAppState } from "../../app.common/store";
-
 import * as style from "./Layout.scss";
 
 interface ILayoutStateProps {

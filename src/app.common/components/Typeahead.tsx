@@ -1,13 +1,12 @@
-import { getMatches, SuggestionMatchPart } from "../util/match";
 import { MenuItem } from "material-ui/Menu";
 import Paper from "material-ui/Paper";
 import { Theme, withStyles } from "material-ui/styles";
 import TextField from "material-ui/TextField";
-import Typography from "material-ui/Typography";
 import * as React from "react";
 import * as Autosuggest from "react-autosuggest";
 
 import { Suggestion } from "../models";
+import { getMatches, SuggestionMatchPart } from "../util/match";
 
 const match = require("autosuggest-highlight/match");
 const parse = require("autosuggest-highlight/parse");
@@ -198,7 +197,7 @@ class TypeaheadImpl extends React.Component<TypeaheadProps, TypeaheadState> {
   }
 }
 
-const styles = (theme: Theme): React.CSSProperties => ({
+const styles = (theme: Theme): any => ({
   container: {
     flexGrow: 1,
     position: "relative",

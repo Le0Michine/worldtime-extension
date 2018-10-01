@@ -1,25 +1,25 @@
-import { FormControlLabel } from "material-ui/Form";
-import { MenuItem } from "material-ui/Menu";
-import Switch from "material-ui/Switch";
-import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
-import Select from "material-ui/Select";
-import { FormControl } from "material-ui/Form";
+import { FormControl, FormControlLabel } from "material-ui/Form";
 import Input, { InputLabel } from "material-ui/Input";
+import { MenuItem } from "material-ui/Menu";
+import Select from "material-ui/Select";
+import Switch from "material-ui/Switch";
 import Typography from "material-ui/Typography";
+import * as React from "react";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import {
+  change24HoursTimeFormatSetting,
   changeDarkThemeSetting,
   changePrimaryColor,
   changeSecondaryColor,
   changeShowControlPanelSetting,
-  changeShowDSTSetting,
-  changeShowTimezoneIdSetting,
-  changeShowTimezoneAbbreviationSetting,
-  changeShowUTCOffsetSetting,
-  change24HoursTimeFormatSetting,
-  changeTimeSelectionStepSetting,
   changeShowDateLabelsSetting,
+  changeShowDSTSetting,
+  changeShowTimezoneAbbreviationSetting,
+  changeShowTimezoneIdSetting,
+  changeShowUTCOffsetSetting,
+  changeTimeSelectionStepSetting,
 } from "../../app.common/actions";
 import { DisplaySettingsInfo } from "../../app.common/models";
 import { AppTheme } from "../../app.common/models/AppTheme";

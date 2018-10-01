@@ -2,7 +2,8 @@ import Button from "material-ui/Button";
 import Typography from "material-ui/Typography";
 import * as moment from "moment";
 import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
 import { Range } from "../../app.common/components";

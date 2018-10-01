@@ -1,7 +1,5 @@
-import { ActionCreator } from "react-redux";
+import { DSTSetting } from "../models";
 import { Action } from "./Action";
-import { DisplaySettingsInfo, DSTSetting } from "../models";
-import * as moment from "moment-timezone";
 
 export function changeShowDSTSetting(showDST: DSTSetting): Action<DSTSetting> {
   return {

@@ -1,7 +1,6 @@
-import { ActionCreator } from "react-redux";
+import { TimeZoneInfo } from "../models";
 import { Action } from "./Action";
-import { TimeZoneInfo, createTimeZoneInfo } from "../models";
-import * as moment from "moment-timezone";
+
 
 export function createOrUpdateTimeLine(timeLine: TimeZoneInfo) {
   return {

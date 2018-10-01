@@ -1,18 +1,9 @@
-import * as moment from "moment";
 import { applyMiddleware, compose, createStore, Store, StoreEnhancer } from "redux";
 import { createLogger } from "redux-logger";
 
-import {
-  AppTheme,
-  createTimeZoneInfo,
-  DisplaySettingsInfo,
-  ScrollPosition,
-  TimeSpanInfo,
-  TimeZoneInfo,
-} from "../app.common/models";
+import { Action } from "./actions";
 import { localStorageEnchancer } from "./localstorage-enchancer";
-import { rootReducer, initialState, IAppState } from "./reducers";
-import { initialPalette } from "./themes/themes";
+import { IAppState, initialState, rootReducer } from "./reducers";
 
 export { IAppState, IAppStoreDispatcher } from "./reducers";
 
@@ -33,7 +24,7 @@ if (process.env.NODE_ENV === "development") {
   ) as any;
 }
 
-export const store: Store<IAppState> = createStore<IAppState>(
+export const store: Store<IAppState> = createStore<IAppState, Action<any>, {}, {}>(
   rootReducer,
   initialState,
   enchancer

@@ -1,7 +1,8 @@
 import Paper from "material-ui/Paper";
 import * as moment from "moment";
 import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
 import { DisplaySettingsInfo, RangeValue, ScrollPosition, TimeSpanInfo } from "../../app.common/models";

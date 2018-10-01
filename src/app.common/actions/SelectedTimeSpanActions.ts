@@ -1,7 +1,5 @@
-import { ActionCreator } from "react-redux";
-import { Action } from "./Action";
 import { TimeSpanInfo } from "../models";
-import * as moment from "moment-timezone";
+import { Action } from "./Action";
 
 export function changeStartTime(hour: number, minute: number) {
   return {

@@ -1,15 +1,16 @@
 import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { connect } from "react-redux";
+import { ActionCreator } from "redux";
 
 import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
 import { TimeLine, TimeSelector } from "../../app.common/components";
 import {
-    DisplaySettingsInfo,
-    getHoursWithOffset,
-    getOffset,
-    RangeValue,
-    ScrollPosition,
-    TimeSpanInfo,
+  DisplaySettingsInfo,
+  getHoursWithOffset,
+  getOffset,
+  RangeValue,
+  ScrollPosition,
+  TimeSpanInfo,
 } from "../../app.common/models";
 import { IAppState } from "../../app.common/store";
 import * as style from "./Layout.scss";

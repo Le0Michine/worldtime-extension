@@ -129,7 +129,7 @@ export class Range extends React.Component<IRangeProps, IRangeState> {
   }
 
   getRangeRect() {
-    return ReactDOM.findDOMNode(this.refs["rangeBase"]).getBoundingClientRect();
+    return (ReactDOM.findDOMNode(this.refs["rangeBase"]) as Element).getBoundingClientRect();
   }
 
   getClicableAreaHeight() {

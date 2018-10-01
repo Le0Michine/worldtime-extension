@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import * as moment from "moment-timezone";
 
 export function formatTime(time: moment.Moment, use24HoursFormat: boolean, withSeconds: boolean = false): string {
     const seconds = withSeconds ? ":ss" : "";

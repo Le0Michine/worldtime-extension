@@ -1,6 +1,8 @@
+import _ = require("lodash");
+
 export function getPlatformInfo(): Promise<chrome.runtime.PlatformInfo> {
     return new Promise(resolve => {
-        if (chrome && chrome.runtime && chrome.runtime.getPlatformInfo) {
+        if (_.has(window, "chrome.runtime.getPlatformInfo")) {
             chrome.runtime.getPlatformInfo(function (info) {
                 resolve(info);
             });

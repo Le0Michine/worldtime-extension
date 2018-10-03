@@ -1,7 +1,7 @@
-import { compose } from "redux";
-import * as persistState from "redux-localstorage";
 import * as _ from "lodash";
 import * as moment from "moment";
+import * as persistState from "redux-localstorage";
+
 import { IAppState } from "./reducers";
 
 function merge(initialState: IAppState, persistedState: IAppState) {

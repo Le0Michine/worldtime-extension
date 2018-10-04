@@ -1,4 +1,5 @@
-import { cloneDeep, merge } from "lodash";
+import cloneDeep from "lodash-es/cloneDeep";
+import merge from "lodash-es/merge";
 import * as moment from "moment";
 import * as persistState from "redux-localstorage";
 

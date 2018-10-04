@@ -1,9 +1,9 @@
-import { chain } from "lodash";
+import orderBy from "lodash-es/orderBy";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
 import * as moment from "moment-timezone";
-import * as React from "react";
 import { KeyboardEvent } from "react";
+import * as React from "react";
 import { connect } from "react-redux";
 import { ActionCreator } from "redux";
 
@@ -40,18 +40,19 @@ type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProp
 class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLineState> {
   constructor(props: AddNewTimeLineProps) {
     super(props);
-    const tzNames: Suggestion[] = chain(moment.tz.names()).map(name => ({
+    const tzNames = moment.tz.names().map(name => ({
       id: name,
       title: name,
       abbr: getTimeZoneAbbreviation(name),
       utcOffset: moment().tz(name).utcOffset(),
-    })).orderBy(x => x.utcOffset, "asc").map(x => ({
+    }));
+    const orderedTzNames: Suggestion[] = orderBy(tzNames, x => x.utcOffset, "asc").map(x => ({
       id: x.id,
       title: x.title + (Boolean(x.abbr) ? ` (${x.abbr})` : ""),
       subheading: `UTC${fromatOffset(x.utcOffset)}`
-    } as Suggestion)).value();
+    } as Suggestion));
     this.state = {
-      timeZones: tzNames,
+      timeZones: orderedTzNames,
       displayName: "",
       selectedTimeZone: "",
       touched: false,

@@ -20,6 +20,7 @@ const webpackOptions = {
 module.exports = (function(env) {
     webpackOptions.cleanOutput = env.clean === "true";
     return webpackMerge(commonConfig(webpackOptions), {
+        mode: "development",
         devtool: "cheap-module-source-map",
         plugins: [
             new webpack.DefinePlugin({

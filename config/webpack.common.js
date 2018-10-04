@@ -82,7 +82,7 @@ module.exports = function (options) {
           exclude: /node_modules/,
           loader: "babel-loader",
           query: {
-            presets: ["react", "env", "stage-0"],
+            presets: ["react", "env"],
             plugins: ["react-html-attrs"],
           }
         },

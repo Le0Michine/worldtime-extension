@@ -1,4 +1,4 @@
-import { has } from "lodash";
+import has from "lodash-es/has";
 
 export function getPlatformInfo(): Promise<chrome.runtime.PlatformInfo> {
     return new Promise(resolve => {

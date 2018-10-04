@@ -1,4 +1,4 @@
-import { has } from "lodash";
+import has from "lodash-es/has";
 
 export function getManifest(): chrome.runtime.Manifest {
     if (has(window, "chrome.runtime.getManifest")) {

@@ -17,6 +17,7 @@ const webpackOptions = {
 
 module.exports = (function(options) {
     return webpackMerge(commonConfig(webpackOptions), {
+        mode: "production",
         optimization: {
             minimize: true,
         },

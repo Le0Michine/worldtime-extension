@@ -86,6 +86,7 @@
         "typescript": "^2.8.4",
         "typings-for-css-modules-loader": "^1.7.0",
         "webpack": "^4.20.2",
+        "webpack-bundle-analyzer": "^3.0.2",
         "webpack-cli": "^3.1.2",
         "webpack-dev-server": "^3.1.9",
         "webpack-merge": "^4.1.4",

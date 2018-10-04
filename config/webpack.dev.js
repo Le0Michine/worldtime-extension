@@ -1,4 +1,5 @@
 const webpackMerge = require("webpack-merge");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const commonConfig = require("./webpack.common.js"); // the settings that are common to prod and dev
 const webpack = require("webpack");
 
@@ -26,6 +27,7 @@ module.exports = (function(env) {
                     "NODE_ENV": `"${ENV}"`
                 }
             }),
+            ...((process.argv || []).includes("--profile-bundle") ? [new BundleAnalyzerPlugin()] : []),
         ]
     });
 });

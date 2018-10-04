@@ -3,15 +3,11 @@ const webpack = require('webpack');
 const webpackMerge = require("webpack-merge");
 const commonConfig = require("./webpack.common.js");
 
-const DefinePlugin = require("webpack/lib/DefinePlugin");
-const NamedModulesPlugin = require("webpack/lib/NamedModulesPlugin");
 const ZipBundlerPlugin = require("webpack-zip-bundler");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const ENV = process.env.ENV = process.env.NODE_ENV = "production";
 const TARGET = process.env.TARGET;
-const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {});
-
-const helpers = require("./helpers");
 
 const webpackOptions = {
     env: ENV,
@@ -31,7 +27,8 @@ module.exports = (function(options) {
                     "NODE_ENV": `"${ENV}"`,
                     "TARGET": `"${TARGET}"`
                 }
-            })
+            }),
+            ...((process.argv || []).includes("--profile-bundle") ? [new BundleAnalyzerPlugin()] : []),
         ]
     });
 })();

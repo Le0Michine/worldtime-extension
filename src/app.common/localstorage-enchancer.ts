@@ -1,11 +1,11 @@
-import * as _ from "lodash";
+import { cloneDeep, merge } from "lodash";
 import * as moment from "moment";
 import * as persistState from "redux-localstorage";
 
 import { IAppState } from "./reducers";
 
-function merge(initialState: IAppState, persistedState: IAppState) {
-    const mergedState = _.cloneDeep(initialState);
+function mergeState(initialState: IAppState, persistedState: IAppState) {
+    const mergedState = cloneDeep(initialState);
     if (!persistedState) {
         return initialState;
     }
@@ -13,16 +13,16 @@ function merge(initialState: IAppState, persistedState: IAppState) {
         mergedState.timeLines = persistedState.timeLines.filter(x => Boolean(moment.tz.zone(x.timeZoneId)));
     }
     if (persistedState.displaySettings) {
-        mergedState.displaySettings = _.merge(mergedState.displaySettings, persistedState.displaySettings);
+        mergedState.displaySettings = merge(mergedState.displaySettings, persistedState.displaySettings);
     }
     if (persistedState.theme) {
-        mergedState.theme = _.merge(mergedState.theme, persistedState.theme);
+        mergedState.theme = merge(mergedState.theme, persistedState.theme);
     }
     return mergedState;
 }
 
 export const localStorageEnchancer = [
-    persistState("timeLines", { key: "timeLines@0.0.259", merge }),
-    persistState("displaySettings", { key: "displaySettings@0.1.265", merge }),
-    persistState("theme", { key: "theme@1.2.45", merge }),
+    persistState("timeLines", { key: "timeLines@0.0.259", mergeState }),
+    persistState("displaySettings", { key: "displaySettings@0.1.265", mergeState }),
+    persistState("theme", { key: "theme@1.2.45", mergeState }),
 ];

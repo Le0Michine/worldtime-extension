@@ -1,9 +1,9 @@
-import * as _ from "lodash";
+import { chain } from "lodash";
 import Button from "material-ui/Button";
 import TextField from "material-ui/TextField";
 import * as moment from "moment-timezone";
-import { KeyboardEvent } from "react";
 import * as React from "react";
+import { KeyboardEvent } from "react";
 import { connect } from "react-redux";
 import { ActionCreator } from "redux";
 
@@ -40,7 +40,7 @@ type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProp
 class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLineState> {
   constructor(props: AddNewTimeLineProps) {
     super(props);
-    const tzNames: Suggestion[] = _.chain(moment.tz.names()).map(name => ({
+    const tzNames: Suggestion[] = chain(moment.tz.names()).map(name => ({
       id: name,
       title: name,
       abbr: getTimeZoneAbbreviation(name),

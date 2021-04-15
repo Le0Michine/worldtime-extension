@@ -1,6 +1,6 @@
 {
     "name": "worldtime",
-    "version": "1.4.77",
+    "version": "1.4.78",
     "description": "Several timezones in popup",
     "main": "webpack.config.js",
     "repository": "https://github.com/Le0Michine/timezone-extension",

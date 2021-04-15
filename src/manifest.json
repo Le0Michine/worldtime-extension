@@ -15,9 +15,6 @@
         "128": "icons/icon_128.png"
     },
     "permissions": [
-        "storage",
-        "notifications",
-        "contextMenus",
         "clipboardWrite"
     ]
 }

@@ -1,11 +1,5 @@
 version: 2
 
-key: &src-cache-key src-{{ .Branch }}-{{ .Revision }}
-key: &npm-dependencies-cache-key npm-dependencies-{{ checksum "package.json" }}
-key: &npm-prod-package-cache-key prod-package-{{ .Branch }}-{{ .Revision }}
-key: &npm-canary-package-cache-key canary-package-{{ .Branch }}-{{ .Revision }}
-key: &npm-firefox-package-cache-key firefox-package-{{ .Branch }}-{{ .Revision }}
-
 steps: &upload-and-publish
   - run:
       name: "Install Dependencies"
@@ -13,9 +7,9 @@ steps: &upload-and-publish
         sudo apt-get update
         sudo apt-get -y --force-yes install curl jq
   - restore_cache:
-      key: *npm-prod-package-cache-key
+      key: prod-package-{{ .Branch }}-{{ .Revision }}
   - restore_cache:
-      key: *npm-canary-package-cache-key
+      key: canary-package-{{ .Branch }}-{{ .Revision }}
   - run:
       name: "Upload & Publish Extension to the Google Chrome Store"
       command: |
@@ -51,7 +45,7 @@ jobs:
       - save_cache:
           paths:
             - ./
-          key: *src-cache-key
+          key: src-{{ .Branch }}-{{ .Revision }}
       # - restore_cache:
       #     keys:
       #     - npm-dependencies-{{ checksum "package.json" }}
@@ -72,9 +66,9 @@ jobs:
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          key: *src-cache-key
+          key: src-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: *npm-dependencies-cache-key
+          key: npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Test package
           command: |
@@ -85,9 +79,9 @@ jobs:
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          key: *src-cache-key
+          key: src-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: *npm-dependencies-cache-key
+          key: npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Build package
           command: |
@@ -101,16 +95,16 @@ jobs:
       - save_cache:
           paths:
             - out/package.zip
-          key: *npm-prod-package-cache-key
+          key: prod-package-{{ .Branch }}-{{ .Revision }}
   build_canary:
     docker:
       - image: circleci/node:9.2.1
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          key: *src-cache-key
+          key: src-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: *npm-dependencies-cache-key
+          key: npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Build package
           command: |
@@ -124,16 +118,16 @@ jobs:
       - save_cache:
           paths:
             - out/canary.zip
-          key: *npm-canary-package-cache-key
+          key: canary-package-{{ .Branch }}-{{ .Revision }}
   build_firefox:
     docker:
       - image: circleci/node:9.2.1
     working_directory: /home/circleci/project
     steps:
       - restore_cache:
-          key: *src-cache-key
+          key: src-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          key: *npm-dependencies-cache-key
+          key: npm-dependencies-{{ checksum "package.json" }}
       - run:
           name: Build package
           command: |
@@ -147,7 +141,7 @@ jobs:
       - save_cache:
           paths:
             - out/firefox.zip
-          key: *npm-firefox-package-cache-key
+          key: firefox-package-{{ .Branch }}-{{ .Revision }}
   upload_and_publish_canary:
     docker:
       - image: circleci/node:9.2.1

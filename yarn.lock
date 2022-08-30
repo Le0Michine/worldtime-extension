@@ -6097,9 +6097,9 @@ mkdirp@0.x:
   dependencies:
     minimist "^1.2.5"
 
-moment-timezone@*, moment-timezone@^0.5.16:
-  version "0.5.33"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.33.tgz#b252fd6bb57f341c9b59a5ab61a8e51a73bbd22c"
+moment-timezone@*, moment-timezone@^0.5.35:
+  version "0.5.35"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.35.tgz#6fa2631bdbe8ff04f6b8753f7199516be6dc9839"
   dependencies:
     moment ">= 2.9.0"
 

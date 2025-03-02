@@ -4,7 +4,7 @@
     "description": "All time zones in one click",
     "version": "1.5.0",
     "options_page": "options.html",
-    "browser_action": {
+    "action": {
         "default_icon": "icons/icon_19.png",
         "default_popup": "index.html"
     },

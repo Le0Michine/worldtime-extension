@@ -1,75 +1,81 @@
-const momentActual = require.requireActual("moment-timezone");
+import { describe, test, beforeEach, expect, vi } from "vitest";
 
-import moment = require("moment-timezone");
+import moment from "moment-timezone";
 import { Moment } from "moment-timezone";
 
-import { formatTime, fromatOffset, formatDate, getTimeZoneAbbreviation } from "./time";
+import {
+  formatTime,
+  formatOffset,
+  formatDate,
+  getTimeZoneAbbreviation,
+} from "./time.js";
 
-jest.mock("moment-timezone", () => {
-    const momentMock: any = () => {
-        return momentActual.utc("2018-06-30T16:12:39-07:00");
-    };
-    momentMock.tz = momentActual.tz;
-    return momentMock;
+vi.mock("moment-timezone", async () => {
+  const momentActual = await vi.importActual<typeof moment>("moment-timezone");
+  const momentMock: any = () => {
+    return momentActual.utc("2018-06-30T16:12:39-07:00");
+  };
+  momentMock.tz = momentActual.tz;
+  return { default: momentMock };
 });
 
 describe("formatTime", () => {
-    let time: Moment;
+  let time: Moment;
 
-    beforeEach(() => {
-        time = moment();
-    });
+  beforeEach(() => {
+    time = moment();
+  });
 
-    test("should format time in am/pm format", () => {
-        const result = formatTime(time, false);
-        expect(result).toBe("11:12pm");
-    });
+  test("should format time in am/pm format", () => {
+    const result = formatTime(time, false);
+    expect(result).toBe("11:12pm");
+  });
 
-    test("should format time with seconds in am/pm format", () => {
-        const result = formatTime(time, false, true);
-        expect(result).toBe("11:12:39pm");
-    });
+  test("should format time with seconds in am/pm format", () => {
+    const result = formatTime(time, false, true);
+    expect(result).toBe("11:12:39pm");
+  });
 
-    test("should format time in 24 hours format", () => {
-        const result = formatTime(time, true, false);
-        expect(result).toBe("23:12");
-    });
+  test("should format time in 24 hours format", () => {
+    const result = formatTime(time, true, false);
+    expect(result).toBe("23:12");
+  });
 
-    test("should format time with seconds in 24 hours format", () => {
-        const result = formatTime(time, true, true);
-        expect(result).toBe("23:12:39");
-    });
+  test("should format time with seconds in 24 hours format", () => {
+    const result = formatTime(time, true, true);
+    expect(result).toBe("23:12:39");
+  });
 });
 
-describe("fromatOffset", () => {
-    const testCases = [
-        { input: 0, expected: "+00:00" },
-        { input: 43, expected: "+00:43" },
-        { input: 243, expected: "+04:03" },
-        { input: 12243, expected: "+204:03" },
-        { input: -43, expected: "-00:43" },
-        { input: -443, expected: "-07:23" },
-        { input: -412343, expected: "-6872:23" },
-    ];
+describe("formatOffset", () => {
+  const testCases = [
+    { input: 0, expected: "+00:00" },
+    { input: 43, expected: "+00:43" },
+    { input: 243, expected: "+04:03" },
+    { input: 12243, expected: "+204:03" },
+    { input: -43, expected: "-00:43" },
+    { input: -443, expected: "-07:23" },
+    { input: -412343, expected: "-6872:23" },
+  ];
 
-    testCases.forEach(testCase => {
-        test(`should format "${testCase.input}" offset`, () => {
-            const result = fromatOffset(testCase.input)
-            expect(result).toBe(testCase.expected);
-        });
+  testCases.forEach((testCase) => {
+    test(`should format "${testCase.input}" offset`, () => {
+      const result = formatOffset(testCase.input);
+      expect(result).toBe(testCase.expected);
     });
+  });
 });
 
 describe("formatDate", () => {
-    test("should format date", () => {
-        const result = formatDate(23, 4);
-        expect(result).toBe("Jul 23");
-    });
+  test("should format date", () => {
+    const result = formatDate(23, 4);
+    expect(result).toBe("Jul 23");
+  });
 });
 
 describe("getTimeZoneAbbreviation", () => {
-    test("should format date", () => {
-        const result = getTimeZoneAbbreviation("America/Vancouver");
-        expect(result).toBe("PST");
-    });
+  test("should format date", () => {
+    const result = getTimeZoneAbbreviation("America/Vancouver");
+    expect(result).toBe("PST");
+  });
 });

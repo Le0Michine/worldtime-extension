@@ -1,5 +1,4 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 interface IRangeProps {
   valueMin?: number;
@@ -9,155 +8,164 @@ interface IRangeProps {
   color?: string;
 }
 
-interface IRangeState {
-  valueMin: number;
-  valueMax: number;
-  hold: false | "min" | "max";
-}
+export const Range = (props: IRangeProps) => {
+  const rangeBaseRef = useRef<HTMLDivElement>(null);
 
-export class Range extends React.Component<IRangeProps, IRangeState> {
-  private onMouseMoveListener;
-  private onMouseUpListener;
+  const getValueMin = useCallback(() => {
+    return props.rangeSize
+      ? (props.valueMin / props.rangeSize) * 100
+      : props.valueMin;
+  }, [props.rangeSize, props.valueMin]);
 
-  constructor(props: IRangeProps) {
-    super(props);
-    const { rangeSize, valueMin, valueMax } = props;
-    this.state = {
-      valueMin: rangeSize ? valueMin / rangeSize * 100 : valueMin,
-      valueMax: rangeSize ? valueMax / rangeSize * 100 : valueMax,
-      hold: false
-    };
-  }
+  const getValueMax = useCallback(() => {
+    return props.rangeSize
+      ? (props.valueMax / props.rangeSize) * 100
+      : props.valueMax;
+  }, [props.rangeSize, props.valueMax]);
 
-  componentWillReceiveProps(props: IRangeProps) {
-    if (props) {
-      this.updateState(props);
-    }
-  }
-  
-  updateState(props: IRangeProps) {
-    const { valueMax, valueMin, rangeSize } = props;
-    this.setState({
-      valueMin: rangeSize ? valueMin / rangeSize * 100 : valueMin,
-      valueMax: rangeSize ? valueMax / rangeSize * 100 : valueMax,
-    });
-  }
+  const [valueMin, setValueMin] = useState(getValueMin());
+  const [valueMax, setValueMax] = useState(getValueMax());
+  const [hold, setHold] = useState<false | "min" | "max">(false);
 
-  onChange(valueMin: number, valueMax: number) {
-    if (this.props.onChange) {
-      this.props.onChange(this.convertValues(valueMin, valueMax));
-    }
-  }
+  const [onMouseMoveListener, setOnMouseMoveListener] =
+    useState<(event: any) => void>();
 
-  convertValues(valueMin: number, valueMax: number) {
-    if (this.props.rangeSize) {
-      const l = 100 / this.props.rangeSize;
-      return { valueMin: Math.round(valueMin / l), valueMax: Math.round(valueMax / l) };
-    }
-    return { valueMin, valueMax };
-  }
+  useEffect(() => {
+    setValueMax(getValueMax());
+    setValueMin(getValueMin());
+  }, [getValueMin, getValueMax]);
 
-  componentDidMount() {
-    this.onMouseUpListener = () => this.onRelease();
-    window.addEventListener("mouseup", this.onMouseUpListener, false);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("mouseup", this.onMouseUpListener);
-  }
-
-  onHold(hold: false | "min" | "max") {
-    this.setState({ hold });
-    if (!this.onMouseMoveListener) {
-      this.onMouseMoveListener = (event) => this.onMouseMove(event);
-      window.addEventListener("mousemove", this.onMouseMoveListener, false);
-    }
-  }
-
-  onRangeBaseClick(event: React.MouseEvent<HTMLDivElement>) {
-    event.preventDefault();
-    const { valueMin, valueMax } = this.state;
-    const x = this.getCoordinateInRange(event);
-    const distToMin = Math.abs(x - valueMin);
-    const distToMax = Math.abs(x - valueMax);
-    const hold = distToMin == distToMax
-      ? x > valueMax
-        ? "max"
-        : "min"
-      : distToMin < distToMax
-        ? "min"
-        : "max";
-    this.onHold(hold);
-    this.movePointer(x, hold);
-  }
-
-  onMouseMove(event: MouseEvent) {
-    event.preventDefault();
-    const { hold } = this.state;
-    this.movePointer(this.getCoordinateInRange(event), hold);
-  }
-
-  getCoordinateInRange(event: MouseEvent | React.MouseEvent<any>) {
-    const rect = this.getRangeRect();
-    return (Math.min(rect.right, Math.max(rect.left, event.clientX)) - rect.left) / rect.width * 100;
-  }
-
-  movePointer(x: number, hold: false | "min" | "max") {
-    const { valueMin, valueMax } = this.state;
-    const { rangeSize } = this.props;
-    if (rangeSize) {
-      const l = 100 / rangeSize;
-      x = Math.round(x / l) * l;
-    }
-    if (hold === "min") {
-      x = Math.min(x, valueMax);
-      this.setState({ valueMin: x });
-      this.onChange(x, valueMax);
-    } else if (hold === "max") {
-      x = Math.max(x, valueMin);
-      this.setState({ valueMax: x });
-      this.onChange(valueMin, x);
+  const onChange = useCallback((newMin, newMax) => {
+    if (props.rangeSize) {
+      const l = 100 / props.rangeSize;
+      props.onChange?.({
+        valueMin: Math.round(newMin / l),
+        valueMax: Math.round(newMax / l),
+      });
     } else {
-      throw new Error("shouldn't go here");
+      props.onChange?.({ valueMin: newMin, valueMax: newMax });
     }
-  }
+  }, []);
 
-  onRelease() {
-    this.setState({ hold: false });
-    window.removeEventListener("mousemove", this.onMouseMoveListener);
-    this.onMouseMoveListener = undefined;
-  }
+  useEffect(() => {
+    if (hold) {
+      const moveListener = (event: MouseEvent) => {
+        event.preventDefault();
+        movePointer(getCoordinateInRange(event), hold);
+      };
+      window.addEventListener("mousemove", moveListener, false);
 
-  getRangeRect() {
-    return ReactDOM.findDOMNode(this.refs["rangeBase"]).getBoundingClientRect();
-  }
+      const releaseListener = (event: MouseEvent) => {
+        event.preventDefault();
+        setHold(false);
+        window.removeEventListener("mousemove", moveListener);
+        window.removeEventListener("mouseup", releaseListener);
+      };
+      window.addEventListener("mouseup", releaseListener, false);
+    }
+  }, [hold, setHold]);
 
-  getClicableAreaHeight() {
+  const onRangeBaseClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.preventDefault();
+      const x = getCoordinateInRange(event);
+      const distToMin = Math.abs(x - valueMin);
+      const distToMax = Math.abs(x - valueMax);
+      const hold =
+        distToMin == distToMax
+          ? x > valueMax
+            ? "max"
+            : "min"
+          : distToMin < distToMax
+            ? "min"
+            : "max";
+      setHold(hold);
+      movePointer(x, hold);
+    },
+    [valueMin, valueMax],
+  );
+
+  const getCoordinateInRange = useCallback(
+    (event: MouseEvent | React.MouseEvent<any>) => {
+      const rect = getRangeRect();
+      return (
+        ((Math.min(rect.right, Math.max(rect.left, event.clientX)) -
+          rect.left) /
+          rect.width) *
+        100
+      );
+    },
+    [],
+  );
+
+  const movePointer = useCallback(
+    (x: number, hold: false | "min" | "max") => {
+      const { rangeSize } = props;
+      if (rangeSize) {
+        const l = 100 / rangeSize;
+        x = Math.round(x / l) * l;
+      }
+      if (hold === "min") {
+        x = Math.min(x, valueMax);
+        setValueMin(x);
+        onChange(x, valueMax);
+      } else if (hold === "max") {
+        x = Math.max(x, valueMin);
+        setValueMax(x);
+        onChange(valueMin, x);
+      } else {
+        throw new Error("shouldn't go here");
+      }
+    },
+    [props.rangeSize, valueMin, valueMax, setValueMin, setValueMax, onChange],
+  );
+
+  const getRangeRect = useCallback(() => {
+    return rangeBaseRef.current?.getBoundingClientRect();
+  }, [rangeBaseRef]);
+
+  const getClickableAreaHeight = useCallback(() => {
     const appElement = document.getElementById("timeLinesContainer");
     if (appElement) {
       return appElement.clientHeight;
     } else {
       return 1000;
     }
-  }
+  }, []);
 
-  render() {
-    const { valueMin, valueMax } = this.state;
-    const { color } = this.props;
-    const min = `${valueMin}%`;
-    const max = `${valueMax}%`;
-    const width = `${valueMax - valueMin}%`;
-    const clicableAreaHeight = this.getClicableAreaHeight();
-    return (
-      <div className="range-material-container">
-        <div ref="rangeBase" className="range-material-base-clickable" style={{ top: -clicableAreaHeight, paddingTop: clicableAreaHeight }} onMouseDown={(event) => this.onRangeBaseClick(event)}>
-          <div ref="rangeBase" className="range-material-base">
-            <div className="range-material-min-selector" style={{ left: min, background: color }} onMouseDown={() => this.onHold("min")}></div>
-            <div className="range-material-range-selected" style={{ left: min, width, background: color }}></div>
-            <div className="range-material-max-selector" style={{ left: max, background: color }} onMouseDown={() => this.onHold("max")}></div>
-          </div>
+  const { color } = props;
+  const min = `${valueMin}%`;
+  const max = `${valueMax}%`;
+  const width = `${valueMax - valueMin}%`;
+  const clickableAreaHeight = getClickableAreaHeight();
+
+  const onMinClick = useCallback(() => setHold("min"), [setHold]);
+  const onMaxClick = useCallback(() => setHold("max"), [setHold]);
+  return (
+    <div className="range-material-container">
+      <div
+        ref={rangeBaseRef}
+        className="range-material-base-clickable"
+        style={{ top: -clickableAreaHeight, paddingTop: clickableAreaHeight }}
+        onMouseDown={onRangeBaseClick}
+      >
+        <div data-ref-bak="rangeBase" className="range-material-base">
+          <div
+            className="range-material-min-selector"
+            style={{ left: min, background: color }}
+            onMouseDown={onMinClick}
+          ></div>
+          <div
+            className="range-material-range-selected"
+            style={{ left: min, width, background: color }}
+          ></div>
+          <div
+            className="range-material-max-selector"
+            style={{ left: max, background: color }}
+            onMouseDown={onMaxClick}
+          ></div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};

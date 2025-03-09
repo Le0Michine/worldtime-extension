@@ -1,5 +1,6 @@
 /node_modules
 /out
+/out.bak
 /secret
 /coverage
 /tmp
@@ -11,3 +12,5 @@ npm-debug.log*
 *.d.ts
 !*-shims.d.ts
 /.vscode/
+dist/
+coverage/

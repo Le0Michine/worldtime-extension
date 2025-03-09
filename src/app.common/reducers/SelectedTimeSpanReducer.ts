@@ -1,41 +1,63 @@
-import { updateState } from "./UpdateStateHelper";
 import { TimeSpanInfo } from "../models";
-import { Action } from "../actions";
-import * as moment from "moment";
+import moment from "moment";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type State = TimeSpanInfo;
+export type SelectedTimespanState = TimeSpanInfo;
 
-export const initialState: State = {
+export const initialState: SelectedTimespanState = {
   startHour: moment().hours(),
   startMinute: moment().minutes(),
   endHour: 24,
-  endMinute: 0
+  endMinute: 0,
 };
 
-export const reducer = function (state: State = initialState, action: Action<any>): State {
-  switch(action.type) {
-    case "SELECTED_TIMESPAN/CHANGE_SELECTED_TIMESPAN": {
-      return updateState(state, action.payload)
-    }
-    case "SELECTED_TIMESPAN/CHANGE_START_TIME": {
-      return updateState(state, { startHour: action.payload.hour, startMinute: action.payload.minute })
-    }
-    case "SELECTED_TIMESPAN/CHANGE_START_HOUR": {
-      return updateState(state, { startHour: action.payload })
-    }
-    case "SELECTED_TIMESPAN/CHANGE_START_MINUTE": {
-      return updateState(state, { startMinute: action.payload })
-    }
-    case "SELECTED_TIMESPAN/CHANGE_END_TIME": {
-      return updateState(state, { endHour: action.payload.hour, endMinute: action.payload.minute })
-    }
-    case "SELECTED_TIMESPAN/CHANGE_END_HOUR": {
-      return updateState(state, { endHour: action.payload })
-    }
-    case "SELECTED_TIMESPAN/CHANGE_END_MINUTE": {
-      return updateState(state, { endMinute: action.payload })
-    }
-    default:
-      return state;
-  }
-};
+export const selectedTimespanSlice = createSlice({
+  name: "selectedTimespanSlice",
+  initialState,
+  reducers: {
+    changeSelectedTimespan: (state, action: PayloadAction<TimeSpanInfo>) => {
+      state.startHour = action.payload.startHour;
+      state.startMinute = action.payload.startMinute;
+      state.endHour = action.payload.endHour;
+      state.endMinute = action.payload.endMinute;
+    },
+    changeStartTime: (
+      state,
+      action: PayloadAction<{ hour: number; minute: number }>,
+    ) => {
+      state.startHour = action.payload.hour;
+      state.startMinute = action.payload.minute;
+    },
+    changeStartHour: (state, action: PayloadAction<number>) => {
+      state.startHour = action.payload;
+    },
+    changeStartMinute: (state, action: PayloadAction<number>) => {
+      state.startMinute = action.payload;
+    },
+    changeEndTime: (
+      state,
+      action: PayloadAction<{ hour: number; minute: number }>,
+    ) => {
+      state.endHour = action.payload.hour;
+      state.endMinute = action.payload.minute;
+    },
+    changeEndHour: (state, action: PayloadAction<number>) => {
+      state.endHour = action.payload;
+    },
+    changeEndMinute: (state, action: PayloadAction<number>) => {
+      state.endMinute = action.payload;
+    },
+  },
+});
+
+export const {
+  changeEndHour,
+  changeEndMinute,
+  changeEndTime,
+  changeSelectedTimespan,
+  changeStartHour,
+  changeStartMinute,
+  changeStartTime,
+} = selectedTimespanSlice.actions;
+
+export default selectedTimespanSlice.reducer;

@@ -1,8 +1,5 @@
-import * as React from "react";
-import * as moment from "moment";
-import * as style from "./TimeSelector.scss";
-
-import { TimeZoneInfo, TimeSpanInfo } from "../models";
+import React from "react";
+import style from "./TimeSelector.module.scss";
 
 interface TimeSelectorProps {
   valueMin: number;
@@ -14,14 +11,28 @@ interface TimeSelectorProps {
 export class TimeSelector extends React.Component<TimeSelectorProps, any> {
   render() {
     const { valueMin, valueMax, rangeSize, color } = this.props;
-    const left = valueMin / rangeSize * 100;
-    const right = valueMax / rangeSize * 100;
+    const left = (valueMin / rangeSize) * 100;
+    const right = (valueMax / rangeSize) * 100;
     const visibilityLeft = left <= 0.001 ? "hidden" : "visible";
     const visibilityRight = right >= 99.999 ? "hidden" : "visible";
     return (
       <div>
-        <div className={style.timeSelector} style={{ left: `${left}%`, visibility: visibilityLeft, borderColor: color }}></div>
-        <div className={style.timeSelector} style={{ left: `${right}%`, visibility: visibilityRight, borderColor: color }}></div>
+        <div
+          className={style.timeSelector}
+          style={{
+            left: `${left}%`,
+            visibility: visibilityLeft,
+            borderColor: color,
+          }}
+        ></div>
+        <div
+          className={style.timeSelector}
+          style={{
+            left: `${right}%`,
+            visibility: visibilityRight,
+            borderColor: color,
+          }}
+        ></div>
       </div>
     );
   }

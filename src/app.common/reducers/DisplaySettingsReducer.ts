@@ -1,52 +1,65 @@
-import { Action } from "../actions";
-import { DisplaySettingsInfo } from "../models";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { DisplaySettingsInfo, DSTSetting } from "../models";
 import { BuildTargets, getBuildTarget } from "../util/target";
-import { updateState } from "./UpdateStateHelper";
 
-export type State = DisplaySettingsInfo;
+export type DisplaySettingsState = DisplaySettingsInfo;
 
-export const initialState: State = {
-    showDST: "hide",
-    showTimeZoneId: false,
-    showTimeZoneAbbreviation: true,
-    showUTCOffset: true,
-    showControlPanel: getBuildTarget() === BuildTargets.demo ? false : true,
-    useDarkTheme: false,
-    use24HoursTime: true,
-    selectionStep: 30,
-    showDateLabels: true,
-}
-
-export const reducer = function (state: State = initialState, action: Action<any>): State {
-  switch (action.type) {
-    case "DISPLAY_SETTINGS/SHOW_DST": {
-      return updateState(state, { showDST: action.payload });
-    }
-    case "DISPLAY_SETTINGS/SHOW_UTC_OFFSET": {
-      return updateState(state, { showUTCOffset: action.payload });
-    }
-    case "DISPLAY_SETTINGS/SHOW_TIMEZONE_ID": {
-      return updateState(state, { showTimeZoneId: action.payload });
-    }
-    case "DISPLAY_SETTINGS/SHOW_TIMEZONE_ABBREVIATION": {
-      return updateState(state, { showTimeZoneAbbreviation: action.payload });
-    }
-    case "DISPLAY_SETTINGS/SHOW_SHOW_CONTROL_PANEL": {
-      return updateState(state, { showControlPanel: action.payload });
-    }
-    case "DISPLAY_SETTINGS/TOGGLE_DARK_THEME": {
-      return updateState(state, { useDarkTheme: action.payload });
-    }
-    case "DISPLAY_SETTINGS/TOGGLE_24_HOURS": {
-      return updateState(state, { use24HoursTime: action.payload });
-    }
-    case "DISPLAY_SETTINGS/CHANGE_TIME_SELECTION_STEP": {
-      return updateState(state, { selectionStep: action.payload });
-    }
-    case "DISPLAY_SETTINGS/TOGGLE_SHOW_DATE_LABELS": {
-      return updateState(state, { showDateLabels: action.payload });
-    }
-    default:
-      return state;
-  }
+export const initialState: DisplaySettingsState = {
+  showDST: "hide",
+  showTimeZoneId: false,
+  showTimeZoneAbbreviation: true,
+  showUTCOffset: true,
+  showControlPanel: getBuildTarget() === BuildTargets.demo ? false : true,
+  useDarkTheme: false,
+  use24HoursTime: true,
+  selectionStep: 30,
+  showDateLabels: true,
 };
+
+export const displaySettingsSlice = createSlice({
+  name: "displaySettingsSlice",
+  initialState,
+  reducers: {
+    setShowDst: (state, action: PayloadAction<DSTSetting>) => {
+      state.showDST = action.payload;
+    },
+    setShowUtcOffset: (state, action: PayloadAction<boolean>) => {
+      state.showUTCOffset = action.payload;
+    },
+    setShowTzId: (state, action: PayloadAction<boolean>) => {
+      state.showTimeZoneId = action.payload;
+    },
+    setShowTzShortName: (state, action: PayloadAction<boolean>) => {
+      state.showTimeZoneAbbreviation = action.payload;
+    },
+    setShowControlPanel: (state, action: PayloadAction<boolean>) => {
+      state.showControlPanel = action.payload;
+    },
+    setDarkTheme: (state, action: PayloadAction<boolean>) => {
+      state.useDarkTheme = action.payload;
+    },
+    set24HoursFormat: (state, action: PayloadAction<boolean>) => {
+      state.use24HoursTime = action.payload;
+    },
+    setSelectionStep: (state, action: PayloadAction<number>) => {
+      state.selectionStep = action.payload;
+    },
+    setShowDateLabels: (state, action: PayloadAction<boolean>) => {
+      state.showDateLabels = action.payload;
+    },
+  },
+});
+
+export const {
+  set24HoursFormat,
+  setDarkTheme,
+  setSelectionStep,
+  setShowControlPanel,
+  setShowDateLabels,
+  setShowDst,
+  setShowTzId,
+  setShowTzShortName,
+  setShowUtcOffset,
+} = displaySettingsSlice.actions;
+
+export default displaySettingsSlice.reducer;

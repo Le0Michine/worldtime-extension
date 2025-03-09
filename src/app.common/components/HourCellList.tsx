@@ -1,9 +1,7 @@
-import * as moment from "moment";
-import * as React from "react";
+import moment from "moment";
 
-import { HourCell } from "./HourCell";
-import * as style from "./TimeLine.scss";
-import { HourDay } from "../models";
+import { HourCell } from "./HourCell.js";
+import style from "./TimeLine.module.scss";
 
 interface HourCellListProps {
   hours: number[];
@@ -12,25 +10,28 @@ interface HourCellListProps {
   use24HoursTime: boolean;
 }
 
-class HourCellListImpl extends React.Component<HourCellListProps> {
-
-  get inlineStyle() {
-    return {
-      transform: `translateX(${this.props.scrollOffset}%)`
-    };
-  }
-
-  render() {
-    const { scrollOffset, utcOffset, hours, use24HoursTime } = this.props;
-    const currentHour = Number(moment().utcOffset(utcOffset).format("HH"));
-    return (
-      <div className={style.timeLine} style={this.inlineStyle}>
-        {[...hours, ...hours, ...hours].map((h, i) =>
-          <HourCell hour={h} isCurrent={h === currentHour} use24HoursTime={use24HoursTime} key={`${h}_${i}`} />
-        )}
-      </div>
-    );
-  }
-}
-
-export const HourCellList = HourCellListImpl;
+export const HourCellList = ({
+  scrollOffset,
+  utcOffset,
+  hours,
+  use24HoursTime,
+}: HourCellListProps) => {
+  const currentHour = Number(moment().utcOffset(utcOffset).format("HH"));
+  return (
+    <div
+      className={style.timeLine}
+      style={{
+        transform: `translateX(${scrollOffset}%)`,
+      }}
+    >
+      {[...hours, ...hours, ...hours].map((h, i) => (
+        <HourCell
+          hour={h}
+          isCurrent={h === currentHour}
+          use24HoursTime={use24HoursTime}
+          key={`${h}_${i}`}
+        />
+      ))}
+    </div>
+  );
+};

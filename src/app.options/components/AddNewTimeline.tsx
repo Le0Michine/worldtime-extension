@@ -1,150 +1,136 @@
-import * as _ from "lodash";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
-import * as moment from "moment-timezone";
-import { KeyboardEvent } from "react";
-import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
-
-import { changeDisplayName, changeTimezoneId, clearForm, createOrUpdateTimeLine } from "../../app.common/actions";
+import orderBy from "lodash-es/orderBy.js";
+import Button from "@mui/material/Button";
 import { Typeahead } from "../../app.common/components";
 import { TimeZoneInfo } from "../../app.common/models";
 import { Suggestion } from "../../app.common/models/TimeZoneShort";
-import { IAppState } from "../../app.common/store";
-import { fromatOffset, getTimeZoneAbbreviation } from "../../app.common/util/time";
 import { SelectTimezoneDialog } from "./SelectTimezoneDialog";
+import TextField from "@mui/material/TextField";
+import { RootState } from "../../app.common/store";
+import { useDispatch, useSelector } from "react-redux";
+import moment from "moment-timezone";
+import {
+  formatOffset,
+  getTimeZoneAbbreviation,
+} from "../../app.common/util/time";
+import { useCallback, useMemo, useState } from "react";
+import {
+  changeDisplayName,
+  changeTzId,
+  clear,
+} from "../../app.common/reducers/EditTimeLineFormReducer";
+import { createOrUpdateTimeline } from "../../app.common/reducers/TimeLineReducer";
 
 let compKey = 0;
 
-interface AddNewTimeLineStateProps {
-  selectedTimeLine?: TimeZoneInfo;
-}
+export const AddNewTimeline = () => {
+  const editTimeLineForm = useSelector(
+    (state: RootState) => state.editTimeLineForm.timezone,
+  );
+  const dispatch = useDispatch();
 
-interface AddNewTimeLineDispatchProps {
-  changeDisplayName?: Function;
-  changeTimezoneId?: Function;
-  saveTimeLine?: Function;
-  clearForm?: Function;
-}
+  const tzNames = useMemo(
+    () =>
+      orderBy(
+        moment.tz.names().map((name) => ({
+          id: name,
+          title: name,
+          abbr: getTimeZoneAbbreviation(name),
+          utcOffset: moment().tz(name).utcOffset(),
+        })),
+        (x) => x.utcOffset,
+        "asc",
+      ).map(
+        (x) =>
+          ({
+            id: x.id,
+            title: x.title + (Boolean(x.abbr) ? ` (${x.abbr})` : ""),
+            subheading: `UTC${formatOffset(x.utcOffset)}`,
+          }) as Suggestion,
+      ),
+    [],
+  );
+  const [timeZones, setTimeZones] = useState(tzNames);
+  const [displayName, setDisplayName] = useState("");
+  const [selectedTimeZone, setSelectedTimeZone] = useState("");
+  const [touched, setTouched] = useState(false);
 
-interface AddNewTimeLineState {
-  timeZones: Suggestion[],
-  displayName: string,
-  selectedTimeZone: string,
-  touched: boolean,
-}
+  const resetForm = useCallback(() => {
+    setTouched(false);
+  }, [setTouched]);
 
-type AddNewTimeLineProps = AddNewTimeLineStateProps & AddNewTimeLineDispatchProps;
+  const onBlur = useCallback(() => {
+    setTouched(true);
+  }, [setTouched]);
 
-class AddNewTimeline extends React.Component<AddNewTimeLineProps, AddNewTimeLineState> {
-  constructor(props: AddNewTimeLineProps) {
-    super(props);
-    const tzNames: Suggestion[] = _.chain(moment.tz.names()).map(name => ({
-      id: name,
-      title: name,
-      abbr: getTimeZoneAbbreviation(name),
-      utcOffset: moment().tz(name).utcOffset(),
-    })).orderBy(x => x.utcOffset, "asc").map(x => ({
-      id: x.id,
-      title: x.title + (Boolean(x.abbr) ? ` (${x.abbr})` : ""),
-      subheading: `UTC${fromatOffset(x.utcOffset)}`
-    } as Suggestion)).value();
-    this.state = {
-      timeZones: tzNames,
-      displayName: "",
-      selectedTimeZone: "",
-      touched: false,
-    };
-  }
+  const saveTimeLine = useCallback(
+    (selectedTimeLine: TimeZoneInfo) => {
+      dispatch(createOrUpdateTimeline(selectedTimeLine));
+      clear();
+      resetForm();
+      compKey++;
+    },
+    [dispatch],
+  );
 
-  get showError(): boolean {
-    return this.state.touched && !Boolean(this.props.selectedTimeLine.name);
-  }
+  const onKeyPress = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.which == 13 && !addButtonDisabled) {
+        saveTimeLine(editTimeLineForm);
+      }
+    },
+    [saveTimeLine],
+  );
 
-  get addButtonDisabled(): boolean {
-    const { selectedTimeLine } = this.props;
-    return !selectedTimeLine.name || !selectedTimeLine.timeZoneId;
-  }
+  const showError = useMemo(
+    () => touched && !Boolean(editTimeLineForm.name),
+    [touched, editTimeLineForm.name],
+  );
+  const addButtonDisabled = useMemo(() => {
+    return !editTimeLineForm.name || !editTimeLineForm.timeZoneId;
+  }, [touched, editTimeLineForm.name, editTimeLineForm.timeZoneId]);
 
-  onBlur() {
-    this.setState({ touched: true });
-  }
-  
-  resetForm() {
-    this.setState({ touched: false });
-  }
-
-  saveTimeLine(selectedTimeLine: TimeZoneInfo) {
-    this.props.saveTimeLine(selectedTimeLine);
-    this.props.clearForm();
-    this.resetForm();
-    compKey++;
-  }
-
-  onKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.which == 13 && !this.addButtonDisabled) {
-      this.saveTimeLine(this.props.selectedTimeLine);
-    }
-  }
-
-  render() {
-    const {
-      changeTimezoneId,
-      changeDisplayName,
-      selectedTimeLine,
-      saveTimeLine,
-      clearForm
-    } = this.props;
-    return (
-      <div key={compKey} className="row">
-        <div className="col-md-6 d-flex">
-          <Typeahead
-            suggestions={this.state.timeZones}
-            onChange={(value) => changeTimezoneId(value)}
-            value={selectedTimeLine.timeZoneId}
-          />
-          <SelectTimezoneDialog
-            timeZones={this.state.timeZones}
-            timeZoneId={selectedTimeLine.timeZoneId}
-            onChange={(value) => changeTimezoneId(value)}
-          />
-        </div>
-        <div className="col-md-4">
-          <TextField
-            required={true}
-            label="Enter name to display"
-            error={this.showError}
-            fullWidth
-            InputProps={{
-              value: selectedTimeLine.name,
-              onChange: (event) => changeDisplayName(event.target.value),
-              onBlur: () => this.onBlur(),
-              onKeyPress: (event) => this.onKeyPress(event),
-            }}
-            helperText={this.showError ? "Field can't be empty" : ""}
-          />
-        </div>
-        <div className="col-md-2">
-          <Button
-            raised
-            disabled={this.addButtonDisabled}
-            color={Boolean(selectedTimeLine.timeLineid) ? "accent" : "primary"}
-            onClick={() => this.saveTimeLine(selectedTimeLine)}
-          >{selectedTimeLine.timeLineid ? "Save" : "Add"}</Button>
-        </div>
+  return (
+    <div key={compKey} className="row">
+      <div className="col-md-6 d-flex">
+        <Typeahead
+          suggestions={timeZones}
+          onChange={(value) => dispatch(changeTzId(value))}
+          value={editTimeLineForm.timeZoneId}
+        />
+        <SelectTimezoneDialog
+          timeZones={timeZones}
+          timeZoneId={editTimeLineForm.timeZoneId}
+          onChange={(value) => dispatch(changeTzId(value))}
+        />
       </div>
-    );
-  }
-}
-
-export default connect<AddNewTimeLineStateProps, AddNewTimeLineDispatchProps, AddNewTimeLineProps>(
-  (store: IAppState) => ({
-    selectedTimeLine: store.editTimeLineForm
-  }),
-  {
-    changeDisplayName: changeDisplayName as ActionCreator<any>,
-    changeTimezoneId: changeTimezoneId as ActionCreator<any>,
-    saveTimeLine: createOrUpdateTimeLine as ActionCreator<any>,
-    clearForm: clearForm as ActionCreator<any>
-  }
-)(AddNewTimeline);
+      <div className="col-md-4">
+        <TextField
+          size="small"
+          required={true}
+          label="Enter name to display"
+          error={showError}
+          fullWidth
+          InputProps={{
+            value: editTimeLineForm.name,
+            onChange: (event) =>
+              dispatch(changeDisplayName(event.target.value)),
+            onBlur,
+            onKeyPress,
+          }}
+          helperText={showError ? "Field can't be empty" : ""}
+        />
+      </div>
+      <div className="col-md-2">
+        <Button
+          disabled={addButtonDisabled}
+          variant={
+            Boolean(editTimeLineForm.timeLineId) ? "outlined" : "contained"
+          }
+          onClick={() => saveTimeLine(editTimeLineForm)}
+        >
+          {editTimeLineForm.timeLineId >= 0 ? "Save" : "Add"}
+        </Button>
+      </div>
+    </div>
+  );
+};

@@ -1,40 +1,21 @@
-import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
-import * as React from "react";
-import { connect } from "react-redux";
+import { useSelector } from "react-redux";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material/styles";
+import { AppTheme } from "../app.common/models/AppTheme.js";
+import { RootState } from "../app.common/store.js";
+import { getTheme } from "../app.common/themes/themes.js";
+import { OptionsLayout } from "./components/OptionsLayout.js";
 
-import { AppTheme } from "../app.common/models/AppTheme";
-import { IAppState } from "../app.common/store";
-import { getTheme } from "../app.common/themes/themes";
-import OptionsLayout from "./components/OptionsLayout";
 
-interface OptionsMainDispatchProps {
-}
+export const AppOptionsMain = () => {
+  const appTheme = useSelector((state: RootState) => state.theme);
+  const { useDarkTheme } = useSelector(
+    (state: RootState) => state.displaySettings,
+  );
 
-interface OptionsMainStateProps {
-  useDarkTheme?: boolean;
-  theme?: AppTheme
-}
-
-type OptionsMainProps = OptionsMainStateProps & OptionsMainDispatchProps;
-
-class AppOptionsMain extends React.Component<OptionsMainProps, any> {
-  render() {
-    const { useDarkTheme, theme } = this.props;
-
-    return (
-      <MuiThemeProvider theme={getTheme(useDarkTheme, theme)}>
-        <Router>
-          <Route path="/" component={OptionsLayout}></Route>
-        </Router>
-      </MuiThemeProvider>
-    );
-  }
-}
-
-export default connect<OptionsMainStateProps, OptionsMainDispatchProps, OptionsMainProps>(
-  (state: IAppState) => ({
-    useDarkTheme: state.displaySettings.useDarkTheme,
-    theme: state.theme,
-  } as OptionsMainStateProps),
-)(AppOptionsMain);
+  return (
+    <ThemeProvider theme={getTheme(useDarkTheme, appTheme)}>
+      <OptionsLayout />
+    </ThemeProvider>
+  );
+};

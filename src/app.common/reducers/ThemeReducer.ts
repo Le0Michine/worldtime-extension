@@ -1,29 +1,34 @@
-import { Action } from "../actions";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppTheme } from "../models";
-import { getColorById, initialPalette } from "../themes/themes";
+import {
+  ColorId,
+  initialPalette,
+  isValidColorId,
+} from "../themes/themes";
 
-export type State = AppTheme;
+export type ThemeState = AppTheme;
 
-export const initialState: State = {
+export const initialState: ThemeState = {
   palette: initialPalette,
 };
 
-export const reducer = function (state: State = initialState, action: Action<any>): State {
-  switch (action.type) {
-    case "THEME/SET_PRIMARY_COLOR":
-      const newState = Object.assign({}, state);
-      if (getColorById(action.payload)) {
-        newState.palette.primary = action.payload;
+export const themeSlice = createSlice({
+  name: "themeSlice",
+  initialState: initialState,
+  reducers: {
+    setPrimaryColor: (state, action: PayloadAction<ColorId>) => {
+      if (isValidColorId(action.payload)) {
+        state.palette.primary = action.payload;
       }
-      return newState;
-    case "THEME/SET_SECONDARY_COLOR": {
-      const newState = Object.assign({}, state);
-      if (getColorById(action.payload)) {
-        newState.palette.secondary = action.payload;
+    },
+    setSecondaryColor: (state, action: PayloadAction<ColorId>) => {
+      if (isValidColorId(action.payload)) {
+        state.palette.secondary = action.payload;
       }
-      return newState;
-    }
-    default:
-      return state;
-  }
-};
+    },
+  },
+});
+
+export const { setPrimaryColor, setSecondaryColor } = themeSlice.actions;
+
+export default themeSlice.reducer;

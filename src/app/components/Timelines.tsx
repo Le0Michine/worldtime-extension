@@ -1,68 +1,51 @@
-import * as React from "react";
-import { ActionCreator, connect } from "react-redux";
+import { useSelector } from "react-redux";
 
-import { changeScrollPostion, changeSelectedTimeSpan, resetScrollPostion } from "../../app.common/actions";
-import { TimeLine, TimeSelector } from "../../app.common/components";
+import { TimeLine, TimeSelector } from "../../app.common/components/index.js";
 import {
-    DisplaySettingsInfo,
-    getHoursWithOffset,
-    getOffset,
-    RangeValue,
-    ScrollPosition,
-    TimeSpanInfo,
-} from "../../app.common/models";
-import { IAppState } from "../../app.common/store";
-import * as style from "./Layout.scss";
+  getHoursWithOffset,
+  getOffset,
+  RangeValue,
+} from "../../app.common/models/index.js";
+import { RootState } from "../../app.common/store.js";
 
-interface ILayoutStateProps {
-  timeLines?: any[];
-  displaySettings?: DisplaySettingsInfo;
-  selectedTimeSpan?: TimeSpanInfo;
-  rangeColor?: string;
-  scrollPosition?: ScrollPosition;
+import style from "./Layout.module.scss";
+
+export interface TimelinesProps {
   rangeValue: RangeValue;
+  rangeColor: string;
 }
 
-interface ILayoutDispatchProps {
-  changeSelectedTimeSpan?: ActionCreator<any>,
-  changeScrollPostion?: ActionCreator<any>,
-  resetScrollPostion?: ActionCreator<any>,
-}
-
-type ILayoutProps = ILayoutStateProps & ILayoutDispatchProps;
-
-class TimelinesImpl extends React.Component<ILayoutProps, any> {
-  render(): React.ReactElement<any> {
-    const {
-      displaySettings,
-      timeLines,
-      rangeColor,
-      scrollPosition,
-      rangeValue
-    } = this.props;
-    const { valueMin, valueMax, rangeSize } = rangeValue;
-    return (
-      <div className={`${style.app} mx-auto`} id="timeLinesContainer">
-        <TimeSelector valueMin={valueMin} valueMax={valueMax} rangeSize={rangeSize} color={rangeColor} />
-        <div>
-          {timeLines.map(tl =>
-            <TimeLine key={tl.name} scrollPosition={scrollPosition.position} timeLine={tl} offset={getOffset(tl)} hourDayList={getHoursWithOffset(getOffset(tl))} displaySettings={displaySettings} />
-          )}
-        </div>
+export const Timelines = ({ rangeColor, rangeValue }: TimelinesProps) => {
+  const displaySettings = useSelector(
+    (state: RootState) => state.displaySettings,
+  );
+  const timeLines = useSelector(
+    (state: RootState) => state.timeLines.timelines,
+  );
+  const scrollPosition = useSelector(
+    (state: RootState) => state.scrollPosition,
+  );
+  const { valueMin, valueMax, rangeSize } = rangeValue;
+  return (
+    <div className={`${style.app} mx-auto`} id="timeLinesContainer">
+      <TimeSelector
+        valueMin={valueMin}
+        valueMax={valueMax}
+        rangeSize={rangeSize}
+        color={rangeColor}
+      />
+      <div>
+        {timeLines.map((tl) => (
+          <TimeLine
+            key={tl.name}
+            scrollPosition={scrollPosition.position}
+            timeLine={tl}
+            offset={getOffset(tl)}
+            hourDayList={getHoursWithOffset(getOffset(tl))}
+            displaySettings={displaySettings}
+          />
+        ))}
       </div>
-    );
-  }
-}
-
-export const Timelines = connect<ILayoutStateProps, ILayoutDispatchProps, ILayoutProps>(
-  (store: IAppState) => ({
-    timeLines: store.timeLines,
-    displaySettings: store.displaySettings,
-    scrollPosition: store.scrollPosition,
-  } as ILayoutProps),
-  {
-    changeSelectedTimeSpan: changeSelectedTimeSpan,
-    changeScrollPostion: changeScrollPostion,
-    resetScrollPostion: resetScrollPostion,
-  }
-)(TimelinesImpl);
+    </div>
+  );
+};

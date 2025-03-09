@@ -1,32 +1,21 @@
 import * as d3 from "d3";
-import * as _ from "lodash";
-import { Color } from "material-ui";
-import Paper from "material-ui/Paper";
-import { Theme, withStyles } from "material-ui/styles";
-import Typography from "material-ui/Typography/Typography";
-import * as moment from "moment-timezone";
-import * as React from "react";
-import { KeyboardEvent } from "react";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import moment from "moment-timezone";
+import React, { useCallback, useMemo, useState } from "react";
+import minBy from "lodash-es/minBy.js";
 
-import { formatTime } from "../../app.common/util/time";
-import * as style from "./WorldMap.scss";
+import { formatTime } from "../../app.common/util/time.js";
+import style from "./WorldMap.module.scss";
 
-const world110 = require("../../assets/world-110m.json");
-const timezoneMeta = require("../../assets/momet-timezone-meta.json");
+import world110 from "../../assets/world-110m.json" with { type: "json" };
+import timezoneMeta from "../../assets/moment-timezone-meta.json" with { type: "json" };
+import { makeStyles } from "../../app.common/themes/themes.js";
 
 interface WorldMapProps {
-  classes: any;
-  useDarkTheme: boolean;
   use24TimeFormat: boolean;
   timeZoneId: string;
   onSelect: (timeZoneId: string) => void;
-}
-
-interface WorldMapState {
-  pointerX: number;
-  pointerY: number;
-  selectedPoint: string;
-  mouseHover: boolean;
 }
 
 interface MapPoint {
@@ -35,70 +24,63 @@ interface MapPoint {
   name: string;
 }
 
-class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
-
-  private points: MapPoint[];
-
-  constructor(props) {
-    super(props);
-    const projection = this.projection;
-    const guessedZone = props.timeZoneId || moment.tz.guess();
-    const guessedZoneMeta = timezoneMeta.zones[guessedZone];
-    const [x, y] = guessedZoneMeta
-      ? projection([guessedZoneMeta.long, guessedZoneMeta.lat])
-      : [0, 0];
-    const points = _.chain(timezoneMeta.zones).map((zone: any) => {
-      const [x, y] = projection([zone.long, zone.lat])
-      const { name } = zone;
-      return { x, y, name }
-    }).filter(x => Boolean(moment.tz.zone(x.name))).value();
-    this.points = points;
-    this.state = {
-      pointerX: x,
-      pointerY: y,
-      selectedPoint: guessedZone,
-      mouseHover: false,
-    };
-  }
-
-  get mapSize() {
-    const { clientWidth, clientHeight } = document.documentElement;
+export const WorldMap = (props: WorldMapProps) => {
+  const { classes } = useStyles();
+  const mapSize = useMemo(() => {
+    const { clientHeight } = document.documentElement;
     const height = (clientHeight - 68 * 2 - 50) * 0.8;
     return { width: height * 2, height: height };
-  }
+  }, []);
 
-  get mapPath() {
-    const path = d3.geoPath().projection(this.projection);
-    return path(world110);
-  }
-
-  get projection() {
-    const { width, height } = this.mapSize;
-    return d3.geoEquirectangular()
+  const projection = useMemo(() => {
+    const { width, height } = mapSize;
+    return d3
+      .geoEquirectangular()
       .scale(width / 2 / Math.PI)
       .translate([width / 2, height / 2]);
-  }
+  }, []);
+  const guessedZone = props.timeZoneId || moment.tz.guess();
+  const guessedZoneMeta = timezoneMeta.zones[guessedZone];
+  const [x, y] = guessedZoneMeta
+    ? projection([guessedZoneMeta.long, guessedZoneMeta.lat])
+    : [0, 0];
+  const points: MapPoint[] = useMemo(
+    () =>
+      Object.values(timezoneMeta.zones)
+        .map((zone: any) => {
+          const [x, y] = projection([zone.long, zone.lat]);
+          const { name } = zone;
+          return { x, y, name };
+        })
+        .filter((x) => Boolean(moment.tz.zone(x.name))),
+    [projection, timezoneMeta],
+  );
 
-  getSelectedTimeZonePosition(timeZoneId: string) {
+  const [pointerLocation, setPointerLocation] = useState({ x, y });
+  const [selectedPointState, setSelectedPointState] = useState(guessedZone);
+  const [mouseHover, setMouseHover] = useState(false);
+
+  const mapPath = useMemo(() => {
+    const path = d3.geoPath().projection(projection);
+    return path(world110 as any);
+  }, []);
+
+  const selectedTimeZonePosition = useCallback((timeZoneId: string) => {
     const selectedZoneMeta = timezoneMeta.zones[timeZoneId];
     const [x, y] = selectedZoneMeta
-      ? this.projection([selectedZoneMeta.long, selectedZoneMeta.lat])
+      ? projection([selectedZoneMeta.long, selectedZoneMeta.lat])
       : [0, 0];
     return { x, y };
-  }
+  }, []);
 
-  getPoints() {
-    const { classes } = this.props;
-    const { selectedPoint } = this.state;
-    const timezones = moment.tz.names();
-    const projection = this.projection;
-    const points = this.points.map(zone => {
+  const renderedPoints = useMemo(() => {
+    const mapPoints = points.map((zone) => {
       const { x, y, name } = zone;
       const pointClasses = [style.point, classes.point];
-      if (name === selectedPoint) {
+      if (name === selectedPointState) {
         pointClasses.push(style.pointSelected);
       }
-      if (name === this.props.timeZoneId) {
+      if (name === props.timeZoneId) {
         pointClasses.push(style.pointSelected);
         pointClasses.push(classes.pointSelected);
       }
@@ -107,110 +89,108 @@ class WorldMapImpl extends React.Component<WorldMapProps, WorldMapState> {
           key={name}
           style={{
             left: `${x}px`,
-            top: `${y}px`
+            top: `${y}px`,
           }}
           className={pointClasses.join(" ")}
         ></span>
       );
     });
-    return (
-      <div className={style.pointsContainer}>
-        {points}
-      </div>
-    );
-  }
+    return <div className={style.pointsContainer}>{mapPoints}</div>;
+  }, [selectedPointState, points, classes, props.timeZoneId]);
 
-  getEuclideanDistance(point1: number[], point2: number[]): number {
-    return Math.sqrt(Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2));
-  }
+  const getEuclideanDistance = useCallback(
+    (point1: number[], point2: number[]): number => {
+      return Math.sqrt(
+        Math.pow(point1[0] - point2[0], 2) + Math.pow(point1[1] - point2[1], 2),
+      );
+    },
+    [],
+  );
 
-  onMouseLeave() {
-    this.setState({ mouseHover: false });
-  }
+  const onMouseLeave = useCallback(() => {
+    setMouseHover(false);
+  }, []);
 
-  onMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+  const onMouseMove = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY, currentTarget } = event;
-    const { width: mapWidth, height: mapHeight, top, left } = currentTarget.getBoundingClientRect();
+    const { top, left } = currentTarget.getBoundingClientRect();
     const mouseX = clientX - left;
     const mouseY = clientY - top;
-    const minDistance = _.chain(this.points).map(x => ({
-      point: x,
-      distance: this.getEuclideanDistance([x.x, x.y], [mouseX, mouseY])
-    })).minBy("distance").value();
-    this.setState({
-      pointerX: minDistance.point.x,
-      pointerY: minDistance.point.y,
-      selectedPoint: minDistance.point.name,
-      mouseHover: true,
-    });
-  }
-
-  onSelect(value: string) {
-    this.props.onSelect(value);
-  }
-
-  render() {
-    const { classes, use24TimeFormat } = this.props;
-    const { width, height } = this.mapSize;
-    const { mouseHover } = this.state;
-    const selectedPoint = !this.state.mouseHover && this.props.timeZoneId
-      ? this.props.timeZoneId
-      : this.state.selectedPoint;
-    const { x: pointerX, y: pointerY } = this.getSelectedTimeZonePosition(selectedPoint);
-    const selectedZone = moment.tz.zone(selectedPoint);
-    const selectedZoneTime = moment.tz(selectedZone.name);
-    const formattedTime = formatTime(selectedZoneTime, use24TimeFormat);
-
-    return (
-      <Paper elevation={0}>
-        <Typography className="text-center">{selectedZone.name} {formattedTime} {selectedZone.abbr(selectedZoneTime.unix())}</Typography>
-        <div
-          className={`d-flex align-items-center justify-content-center ${classes.mapContainer}`}
-          onMouseMove={(event) => this.onMouseMove(event)}
-          onMouseLeave={() => this.onMouseLeave()}
-          onClick={() => this.onSelect(selectedPoint)}
-        >
-          <div className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisX}`} style={{ top: pointerY }}></div>
-          <div className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisY}`} style={{ left: pointerX }}></div>
-          <svg
-            id="map"
-            className={classes.map}
-            width={width}
-            height={height}
-          >
-            <path d={this.mapPath}></path>
-          </svg>
-          {this.getPoints()}
-        </div>
-      </Paper>
+    const minDistance = minBy(
+      points.map((x) => ({
+        point: x,
+        distance: getEuclideanDistance([x.x, x.y], [mouseX, mouseY]),
+      })),
+      "distance",
     );
-  }
-}
+    setPointerLocation({ x: minDistance.point.x, y: minDistance.point.y });
+    setSelectedPointState(minDistance.point.name);
+    setMouseHover(true);
+  }, []);
 
-const styles = (theme: Theme): { [className: string]: React.CSSProperties } => ({
+  const { use24TimeFormat } = props;
+  const { width, height } = mapSize;
+  const selectedPoint =
+    !mouseHover && props.timeZoneId ? props.timeZoneId : selectedPointState;
+  const { x: pointerX, y: pointerY } = selectedTimeZonePosition(selectedPoint);
+  const selectedZone = moment.tz.zone(selectedPoint);
+  const selectedZoneTime = moment.tz(selectedZone.name);
+  const formattedTime = formatTime(selectedZoneTime, use24TimeFormat);
+
+  return (
+    <Paper elevation={0}>
+      <Typography variant="subtitle1" className="text-center">
+        {selectedZone.name} {formattedTime}{" "}
+        {selectedZone.abbr(selectedZoneTime.unix())}
+      </Typography>
+      <div
+        className={`d-flex align-items-center justify-content-center ${classes.mapContainer}`}
+        onMouseMove={(event) => onMouseMove(event)}
+        onMouseLeave={() => onMouseLeave()}
+        onClick={() => props.onSelect(selectedPoint)}
+      >
+        <div
+          className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisX}`}
+          style={{ top: pointerY }}
+        ></div>
+        <div
+          className={`${classes.mapAxis} ${style.mapAxis} ${style.mapAxisY}`}
+          style={{ left: pointerX }}
+        ></div>
+        <svg id="map" className={classes.map} width={width} height={height}>
+          <path d={mapPath}></path>
+        </svg>
+        {renderedPoints}
+      </div>
+    </Paper>
+  );
+};
+
+const useStyles = makeStyles()((theme) => ({
   map: {
-    stroke: theme.palette.type === "dark"
-      ? theme.palette.common.lightWhite
-      : theme.palette.common.lightBlack,
-    fill: theme.palette.common.faintBlack,
+    stroke:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey.A100
+        : theme.palette.grey[50],
+    fill: theme.palette.grey[500],
   },
   mapContainer: {
-    background: theme.palette.background.contentFrame,
+    background: theme.palette.background.paper,
     position: "relative",
   },
   mapAxis: {
-    borderColor: theme.palette.type === "dark"
-      ? theme.palette.common.lightWhite
-      : theme.palette.common.lightBlack,
+    borderColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.grey[50]
+        : theme.palette.primary.main,
   },
   point: {
-    borderColor: theme.palette.type === "dark"
-      ? theme.palette.common.lightWhite
-      : theme.palette.common.lightBlack,
+    borderColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.common.white
+        : theme.palette.common.black,
   },
   pointSelected: {
-    borderColor: (theme.palette.secondary as Color).A400,
-  }
-});
-
-export const WorldMap = withStyles(styles)(WorldMapImpl) as React.ComponentClass<Partial<WorldMapProps>>;
+    borderColor: theme.palette.primary.main,
+  },
+}));

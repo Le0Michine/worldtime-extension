@@ -1,103 +1,115 @@
-import { Theme, withTheme } from "material-ui/styles";
-import Typography from "material-ui/Typography";
-import * as moment from "moment";
-import * as React from "react";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
 
-import { DisplaySettingsInfo, getOffset, TimeZoneInfo, HourDay } from "../models";
-import { formatTime, fromatOffset, getTimeZoneAbbreviation } from "../util/time";
-import { HourCellList } from "./HourCellList";
-import { HourNoteList } from "./HourNoteList";
-import * as style from "./TimeLine.scss";
+import {
+  DisplaySettingsInfo,
+  getOffset,
+  TimeZoneInfo,
+  HourDay,
+} from "../models/index.js";
+import {
+  formatTime,
+  formatOffset,
+  getTimeZoneAbbreviation,
+} from "../util/time.js";
+import { HourCellList } from "./HourCellList.js";
+import { HourNoteList } from "./HourNoteList.js";
+import style from "./TimeLine.module.scss";
+import Typography from "@mui/material/Typography";
 
 interface TimeLineProps {
   timeLine: TimeZoneInfo;
   offset: number;
   hourDayList: HourDay[];
   displaySettings: DisplaySettingsInfo;
-  theme: Theme;
   scrollPosition: number;
 }
 
-interface TimeLineState {
-  time: string;
-}
+const isDST = (tz: string) => {
+  return moment().tz(tz).isDST();
+};
 
-class TimeLineImpl extends React.Component<TimeLineProps, TimeLineState> {
-  private interval: any;
+const getTimeLineOffsetY = (utcOffset: number, scrollPosition: number) => {
+  const uiOffset = (utcOffset % 60) / 60;
+  const oneDay = 100 / 3;
+  const oneHour = oneDay / 24;
+  const position = scrollPosition;
+  return -oneDay + oneHour * position - oneHour * uiOffset;
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      time: this.getCurrentTime(getOffset(this.props.timeLine))
-    };
-    this.interval = setInterval(() => this.setState({ time: this.getCurrentTime(getOffset(this.props.timeLine)) }), 1000)
-  }
+const getCurrentTime = (offset: number, use24HoursTime: boolean) => {
+  return formatTime(moment().utcOffset(offset), use24HoursTime);
+};
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+export const TimeLine = ({
+  scrollPosition,
+  offset,
+  hourDayList,
+  displaySettings,
+  timeLine,
+}: TimeLineProps) => {
+  const [time, setTime] = useState(
+    getCurrentTime(getOffset(timeLine), displaySettings.use24HoursTime),
+  );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(
+        getCurrentTime(getOffset(timeLine), displaySettings.use24HoursTime),
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [setTime]);
 
-  getCurrentTime(offset: number) {
-    const use24HoursFormat = this.props.displaySettings.use24HoursTime;
-    return formatTime(moment().utcOffset(offset), use24HoursFormat);
-  }
+  const summer = displaySettings.showDST === "DST" ? "DST" : "Summer time";
+  const winter = displaySettings.showDST === "DST" ? "" : "Winter time";
+  const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
 
-  isDST(tz: string) {
-    return moment().tz(tz).isDST();
-  }
-
-  getTimeLineOffsetY(utcOffset: number) {
-    const uiOffset = (utcOffset % 60) / 60;
-    const oneDay = 100 / 3;
-    const oneHour = oneDay / 24;
-    const position = this.props.scrollPosition;
-    return -oneDay + oneHour * position - oneHour * uiOffset;
-  }
-
-  render() {
-    const { offset, hourDayList, displaySettings, timeLine } = this.props;
-    const summer = displaySettings.showDST === "DST" ? "DST" : "Summer time";
-    const winter = displaySettings.showDST === "DST" ? "" : "Winter time";
-    const abbreviation = getTimeZoneAbbreviation(timeLine.timeZoneId);
-
-    return (
-      <div className={style.container}>
-        <div className="d-flex">
-          <Typography type="subheading" className="mr-2">{timeLine.name}</Typography>
-          {displaySettings.showTimeZoneId ?
-            <Typography type="subheading" color="secondary" className="mr-2">{timeLine.timeZoneId.replace("_", " ")}</Typography> : null
-          }
-          {displaySettings.showTimeZoneAbbreviation && Boolean(abbreviation) ?
-            <Typography type="subheading" color="secondary" className="mr-2">{abbreviation}</Typography> : null
-          }
-          {displaySettings.showUTCOffset ?
-            <Typography type="subheading" color="secondary" className="mr-2">UTC{fromatOffset(offset)}</Typography> : null
-          }
-          {displaySettings.showDST !== "hide" ?
-            <Typography type="subheading" color="secondary">{this.isDST(timeLine.timeZoneId) ? summer : winter}</Typography> : null
-          }
-          <Typography type="subheading" className="ml-auto">{this.state.time}</Typography>
-        </div>
-        <div>
-          <HourCellList
-            hours={hourDayList.map(x => x.hour)}
-            utcOffset={offset}
-            scrollOffset={this.getTimeLineOffsetY(offset)}
-            use24HoursTime={displaySettings.use24HoursTime}
-          />
-        </div>
-        <div className={style.timeLineNotes}>
-          {displaySettings.showDateLabels
-            ? <HourNoteList
-                hourDayList={hourDayList}
-                scrollOffset={this.getTimeLineOffsetY(offset)}
-              />
-            : null
-          }
-        </div>
+  return (
+    <div className={style.container}>
+      <div className="d-flex">
+        <Typography component="h3" variant="subtitle1" className="mr-2">
+          {timeLine.name}
+        </Typography>
+        {displaySettings.showTimeZoneId ? (
+          <Typography component="h3" variant="subtitle1" color="secondary" className="mr-2">
+            {timeLine.timeZoneId.replace("_", " ")}
+          </Typography>
+        ) : null}
+        {displaySettings.showTimeZoneAbbreviation && Boolean(abbreviation) ? (
+          <Typography component="h3" variant="subtitle1" color="secondary" className="mr-2">
+            {abbreviation}
+          </Typography>
+        ) : null}
+        {displaySettings.showUTCOffset ? (
+          <Typography component="h3" variant="subtitle1" color="secondary" className="mr-2">
+            UTC{formatOffset(offset)}
+          </Typography>
+        ) : null}
+        {displaySettings.showDST !== "hide" ? (
+          <Typography component="h3" variant="subtitle1" color="secondary">
+            {isDST(timeLine.timeZoneId) ? summer : winter}
+          </Typography>
+        ) : null}
+        <Typography component="h3" variant="subtitle1" className="ml-auto">
+          {time}
+        </Typography>
       </div>
-    );
-  }
-}
-
-export const TimeLine = withTheme()(TimeLineImpl);
+      <div>
+        <HourCellList
+          hours={hourDayList.map((x) => x.hour)}
+          utcOffset={offset}
+          scrollOffset={getTimeLineOffsetY(offset, scrollPosition)}
+          use24HoursTime={displaySettings.use24HoursTime}
+        />
+      </div>
+      <div className={style.timeLineNotes}>
+        {displaySettings.showDateLabels ? (
+          <HourNoteList
+            hourDayList={hourDayList}
+            scrollOffset={getTimeLineOffsetY(offset, scrollPosition)}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+};

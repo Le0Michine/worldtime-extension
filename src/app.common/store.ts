@@ -1,40 +1,25 @@
-import * as moment from "moment";
-import { applyMiddleware, compose, createStore, Store, StoreEnhancer } from "redux";
+import { applyMiddleware } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import { createLogger } from "redux-logger";
 
-import {
-  AppTheme,
-  createTimeZoneInfo,
-  DisplaySettingsInfo,
-  ScrollPosition,
-  TimeSpanInfo,
-  TimeZoneInfo,
-} from "../app.common/models";
-import { localStorageEnchancer } from "./localstorage-enchancer";
-import { rootReducer, initialState, IAppState } from "./reducers";
-import { initialPalette } from "./themes/themes";
+import { localStorageEnhancer } from "./localstorage-enhancer.js";
+import { initialState, reducers } from "./reducers/index.js";
 
-export { IAppState, IAppStoreDispatcher } from "./reducers";
+export type { IAppState, IAppStoreDispatcher } from "./reducers/index.js";
 
-let enchancer: StoreEnhancer<IAppState>;
+export const store = configureStore({
+  reducer: reducers,
+  devTools: import.meta.env.DEV,
+  enhancers: (getDefaultEnhancers) => {
+    if (import.meta.env.DEV) {
+      return getDefaultEnhancers().concat(
+        localStorageEnhancer,
+        applyMiddleware((<any>createLogger)()),
+      ) as any;
+    }
+    return getDefaultEnhancers().concat(localStorageEnhancer);
+  },
+  preloadedState: initialState,
+});
 
-if (process.env.NODE_ENV === "development") {
-  const devEnchansers = [
-    applyMiddleware((<any>createLogger)())
-  ];
-  const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  enchancer = composeEnhancers(
-    ...devEnchansers,
-    ...localStorageEnchancer
-  ) as any;
-} else {
-  enchancer = compose(
-    ...localStorageEnchancer
-  ) as any;
-}
-
-export const store: Store<IAppState> = createStore<IAppState>(
-  rootReducer,
-  initialState,
-  enchancer
-);
+export type RootState = ReturnType<typeof store.getState>;

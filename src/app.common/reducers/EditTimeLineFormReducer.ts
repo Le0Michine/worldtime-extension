@@ -1,28 +1,42 @@
-import { updateState } from "./UpdateStateHelper";
 import { TimeZoneInfo } from "../models";
-import { Action } from "../actions";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-export type State = TimeZoneInfo;
+export interface EditTimelineState {
+  timezone: TimeZoneInfo;
+}
 
-export const initialState: State = {
-  name: "",
-  timeZoneId: ""
-} as State;
-
-export const reducer = function (state: State = initialState, action: Action<any>): State {
-  switch(action.type) {
-    case "EDIT_TIMELINE/CHANGE_DISPLAY_NAME":
-      return updateState(state, { name: action.payload })
-    case "EDIT_TIMELINE/CHANGE_TIMEZONE_ID": {
-      return updateState(state, { timeZoneId: action.payload })
-    }
-    case "EDIT_TIMELINE/START": {
-      return updateState(state, action.payload);
-    }
-    case "EDIT_TIMELINE/CLEAR_FORM": {
-      return updateState(state, { name: "", timeZoneId: "" });
-    }
-    default:
-      return state;
-  }
+export const initialState: EditTimelineState = {
+  timezone: {
+    name: "",
+    timeZoneId: "",
+    timeLineId: -1,
+  },
 };
+
+export const editTimeLineFormSlice = createSlice({
+  name: "editTimeLineFormSlice",
+  initialState,
+  reducers: {
+    changeDisplayName: (state, action: PayloadAction<string>) => {
+      state.timezone.name = action.payload;
+    },
+    changeTzId: (state, action: PayloadAction<string>) => {
+      state.timezone.timeZoneId = action.payload;
+    },
+    init: (state, action: PayloadAction<TimeZoneInfo>) => {
+      state.timezone = action.payload;
+    },
+    clear: (state, action: PayloadAction<TimeZoneInfo>) => {
+      state.timezone = {
+        name: "",
+        timeZoneId: "",
+        timeLineId: -1,
+      };
+    },
+  },
+});
+
+export const { changeDisplayName, changeTzId, clear, init } =
+  editTimeLineFormSlice.actions;
+
+export default editTimeLineFormSlice.reducer;

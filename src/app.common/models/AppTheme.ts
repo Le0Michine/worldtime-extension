@@ -1,6 +1,7 @@
+
 import { Theme } from "material-ui/styles";
 
-import { ColorId } from "../themes/themes";
+import { ColorId } from "../themes/themes.js";
 
 export interface AppTheme {
     palette: {

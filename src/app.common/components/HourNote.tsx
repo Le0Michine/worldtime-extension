@@ -1,29 +1,20 @@
-import { Theme, withStyles } from "material-ui/styles";
-import * as React from "react";
-
-import * as style from "./TimeLine.scss";
-import { ClassMap } from "../models";
+import style from "./TimeLine.module.scss";
+import { makeStyles } from "../themes/themes";
+import { Theme } from "@mui/material/styles";
 
 interface HourNoteProps {
   text: string;
-  classes: any;
 }
 
-class HourNoteImpl extends React.Component<HourNoteProps> {
-
-  render() {
-    const { text, classes } = this.props;
-
-    return (
-      <span className={`${style.hourNote} ${classes.hourNote}`}>{text}</span>
-    );
-  }
-}
-
-const styles = (theme: Theme): ClassMap => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   hourNote: {
     color: theme.palette.getContrastText(theme.palette.background.paper),
-  }
-});
+  },
+}));
 
-export const HourNote = withStyles(styles)(HourNoteImpl) as React.ComponentClass<Partial<HourNoteProps>>;
+export const HourNote = ({ text }: HourNoteProps) => {
+  const { classes } = useStyles();
+  return (
+    <div className={`${style.hourNote} ${classes.hourNote}`}>{text}</div>
+  );
+};

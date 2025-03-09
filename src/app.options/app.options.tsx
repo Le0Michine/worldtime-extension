@@ -1,16 +1,17 @@
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { store } from "../app.common/store";
-import OptionsLayout from "./components/OptionsLayout";
-import AppOptionsMain from "./app.options.main";
+import { store } from "../app.common/store.js";
+import { AppOptionsMain } from "./app.options.main.js";
+import { ErrorBoundary } from "../app.common/error-boundary.js";
 
-const app = document.getElementById('app');
+const app = document.getElementById("app-options");
+const reactRoot = createRoot(app);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <AppOptionsMain />
-  </Provider>
-, app);
+reactRoot.render(
+  <ErrorBoundary>
+    <Provider store={store}>
+      <AppOptionsMain />
+    </Provider>
+  </ErrorBoundary>,
+);

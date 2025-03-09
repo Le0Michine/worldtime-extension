@@ -1,33 +1,28 @@
-import Typography from "material-ui/Typography";
-import * as moment from "moment";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import Typography from "@mui/material/Typography";
+import moment from "moment";
 
-import { formatTime } from "../util/time";
+import { formatTime } from "../util/time.js";
 
 interface ClockProps {
   use24HoursFormat: boolean;
 }
 
-interface ClockState {
-  time: string;
-}
-
-export class Clock extends React.Component<ClockProps, ClockState> {
-  constructor(props: ClockProps) {
-    super(props);
-    this.state = {
-      time: formatTime(moment(), props.use24HoursFormat, true),
-    };
-    setInterval(() => this.updateTime(), 1000);
-  }
-
-  updateTime(): void {
-    this.setState({time: formatTime(moment(), this.props.use24HoursFormat, true)});
-  }
-
-  render() {
-    return (
-      <Typography type="display1">{this.state.time}</Typography>
+export const Clock = ({ use24HoursFormat }: ClockProps) => {
+  const [time, setTime] = useState<string>(
+    formatTime(moment(), use24HoursFormat, true),
+  );
+  useEffect(() => {
+    const interval = setInterval(
+      () => setTime(formatTime(moment(), use24HoursFormat, true)),
+      1000,
     );
-  }
-}
+    return () => clearInterval(interval);
+  }, [use24HoursFormat]);
+
+  return (
+    <Typography component="h2" variant="h1">
+      {time}
+    </Typography>
+  );
+};

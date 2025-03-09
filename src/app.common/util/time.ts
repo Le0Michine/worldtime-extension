@@ -1,11 +1,11 @@
-import * as moment from "moment-timezone";
+import moment from "moment-timezone";
 
 export function formatTime(time: moment.Moment, use24HoursFormat: boolean, withSeconds: boolean = false): string {
     const seconds = withSeconds ? ":ss" : "";
     return moment(time).format(use24HoursFormat ? `HH:mm${seconds}` : `h:mm${seconds}a`);
 }
 
-export function fromatOffset(offset: number) {
+export function formatOffset(offset: number) {
     const absOffset = Math.abs(offset);
     const hours = Math.trunc(absOffset / 60);
     const minutes = absOffset % 60;

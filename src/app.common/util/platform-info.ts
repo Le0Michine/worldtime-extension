@@ -6,7 +6,7 @@ export function getPlatformInfo(): Promise<chrome.runtime.PlatformInfo> {
             });
         } else {
             resolve({
-                os: "dev",
+                os: "dev" as chrome.runtime.PlatformOs,
                 arch: "x86-64",
                 nacl_arch: "x86-64",
             });
